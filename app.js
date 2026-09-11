@@ -42,28 +42,17 @@ function escapeHTML(value = "") {
     .replaceAll("'", "&#039;");
 }
 
-// Product image system:
-// Put each perfume image inside /images using the product ID as the filename.
-// Example: images/white-code.jpg OR .jpeg OR .png OR .webp
-// The website will try the available extensions automatically.
-// This means you do NOT need to edit the JSON or app.js when adding a new image.
-
 const IMAGE_EXTENSIONS = ["webp", "png", "jpg", "jpeg"];
 
 function getProductImageCandidates(product) {
   const id = String(product.id || "").trim().toLowerCase();
-
-  // The final product IDs already match the clean filenames we want.
   const candidates = IMAGE_EXTENSIONS.map(ext => `images/${id}.${ext}`);
 
-  // Keep the JSON image as an additional candidate if it differs.
   if (product.image && !candidates.includes(product.image)) {
     candidates.push(product.image);
   }
 
-  // Final fallback: the real Willi's bottle image.
   candidates.push("images/bottle.png");
-
   return [...new Set(candidates)];
 }
 
@@ -135,9 +124,7 @@ function getFilteredProducts() {
   const q = state.search.trim().toLowerCase();
 
   return state.products.filter(product => {
-    const matchesGender =
-      state.gender === "All" || product.gender === state.gender;
-
+    const matchesGender = state.gender === "All" || product.gender === state.gender;
     const matchesCategory =
       state.category === "All" ||
       (Array.isArray(product.categories) && product.categories.includes(state.category));
@@ -157,7 +144,6 @@ function getFilteredProducts() {
 
 function renderProducts() {
   const products = getFilteredProducts();
-
   resultCount.textContent = `${products.length} fragrance${products.length === 1 ? "" : "s"}`;
 
   if (!products.length) {
@@ -178,16 +164,11 @@ function renderProducts() {
         <div class="product-image-wrap">
           <span class="product-gender">${escapeHTML(product.gender)}</span>
           ${productImageTag(product)}
-
         </div>
 
         <div class="product-body">
           <h3 class="product-name">${escapeHTML(product.brand_name)}</h3>
-
-          <p class="inspired">
-            Inspired by <strong>${escapeHTML(product.inspired_by)}</strong>
-          </p>
-
+          <p class="inspired">Inspired by <strong>${escapeHTML(product.inspired_by)}</strong></p>
           <div class="profile-row">${profiles}</div>
 
           <div class="price-line">
@@ -206,21 +187,17 @@ function renderProducts() {
 
 function setGender(gender) {
   state.gender = gender;
-
   document.querySelectorAll("#genderFilters .filter-chip").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.gender === gender);
   });
-
   renderProducts();
 }
 
 function setCategory(category) {
   state.category = category;
-
   document.querySelectorAll("#categoryFilters .category-chip").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.category === category);
   });
-
   renderProducts();
 }
 
@@ -230,7 +207,6 @@ function openProduct(productId) {
 
   state.selectedProduct = product;
   state.selectedSize = "35ml";
-
   renderProductModal();
 
   productModal.classList.add("open");
@@ -256,10 +232,7 @@ function renderProductModal() {
     .join("");
 
   const sizeButtons = ["35ml", "55ml", "110ml"].map(size => `
-    <button
-      class="size-btn ${state.selectedSize === size ? "active" : ""}"
-      data-size="${size}"
-    >
+    <button class="size-btn ${state.selectedSize === size ? "active" : ""}" data-size="${size}">
       <span>${size.replace("ml", " ML")}</span>
       <strong>${Number(product.sizes?.[size] || 0).toLocaleString()} EGP</strong>
     </button>
@@ -268,15 +241,12 @@ function renderProductModal() {
   modalContent.innerHTML = `
     <div class="detail-image">
       ${productImageTag(product, "detail-product-image")}
-
     </div>
 
     <span class="detail-gender">${escapeHTML(product.gender)}</span>
     <h2 class="detail-title">${escapeHTML(product.brand_name)}</h2>
     <p class="detail-inspired">Inspired by ${escapeHTML(product.inspired_by)}</p>
-
     <div class="detail-profile">${profiles}</div>
-
     <p class="detail-description">${escapeHTML(product.description)}</p>
 
     <div class="family-box">
@@ -306,14 +276,11 @@ function renderProductModal() {
     });
   });
 
-  document.getElementById("orderWhatsApp")?.addEventListener("click", () => {
-    orderOnWhatsApp();
-  });
+  document.getElementById("orderWhatsApp")?.addEventListener("click", orderOnWhatsApp);
 }
 
 function renderNoteCard(title, values) {
   const safeValues = Array.isArray(values) ? values : [];
-
   return `
     <div class="note-card">
       <span>${title}</span>
@@ -388,7 +355,6 @@ async function loadProducts() {
     }
 
     state.products = await response.json();
-
     console.log(`Willi's Perfume: ${state.products.length} products loaded.`);
     renderProducts();
   } catch (error) {
@@ -403,6 +369,23 @@ async function loadProducts() {
     `;
   }
 }
+
+/* Keep internal section links functional without putting #home, #collection, etc. in the URL. */
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  const hash = link.getAttribute("href");
+  if (!hash || hash === "#") return;
+
+  link.addEventListener("click", event => {
+    const target = document.querySelector(hash);
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+
+    if (link.closest(".side-menu")) closeSideMenu();
+  });
+});
 
 /* Events */
 document.querySelectorAll("#genderFilters .filter-chip").forEach(btn => {
@@ -446,6 +429,7 @@ sideMenu.querySelectorAll("[data-gender]").forEach(button => {
     setGender(button.dataset.gender);
     closeSideMenu();
     document.getElementById("collection").scrollIntoView({ behavior: "smooth" });
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
   });
 });
 
@@ -468,8 +452,6 @@ document.addEventListener("keydown", event => {
 });
 
 loadProducts();
-
-
 initHeroMotion();
 
 document.getElementById("desktopWhatsApp")?.addEventListener("click", () => {
