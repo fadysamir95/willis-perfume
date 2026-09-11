@@ -1,0 +1,40 @@
+name: Adjust mobile product text
+
+on:
+  push:
+    paths:
+      - '.github/workflows/adjust-product-text.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Move product name and inspired text slightly down on mobile
+        shell: bash
+        run: |
+          cat >> style.css <<'EOF'
+
+          /* ==========================================================
+             MOBILE PRODUCT TEXT — slight separation from image
+             ========================================================== */
+          @media (max-width: 699px) {
+            .product-name,
+            .inspired {
+              position: relative;
+              top: 5px;
+            }
+          }
+          EOF
+
+          rm -f .github/workflows/adjust-product-text.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add style.css .github/workflows/adjust-product-text.yml
+          git commit -m 'Add slight spacing below mobile product images'
+          git push origin HEAD:main
