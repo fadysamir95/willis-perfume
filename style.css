@@ -2057,3 +2057,60 @@ a {
   }
   .hero-real-leaf { opacity: .58; }
 }
+
+/* ==========================================================
+   MOBILE PRODUCT CARD — compact spacing / preserve visuals
+   ========================================================== */
+@media (max-width: 699px) {
+  .collection-section {
+    padding: 42px 14px 82px;
+  }
+
+  .products-grid {
+    gap: 10px;
+  }
+
+  .product-image-wrap {
+    min-height: 158px;
+    padding: 8px 9px;
+  }
+
+  .product-image {
+    width: 76%;
+    height: 148px;
+  }
+
+  .product-body {
+    padding: 10px 10px 11px;
+  }
+
+  .product-name {
+    margin-bottom: 3px;
+    font-size: 21px;
+  }
+
+  .inspired {
+    min-height: 25px;
+    margin-bottom: 7px;
+    font-size: 8px;
+  }
+
+  .profile-row {
+    gap: 3px;
+    min-height: 19px;
+  }
+
+  .profile-chip {
+    padding: 3px 5px;
+    font-size: 6.5px;
+  }
+
+  .price-line {
+    margin-top: 9px;
+  }
+
+  .view-details {
+    margin-top: 8px;
+    min-height: 34px;
+  }
+}
