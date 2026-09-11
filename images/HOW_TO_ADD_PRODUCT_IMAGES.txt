@@ -1,0 +1,38 @@
+WILLI'S PERFUME — PRODUCT IMAGE GUIDE
+
+Put each perfume image in this folder using the exact product ID below.
+You can use .webp, .png, .jpg, or .jpeg.
+
+white-code
+fortune-rush
+pink-crush
+cedar-way
+tropical-veil
+iris-noir
+citrus-ink
+urban-pulse
+velvet-muse
+noir-reserve
+woody-pulse
+milky-amber
+fresh-orchard
+saffron-flame
+silk-veil
+musk-aura
+golden-bloom
+solar-glow
+amber-ray
+sandal-rush
+berry-cloud
+heavenly-bloom
+green-sprint
+aqua-drive
+blush-aura
+
+Examples:
+white-code.jpg
+fortune-rush.webp
+pink-crush.png
+
+You do NOT need to edit app.js or the JSON file.
+If a product image is missing, the website automatically falls back to bottle.png.
