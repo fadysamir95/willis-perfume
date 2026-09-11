@@ -1,4 +1,13 @@
-/* Product card image fix: consistent square media frame, centered contain, no crop. */
+/* Restore the last complete stylesheet, then apply the product-card media fix. */
+@import url("https://raw.githubusercontent.com/minawilli93/willis-perfume/a692cf2c79c57c1ab040303da7d0d71fe9b91126/style.css");
+
+/* ==========================================================
+   Product Card Media QA Fix
+   - Restores a consistent media stage for every fragrance image.
+   - Keeps the complete source artwork visible (no crop).
+   - Centers images and prevents portrait/landscape assets from
+     changing the card height or pushing the product content.
+   ========================================================== */
 .product-image-wrap {
   position: relative;
   display: flex;
@@ -8,7 +17,7 @@
   aspect-ratio: 1 / 1;
   min-height: 0;
   height: auto;
-  padding: clamp(14px, 2vw, 22px);
+  padding: clamp(12px, 2vw, 22px);
   overflow: hidden;
   background: radial-gradient(circle at 50% 38%, #fff 0%, #f7f1e8 58%, #eee5d8 100%);
 }
