@@ -2151,12 +2151,10 @@ a {
 }
 
 /* ==========================================================
-   MOBILE PRODUCT TEXT — slight separation from image
+   MOBILE PRODUCT TEXT — balanced separation from image
    ========================================================== */
 @media (max-width: 699px) {
-  .product-name,
-  .inspired {
-    position: relative;
-    top: 5px;
+  .product-body {
+    padding-top: 14px;
   }
 }
