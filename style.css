@@ -2149,3 +2149,14 @@ a {
     z-index: 3;
   }
 }
+
+/* ==========================================================
+   MOBILE PRODUCT TEXT — slight separation from image
+   ========================================================== */
+@media (max-width: 699px) {
+  .product-name,
+  .inspired {
+    position: relative;
+    top: 5px;
+  }
+}
