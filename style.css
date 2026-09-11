@@ -2114,3 +2114,10 @@ a {
     min-height: 34px;
   }
 }
+
+/* Keep the gender badge above the product image on mobile */
+@media (max-width: 699px) {
+  .product-gender {
+    z-index: 3;
+  }
+}
