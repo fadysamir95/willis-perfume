@@ -5,7 +5,7 @@ const DATA_URL = "website_data_willis_perfume_FINAL_WITH_PRICES.json";
   Replace this with Willi's real WhatsApp number in international format.
   Egypt example format: 2010XXXXXXXX
 */
-const WHATSAPP_NUMBER = "201000000000";
+const WHATSAPP_NUMBER = "201272566695";
 
 const state = {
   products: [],
@@ -398,20 +398,13 @@ async function loadProducts() {
       <div class="empty-state">
         <div>!</div>
         <h3>Could not load the collection</h3>
-        <p>Make sure Live Server is running and the JSON file is in the same folder as index.html.</p>
+        <p>Please refresh the page and try again.</p>
       </div>
     `;
   }
 }
 
 /* Events */
-document.addEventListener("click", event => {
-  const detailsButton = event.target.closest(".view-details");
-  if (detailsButton) {
-    openProduct(detailsButton.dataset.productId);
-  }
-});
-
 document.querySelectorAll("#genderFilters .filter-chip").forEach(btn => {
   btn.addEventListener("click", () => setGender(btn.dataset.gender));
 });
