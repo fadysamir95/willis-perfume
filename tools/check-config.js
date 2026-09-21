@@ -21,7 +21,9 @@ function loadConfig() {
 }
 
 const isPending = {
-  domain: v => /willis-perfume\.com/.test(v || ""),
+  /* the launch domain is confirmed: https://willis-perfume.com — only flag
+     genuinely unset/broken values (empty, placeholder-ish, whitespace) */
+  domain: v => !v || /X{4,}/.test(v) || /\s/.test(v),
   ga4: v => !v || /X{4,}/.test(v),
   pixel: v => !v || /X{4,}/.test(v) || /^1234567890123456$/.test(v),
   whatsapp: v => !v || /X/.test(v)
