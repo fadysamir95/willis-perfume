@@ -170,6 +170,8 @@ function addToCart(product, size, qty = 1) {
       quantity: qty
     }]
   });
+
+  openCartIfNeeded();
 }
 
 function changeCartQty(productId, size, delta) {
@@ -280,6 +282,13 @@ function closeCart() {
   cartOverlay?.classList?.remove("open");
   cartDrawer?.setAttribute("aria-hidden", "true");
   document.body.classList.remove("cart-open");
+}
+
+/* Auto-open the cart after adding a product — but never fight an
+   already-open drawer (just keep it open). */
+function openCartIfNeeded() {
+  if (!cartDrawer) return;
+  if (!document.body.classList.contains("cart-open")) openCart();
 }
 
 let toastTimer = null;
@@ -1182,6 +1191,7 @@ document.addEventListener("click", event => {
   const addBtn = event.target.closest("#addToCartBtn");
   if (addBtn && state.selectedProduct) {
     addToCart(state.selectedProduct, state.selectedSize, state.selectedQty);
+    if (productModal && productModal.classList.contains("open")) closeProductModal();
     return;
   }
 
