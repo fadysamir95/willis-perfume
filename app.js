@@ -406,7 +406,7 @@ function copyShareLink(product) {
 
 /* ---------- Related products ---------- */
 function relatedProducts(product, limit = 4) {
-  const others = state.products.filter(p => p.id !== product.id);
+  const others = state.products.filter(p => p.id !== product.id && isVisible(p));
 
   const score = p => {
     let s = 0;
@@ -463,7 +463,19 @@ function relatedSectionHTML(product) {
    ================================ */
 
 function productStock(product) {
-  return product.stock || "in";
+  const raw = product?.stock;
+  const asNum = Number(raw);
+  if (raw != null && String(raw).trim() !== "" && !Number.isNaN(asNum)) {
+    if (asNum <= 0) return "out";
+    if (asNum <= 3) return "low";
+    return "in";
+  }
+  if (raw === "out" || raw === "low") return raw;
+  return "in";
+}
+
+function isVisible(product) {
+  return !!product && product.visible !== false;
 }
 
 function isAvailable(product) {
@@ -656,22 +668,26 @@ function renderActiveDetail() {
 function filteredProducts() {
   const query = state.search.trim().toLowerCase();
 
-  return state.products.filter(product => {
-    const matchesGender = state.gender === "All" || product.gender === state.gender;
-    const matchesCategory =
-      state.category === "All" || (product.categories || []).includes(state.category);
+  return state.products
+    .filter(product => {
+      if (!isVisible(product)) return false;
 
-    const haystack = [
-      product.brand_name,
-      product.inspired_by,
-      product.gender,
-      ...(product.categories || []),
-      ...(product.short_profile || []),
-      ...Object.values(product.notes || {}).flat()
-    ].join(" ").toLowerCase();
+      const matchesGender = state.gender === "All" || product.gender === state.gender;
+      const matchesCategory =
+        state.category === "All" || (product.categories || []).includes(state.category);
 
-    return matchesGender && matchesCategory && (!query || haystack.includes(query));
-  });
+      const haystack = [
+        product.brand_name,
+        product.inspired_by,
+        product.gender,
+        ...(product.categories || []),
+        ...(product.short_profile || []),
+        ...Object.values(product.notes || {}).flat()
+      ].join(" ").toLowerCase();
+
+      return matchesGender && matchesCategory && (!query || haystack.includes(query));
+    })
+    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
 }
 
 function renderProducts() {
@@ -789,7 +805,7 @@ function renderPageProduct() {
   if (!pageEl || !PAGE_PRODUCT_ID) return;
 
   const product = state.products.find(p => p.id === PAGE_PRODUCT_ID);
-  if (!product) {
+  if (!product || !isVisible(product)) {
     pageEl.innerHTML = `
       <div class="not-found">
         <h2>404</h2>
@@ -1148,6 +1164,7 @@ async function loadProducts() {
     }
 
     state.products = await response.json();
+    state.products.forEach((p, i) => { if (p.order == null) p.order = i + 1; });
     console.log(`Willi's Perfume: ${state.products.length} products loaded.`);
 
     if (PAGE_PRODUCT_ID) {

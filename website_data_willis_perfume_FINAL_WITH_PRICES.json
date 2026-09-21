@@ -42,7 +42,38 @@
     },
     "image": "images/white-code.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Prada/Prada-L-Homme-39029.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر نظيف وراقٍ مبني على السوسن الناعم والنيرولي المنعش والأخشاب الدافئة. أنيق وهادئ وسهل الارتداء للعمل أو المناسبات الرسمية.",
+      "family": "شيبر خشبي",
+      "profile": [
+        "نظيف",
+        "بودري",
+        "أنيق"
+      ],
+      "notes": {
+        "top": [
+          "نيرولي",
+          "فلفل أسود",
+          "هيل",
+          "بذور الجزر"
+        ],
+        "heart": [
+          "سوسن",
+          "بنفسج",
+          "إبرة الراعي",
+          "ماتي"
+        ],
+        "base": [
+          "عنبر",
+          "أرز",
+          "خشب الصندل",
+          "باتشولي"
+        ]
+      }
+    },
+    "order": 1,
+    "visible": true
   },
   {
     "id": "fortune-rush",
@@ -90,7 +121,40 @@
     },
     "image": "images/fortune-rush.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Paco-Rabanne/1-Million-Lucky-48903.html",
-    "stock": "low"
+    "stock": 2,
+    "ar": {
+      "description": "عطر خشبي غني ومرح مع البرقوق العصير والبندق والعسل فوق أخشاب دافئة. خيار واثق للسهرات والمواعيد والأجواء الباردة.",
+      "family": "خشبي",
+      "profile": [
+        "حلو",
+        "خشبي",
+        "دافئ"
+      ],
+      "notes": {
+        "top": [
+          "برقوق",
+          "نوتات أوزونية",
+          "جريب فروت",
+          "برغموت"
+        ],
+        "heart": [
+          "بندق",
+          "عسل",
+          "أرز",
+          "خشب كشميري",
+          "زهر البرتقال",
+          "ياسمين"
+        ],
+        "base": [
+          "خشب العنبر",
+          "باتشولي",
+          "فيتيفر",
+          "طحلب البلوط"
+        ]
+      }
+    },
+    "order": 2,
+    "visible": true
   },
   {
     "id": "pink-crush",
@@ -134,7 +198,36 @@
     },
     "image": "images/pink-crush.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Katy-Perry/Katy-Perry-s-Mad-Love-39443.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر فواكه وزهري مرح بالفراولة والتفاح والجريب فروت الوردي، ينعّمه جوز الهند والمسك وخشب الصندل.",
+      "family": "زهري فواكه جورماند",
+      "profile": [
+        "فواكه",
+        "حلو",
+        "ناعم"
+      ],
+      "notes": {
+        "top": [
+          "سوربيه",
+          "فراولة",
+          "تفاح",
+          "جريب فروت وردي"
+        ],
+        "heart": [
+          "نوتات زهرية",
+          "فاوانيا",
+          "ياسمين"
+        ],
+        "base": [
+          "جوز الهند",
+          "مسك",
+          "خشب الصندل"
+        ]
+      }
+    },
+    "order": 3,
+    "visible": true
   },
   {
     "id": "cedar-way",
@@ -180,7 +273,38 @@
     },
     "image": "images/cedar-way.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Sospiro-Perfumes/Vibrato-75930.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر مشرق وراقٍ يقوده الجريب فروت والبرغموت، مع أزهار ناعمة وزنجبيل وقاعدة خشبية مسكية ملساء.",
+      "family": "حمضي منعش حار",
+      "profile": [
+        "منعش",
+        "حمضي",
+        "خشبي"
+      ],
+      "notes": {
+        "top": [
+          "جريب فروت",
+          "برغموت",
+          "ياسمين",
+          "ماغنوليا"
+        ],
+        "heart": [
+          "زنجبيل",
+          "نوتات عشبية",
+          "نوتات بودرية"
+        ],
+        "base": [
+          "مسك",
+          "أرز",
+          "عنبر",
+          "باتشولي",
+          "جذر السوسن"
+        ]
+      }
+    },
+    "order": 4,
+    "visible": true
   },
   {
     "id": "tropical-veil",
@@ -222,7 +346,35 @@
     },
     "image": "images/tropical-veil.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Jean-Paul-Gaultier/Le-Beau-Paradise-Garden-88836.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر استوائي منعش يدمج النوتات الخضراء والمائية بالنعناع وجوز الهند والتين ولمسة خشب صندل دافئة.",
+      "family": "خشبي أخضر مائي",
+      "profile": [
+        "منعش",
+        "استوائي",
+        "خشبي"
+      ],
+      "notes": {
+        "top": [
+          "نوتات خضراء",
+          "نوتات مائية",
+          "نعناع",
+          "زنجبيل"
+        ],
+        "heart": [
+          "جوز الهند",
+          "تين",
+          "ملح"
+        ],
+        "base": [
+          "حبوب التونكا",
+          "خشب الصندل"
+        ]
+      }
+    },
+    "order": 5,
+    "visible": true
   },
   {
     "id": "iris-noir",
@@ -262,7 +414,32 @@
     },
     "image": "images/iris-noir.webp",
     "reference_link": "https://www.fragrantica.com/p/107428",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر عصري خشبي حار بالبرغموت المشرق والزنجبيل والهيل، متوازن بزهر البرتقال وقاعدة باتشولي عميقة.",
+      "family": "خشبي حار",
+      "profile": [
+        "منعش حار",
+        "خشبي",
+        "أنيق"
+      ],
+      "notes": {
+        "top": [
+          "زنجبيل",
+          "برغموت",
+          "هيل"
+        ],
+        "heart": [
+          "زهر البرتقال",
+          "نوتات زهرية"
+        ],
+        "base": [
+          "باتشولي"
+        ]
+      }
+    },
+    "order": 6,
+    "visible": true
   },
   {
     "id": "citrus-ink",
@@ -306,7 +483,36 @@
     },
     "image": "images/citrus-ink.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Louis-Vuitton/Imagination-67370.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر حمضي راقٍ ومتطور بالبرغموت والبرتقال والنيرولي، تعقبه لمسات الزنجبيل والشاي الأسود والأخشاب الناعمة.",
+      "family": "حمضي عطري",
+      "profile": [
+        "حمضي",
+        "منعش",
+        "راقٍ"
+      ],
+      "notes": {
+        "top": [
+          "كترون",
+          "برغموت كالابريا",
+          "برتقال صقلي"
+        ],
+        "heart": [
+          "نيرولي تونسي",
+          "زنجبيل نيجيري",
+          "قرفة سيلانية"
+        ],
+        "base": [
+          "شاي أسود صيني",
+          "أمبروكسان",
+          "خشب الغاياك",
+          "لبان"
+        ]
+      }
+    },
+    "order": 7,
+    "visible": true
   },
   {
     "id": "urban-pulse",
@@ -351,7 +557,37 @@
     },
     "image": "images/urban-pulse.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Yves-Saint-Laurent/Y-Le-Parfum-64718.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر عصري وواثق يمزج التفاح المنعش والجريب فروت باللافندر والمريمية وقاعدة خشبية دافئة.",
+      "family": "شرقي فوجير",
+      "profile": [
+        "منعش",
+        "داكن",
+        "عصري"
+      ],
+      "notes": {
+        "top": [
+          "تفاح",
+          "ألدهيدات",
+          "جريب فروت",
+          "زنجبيل"
+        ],
+        "heart": [
+          "لافندر",
+          "مريمية",
+          "إبرة الراعي"
+        ],
+        "base": [
+          "حبوب التونكا",
+          "أرز",
+          "لبان",
+          "باتشولي"
+        ]
+      }
+    },
+    "order": 8,
+    "visible": true
   },
   {
     "id": "velvet-muse",
@@ -395,7 +631,36 @@
     },
     "image": "images/velvet-muse.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Accento-55156.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر فاخر زهري فواكه بأناناس منعش وصفيراء، قلب ناعم من السوسن والياسمين، وقاعدة مسكية فانيليا دافئة.",
+      "family": "شيبر زهري",
+      "profile": [
+        "فواكه",
+        "زهري",
+        "أنيق"
+      ],
+      "notes": {
+        "top": [
+          "أناناس",
+          "صفيراء"
+        ],
+        "heart": [
+          "سوسن",
+          "فلفل وردي",
+          "ياسمين"
+        ],
+        "base": [
+          "مسك",
+          "عنبر",
+          "فيتيفر",
+          "فانيليا",
+          "باتشولي"
+        ]
+      }
+    },
+    "order": 9,
+    "visible": true
   },
   {
     "id": "noir-reserve",
@@ -431,7 +696,28 @@
     },
     "image": "images/noir-reserve.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Chanel/Bleu-de-Chanel-L-Exclusif-113429.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر خشبي عميق وراقٍ مبني على العنبر وخشب الصندل واللابدانوم بطابع دافئ باقٍ.",
+      "family": "خشبي عطري",
+      "profile": [
+        "خشبي",
+        "عنبري",
+        "عميق"
+      ],
+      "notes": {
+        "top": [
+          "عنبر",
+          "نوتات خشبية",
+          "لابدانوم",
+          "خشب صندل"
+        ],
+        "heart": [],
+        "base": []
+      }
+    },
+    "order": 10,
+    "visible": true
   },
   {
     "id": "woody-pulse",
@@ -473,7 +759,34 @@
     },
     "image": "images/woody-pulse.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Essential-Parfums/Bois-Imperial-64338.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر خشبي عصري بالريحان والتوابل الطازجة والفيتيفر، مدعوم بأمبروكسان وباتشولي وطابع خشبي مميز.",
+      "family": "عطري خشبي",
+      "profile": [
+        "خشبي",
+        "أخضر",
+        "منعش حار"
+      ],
+      "notes": {
+        "top": [
+          "ريحان",
+          "فلفل تيمور",
+          "توابل طازجة"
+        ],
+        "heart": [
+          "خشب أكيجالا",
+          "فيتيفر"
+        ],
+        "base": [
+          "أمبروكسان",
+          "باتشولي",
+          "نوتات خشبية"
+        ]
+      }
+    },
+    "order": 11,
+    "visible": true
   },
   {
     "id": "milky-amber",
@@ -512,7 +825,31 @@
     },
     "image": "images/milky-amber.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Giardini-Di-Toscana/Bianco-Latte-64757.html",
-    "stock": "low"
+    "stock": 2,
+    "ar": {
+      "description": "عطر كريمي ومريح يتمحور حول الكراميل والعسل، مع لمسة فانيليا ناعمة ومسك أبيض في القاعدة.",
+      "family": "فانيليا حلو",
+      "profile": [
+        "كريمي",
+        "حلو",
+        "دافئ"
+      ],
+      "notes": {
+        "top": [
+          "كراميل"
+        ],
+        "heart": [
+          "كومارين",
+          "عسل"
+        ],
+        "base": [
+          "فانيليا",
+          "مسك أبيض"
+        ]
+      }
+    },
+    "order": 12,
+    "visible": true
   },
   {
     "id": "fresh-orchard",
@@ -558,7 +895,38 @@
     },
     "image": "images/fresh-orchard.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Parfums-de-Marly/Greenley-62101.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر منعش وحيوي بالتفاح الأخضر والبرغموت واليوسفي، يُختتم بالأرز والطحلب والمسك والأخشاب الناعمة.",
+      "family": "حمضي عطري",
+      "profile": [
+        "منعش",
+        "أخضر",
+        "فواكه"
+      ],
+      "notes": {
+        "top": [
+          "تفاح أخضر",
+          "برغموت كالابريا",
+          "يوسفي"
+        ],
+        "heart": [
+          "بيتيغرين",
+          "أرز",
+          "كشميران",
+          "بوماروز",
+          "بنفسج"
+        ],
+        "base": [
+          "طحلب البلوط",
+          "مسك",
+          "خشب العنبر",
+          "باتشولي"
+        ]
+      }
+    },
+    "order": 13,
+    "visible": true
   },
   {
     "id": "saffron-flame",
@@ -603,7 +971,37 @@
     },
     "image": "images/saffron-flame.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Stephane-Humbert-Lucas-777/God-of-Fire-72381.html",
-    "stock": "low"
+    "stock": 2,
+    "ar": {
+      "description": "عطر استوائي جريء يقوده المانجو والليمون والزنجبيل، مع ياسمين وأرز فوق قاعدة عود وعنبر ومسك غنية.",
+      "family": "شرقي خشبي",
+      "profile": [
+        "فواكه",
+        "استوائي",
+        "دافئ"
+      ],
+      "notes": {
+        "top": [
+          "مانجو",
+          "ليمون",
+          "زنجبيل",
+          "توت أحمر"
+        ],
+        "heart": [
+          "كومارين",
+          "ياسمين",
+          "أرز"
+        ],
+        "base": [
+          "مسك",
+          "عود",
+          "عنبر",
+          "زيت السيبريول"
+        ]
+      }
+    },
+    "order": 14,
+    "visible": true
   },
   {
     "id": "silk-veil",
@@ -649,7 +1047,38 @@
     },
     "image": "images/silk-veil.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Amouage/Guidance-78656.html",
-    "stock": "low"
+    "stock": 2,
+    "ar": {
+      "description": "عطر غني ومميز يدمج الكمثرى والبندق بالورد والزعفران والياسمين، يستقر على أخشاب كريمية وفانيليا.",
+      "family": "زهري فواكه",
+      "profile": [
+        "فواكه",
+        "زهري",
+        "دافئ"
+      ],
+      "notes": {
+        "top": [
+          "كمثرى",
+          "بندق",
+          "لبان"
+        ],
+        "heart": [
+          "أوسمانثوس",
+          "ورد",
+          "زعفران",
+          "ياسمين سامباك"
+        ],
+        "base": [
+          "خشب الصندل",
+          "فانيليا",
+          "خشب أكيجالا",
+          "عنبر رمادي",
+          "لابدانوم"
+        ]
+      }
+    },
+    "order": 15,
+    "visible": true
   },
   {
     "id": "musk-aura",
@@ -687,7 +1116,30 @@
     },
     "image": "images/musk-aura.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Ajmal/Musk-Silk-58837.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر مسكي بودري ناعم مع زنبق الوادي ودفء بلسمي خفيف وفانيليا.",
+      "family": "شرقي زهري",
+      "profile": [
+        "بودري",
+        "ناعم",
+        "نظيف"
+      ],
+      "notes": {
+        "top": [
+          "زنبق الوادي"
+        ],
+        "heart": [
+          "بلسم تولو",
+          "نوتات بودرية"
+        ],
+        "base": [
+          "فانيليا"
+        ]
+      }
+    },
+    "order": 16,
+    "visible": true
   },
   {
     "id": "golden-bloom",
@@ -733,7 +1185,38 @@
     },
     "image": "images/golden-bloom.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Tiziana-Terenzi/Kirke-32172.html",
-    "stock": "out"
+    "stock": 0,
+    "ar": {
+      "description": "عطر فواكه مفعم بالباشن فروت والخوخ والكمثرى والتوت، تنعّمه نوتات زهرية وقاعدة مسكية فانيليا دافئة.",
+      "family": "شيبر فواكه",
+      "profile": [
+        "فواكه",
+        "حلو",
+        "مسكي"
+      ],
+      "notes": {
+        "top": [
+          "باشن فروت",
+          "خوخ",
+          "كمثرى",
+          "توت",
+          "كاسيس",
+          "رمل"
+        ],
+        "heart": [
+          "زنبق الوادي"
+        ],
+        "base": [
+          "مسك",
+          "خشب صندل",
+          "فانيليا",
+          "باتشولي",
+          "هيليوتروب"
+        ]
+      }
+    },
+    "order": 17,
+    "visible": true
   },
   {
     "id": "solar-glow",
@@ -773,7 +1256,32 @@
     },
     "image": "images/solar-glow.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Dolce-Gabbana/Dolce-Gabbana-Pour-Femme-Intense-18837.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر زهري مشرق بالنيرولي المنعش واليوسفي الأخضر، يليه زهر البرتقال والتوبروز فوق ناعم المارشملو وخشب الصندل.",
+      "family": "زهري",
+      "profile": [
+        "زهري",
+        "مشرق",
+        "دافئ"
+      ],
+      "notes": {
+        "top": [
+          "نيرولي",
+          "يوسفي أخضر"
+        ],
+        "heart": [
+          "زهر البرتقال",
+          "توبروز"
+        ],
+        "base": [
+          "مارشملو",
+          "خشب صندل"
+        ]
+      }
+    },
+    "order": 18,
+    "visible": true
   },
   {
     "id": "amber-ray",
@@ -817,7 +1325,36 @@
     },
     "image": "images/amber-ray.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Elie-Saab/Le-Parfum-Lumi-re-69136.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر زهري مشرق وأنيق بزهر البرتقال واليلانغ يلانغ واليوسفي، يليه ياسمين وتوبروز وقاعدة عنبرية خشبية دافئة.",
+      "family": "شرقي زهري",
+      "profile": [
+        "زهري",
+        "مشرق",
+        "دافئ"
+      ],
+      "notes": {
+        "top": [
+          "زهر البرتقال",
+          "يلانغ يلانغ",
+          "يوسفي"
+        ],
+        "heart": [
+          "ياسمين سامباك",
+          "توبروز",
+          "غاردينيا"
+        ],
+        "base": [
+          "باتشولي",
+          "مسك",
+          "نوتات خشبية",
+          "عنبر"
+        ]
+      }
+    },
+    "order": 19,
+    "visible": true
   },
   {
     "id": "sandal-rush",
@@ -857,7 +1394,32 @@
     },
     "image": "images/sandal-rush.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Giorgio-Armani/Emporio-Armani-Stronger-With-You-Sandalwood-102519.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر خشبي دافئ بالزعفران واللافندر، قلب من الكستناء الحلو وقاعدة ناعمة من خشب الصندل والفانيليا والأرز.",
+      "family": "شرقي خشبي",
+      "profile": [
+        "خشبي",
+        "دافئ",
+        "كريمي"
+      ],
+      "notes": {
+        "top": [
+          "زعفران"
+        ],
+        "heart": [
+          "لافندر",
+          "كستناء"
+        ],
+        "base": [
+          "خشب صندل",
+          "فانيليا",
+          "خشب الأرز"
+        ]
+      }
+    },
+    "order": 20,
+    "visible": true
   },
   {
     "id": "berry-cloud",
@@ -907,7 +1469,42 @@
     },
     "image": "images/berry-cloud.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Burberry/Burberry-Her-51694.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر توت عصيري بالفراولة والتوت والكرز، تنعّمه البنفسج والياسمين والمسك والفانيليا.",
+      "family": "زهري فواكه جورماند",
+      "profile": [
+        "فواكه",
+        "حلو",
+        "ناعم"
+      ],
+      "notes": {
+        "top": [
+          "فراولة",
+          "توت",
+          "توت أسود",
+          "كرز حامض",
+          "كشمش أسود",
+          "يوسفي",
+          "ليمون"
+        ],
+        "heart": [
+          "بنفسج",
+          "ياسمين"
+        ],
+        "base": [
+          "مسك",
+          "فانيليا",
+          "كشميران",
+          "نوتات خشبية",
+          "عنبر",
+          "طحلب البلوط",
+          "باتشولي"
+        ]
+      }
+    },
+    "order": 21,
+    "visible": true
   },
   {
     "id": "heavenly-bloom",
@@ -953,7 +1550,38 @@
     },
     "image": "images/heavenly-bloom.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Victoria-s-Secret/Love-is-Heavenly-2016-39089.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر أنثوي منعش زهري وفواكه بزهر اليوسفي والعليق والكيوي، تليه أزهار ناعمة ومسك نظيف مع أخشاب.",
+      "family": "زهري فواكه",
+      "profile": [
+        "منعش",
+        "زهري",
+        "فواكه"
+      ],
+      "notes": {
+        "top": [
+          "زهر اليوسفي",
+          "توت أسود",
+          "برتقال",
+          "كيوي"
+        ],
+        "heart": [
+          "زنبق الماء",
+          "فريزيا",
+          "فاوانيا",
+          "أوركيد"
+        ],
+        "base": [
+          "مسك",
+          "خشب صندل",
+          "خشب الأبنوس",
+          "ماغوني"
+        ]
+      }
+    },
+    "order": 22,
+    "visible": true
   },
   {
     "id": "green-sprint",
@@ -996,7 +1624,36 @@
     },
     "image": "images/green-sprint.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Torino21-70424.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر أخضر منعش وحيوي بالنعناع والليمون والريحان، تعقبه أعشاب عطرية ولمسة مسكية نظيفة.",
+      "family": "منعش عطري",
+      "profile": [
+        "منعش",
+        "أخضر",
+        "حمضي"
+      ],
+      "notes": {
+        "top": [
+          "نعناع",
+          "ليمون",
+          "ريحان",
+          "زعتر"
+        ],
+        "heart": [
+          "كشمش أسود",
+          "لافندر",
+          "إكليل الجبل",
+          "ياسمين"
+        ],
+        "base": [
+          "مسك",
+          "لويزة"
+        ]
+      }
+    },
+    "order": 23,
+    "visible": true
   },
   {
     "id": "aqua-drive",
@@ -1043,7 +1700,39 @@
     },
     "image": "images/aqua-drive.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Chanel/Allure-Homme-Sport-607.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر منعش ورياضي بالبرتقال والنوتات البحرية، قلب حار وقاعدة ناعمة من الفانيليا والتونكا والمسك.",
+      "family": "خشبي حار",
+      "profile": [
+        "منعش",
+        "رياضي",
+        "دافئ"
+      ],
+      "notes": {
+        "top": [
+          "برتقال",
+          "نوتات بحرية",
+          "ألدهيدات",
+          "يوسفي دموي"
+        ],
+        "heart": [
+          "فلفل",
+          "نيرولي",
+          "أرز"
+        ],
+        "base": [
+          "فانيليا",
+          "حبوب التونكا",
+          "مسك أبيض",
+          "عنبر",
+          "فيتيفر",
+          "راتنج الإيليمي"
+        ]
+      }
+    },
+    "order": 24,
+    "visible": true
   },
   {
     "id": "blush-aura",
@@ -1086,6 +1775,34 @@
     },
     "image": "images/blush-aura.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Assaf/Arrogate-Pink-110870.html",
-    "stock": "in"
+    "stock": 20,
+    "ar": {
+      "description": "عطر زهري فواكه ناعم بزهر البرتقال والنيرولي واللوز، يليه بنفسج وياسمين ومشمش فوق المسك وخشب الصندل.",
+      "family": "زهري فواكه",
+      "profile": [
+        "زهري",
+        "بودري",
+        "ناعم"
+      ],
+      "notes": {
+        "top": [
+          "زهر البرتقال",
+          "نيرولي",
+          "لوز"
+        ],
+        "heart": [
+          "بنفسج",
+          "ياسمين",
+          "مشمش"
+        ],
+        "base": [
+          "مسك",
+          "ياسمين",
+          "خشب صندل"
+        ]
+      }
+    },
+    "order": 25,
+    "visible": true
   }
 ]

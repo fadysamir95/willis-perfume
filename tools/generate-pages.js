@@ -6,11 +6,9 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
-const DATA_PATH = path.join(ROOT, "website_data_willis_perfume_FINAL_WITH_PRICES.json");
-const OUT_DIR = path.join(ROOT, "products");
-
-/* Replace with the real domain on launch — same placeholder used in index.html / robots.txt */
-const SITE_URL = "https://willis-perfume.com";
+const DATA_PATH = process.env.DATA_PATH || path.join(ROOT, "website_data_willis_perfume_FINAL_WITH_PRICES.json");
+const OUT_DIR = process.env.OUT_DIR || path.join(ROOT, "products");
+const SITE_URL = process.env.SITE_URL || "https://willis-perfume.com";
 
 const data = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
 
@@ -28,11 +26,25 @@ function truncate(text, max = 158) {
   return plain.slice(0, max - 1).trimEnd() + "…";
 }
 
+function stockStatus(stock) {
+  const asNum = Number(stock);
+  if (stock != null && String(stock).trim() !== "" && !Number.isNaN(asNum)) {
+    if (asNum <= 0) return "out";
+    if (asNum <= 3) return "low";
+    return "in";
+  }
+  if (stock === "out" || stock === "low") return stock;
+  return "in";
+}
+
 function availability(stock) {
-  if (stock === "out") return "https://schema.org/OutOfStock";
-  if (stock === "low") return "https://schema.org/LimitedAvailability";
+  const s = stockStatus(stock);
+  if (s === "out") return "https://schema.org/OutOfStock";
+  if (s === "low") return "https://schema.org/LimitedAvailability";
   return "https://schema.org/InStock";
 }
+
+const isVisible = product => product.visible !== false;
 
 const ANALYTICS_SNIPPETS = `
   <!-- ======================================================================
@@ -297,13 +309,48 @@ function shellBody(product, prevId, nextId) {
 
 /* ---------- main ---------- */
 
+/* ---------- validation & report ---------- */
+const warnings = [];
+const seen = new Set();
+for (const product of data) {
+  if (!product.id) { warnings.push("product without id"); continue; }
+  if (seen.has(product.id)) { console.error(`✖ duplicate id: ${product.id}`); process.exitCode = 1; }
+  seen.add(product.id);
+
+  if (!product.brand_name) warnings.push(`${product.id}: missing brand_name`);
+  if (!product.inspired_by) warnings.push(`${product.id}: missing inspired_by`);
+  const sizes = product.sizes || {};
+  if (["35ml", "55ml", "110ml"].some(s => sizes[s] == null || Number.isNaN(Number(sizes[s])))) {
+    warnings.push(`${product.id}: sizes must be numbers for 35ml / 55ml / 110ml`);
+  }
+  const imgRefs = [product.image, ...(product.image_gallery || [])].filter(Boolean);
+  const missing = imgRefs.filter(p => !fs.existsSync(path.join(ROOT, p)));
+  if (missing.length) warnings.push(`${product.id}: image not found — ${missing.join(", ")}`);
+}
+
+if (process.exitCode) {
+  console.error("\n✖ Aborting: fix the validation errors above, then rerun.");
+  process.exit(1);
+}
+
+const visible = data
+  .filter(isVisible)
+  .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+const hiddenIds = data.filter(p => !isVisible(p)).map(p => p.id);
+
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
+
+/* Remove pages whose product no longer exists or was hidden. */
+const keepSet = new Set(visible.map(p => `${p.id}.html`));
+const removedPages = fs.readdirSync(OUT_DIR)
+  .filter(f => f.endsWith(".html") && !keepSet.has(f));
+for (const f of removedPages) fs.unlinkSync(path.join(OUT_DIR, f));
 
 const urls = [`${SITE_URL}/`];
 
-data.forEach((product, index) => {
-  const prev = data[(index - 1 + data.length) % data.length];
-  const next = data[(index + 1) % data.length];
+visible.forEach((product, index) => {
+  const prev = visible[(index - 1 + visible.length) % visible.length];
+  const next = visible[(index + 1) % visible.length];
 
   const page = headHTML(product) + shellBody(product, prev.id, next.id);
   const file = path.join(OUT_DIR, `${product.id}.html`);
@@ -321,3 +368,14 @@ ${urls.map(u => `  <url>\n    <loc>${u}</loc>\n    <changefreq>weekly</changefre
 `;
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), sitemap, "utf8");
 console.log(`✔ sitemap.xml (${urls.length} URLs)`);
+
+/* ---------- summary ---------- */
+console.log(`\nℹ ${visible.length} visible / ${data.length} total`);
+if (hiddenIds.length) console.log(`⊘ hidden (page not generated): ${hiddenIds.join(", ")}`);
+if (removedPages.length) console.log(`🗑 removed stale pages: ${removedPages.join(", ")}`);
+if (warnings.length) {
+  console.log(`\n⚠ ${warnings.length} warning(s):`);
+  warnings.forEach(w => console.log(`   - ${w}`));
+} else {
+  console.log("✔ no data warnings");
+}
