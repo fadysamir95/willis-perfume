@@ -103,9 +103,6 @@
     background: rgba(0,0,0,.07); padding: 1px 7px; border-radius: 5px;
     font-family: Consolas, monospace; direction: ltr; display: inline-block;
   }
-  .api-guide.ok {
-    background: #e3f2e8; border-color: #b4d6c0; color: #1d5c38;
-  }
   .toolbar input[type=password] {
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -176,7 +173,6 @@
 </div>
 
 <div id="apiGuide" class="api-guide hidden"></div>
-<div id="remoteNote" class="api-guide ok hidden"></div>
 
 <div class="table-wrap">
   <table>
@@ -337,12 +333,9 @@ async function load() {
 }
 
 function applyRemoteMode() {
+  /* in cloud mode the regenerate button is useless (SEO pages are refreshed
+     from the developer machine), so it is hidden silently */
   const g = $("genBtn"); if (g) g.classList.add("hidden");
-  const n = $("remoteNote");
-  const total = products.length;
-  n.innerHTML = `وضع السحابة ✅ — ${total} منتج محمّل من Vercel Blob. الحفظ يظهر <b>فورًا على الموقع المنشور</b>.<br>
-    ملاحظة: تحديث ملفات الـ SEO (سايت ماب وصفحات المنتجات) يتم من جهازك — حمّل الـ JSON من زر <b>⬇ JSON</b>، ضعه مكان الملف المحلي، ثم شغّل <code>node tools/generate-pages.js</code> واعمل <code>git push</code>.`;
-  n.classList.remove("hidden");
 }
 
 function filtered() {
