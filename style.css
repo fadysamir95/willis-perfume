@@ -2791,6 +2791,23 @@ a {
   text-transform: uppercase;
 }
 
+/* Keep Shipping & Testimonials aligned with Collection & Story sections
+   (same inline gutters at every breakpoint). */
+@media (min-width: 700px) {
+  .shipping-section,
+  .testimonials-section { padding-inline: 7vw; }
+}
+
+@media (min-width: 1050px) {
+  .shipping-section,
+  .testimonials-section { padding-inline: 11vw; }
+}
+
+@media (max-width: 699px) {
+  .shipping-section,
+  .testimonials-section { padding-inline: 14px; }
+}
+
 /* ---------- Not-found (standalone product pages) ---------- */
 .not-found {
   padding: 70px 18px;
