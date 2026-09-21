@@ -178,7 +178,13 @@ function changeCartQty(productId, size, delta) {
   const item = findCartItem(productId, size);
   if (!item) return;
 
-  item.qty = Math.min(99, Math.max(1, (Number(item.qty) || 1) + delta));
+  const next = (Number(item.qty) || 1) + delta;
+  if (next < 1) {
+    removeCartItem(productId, size);
+    return;
+  }
+
+  item.qty = Math.min(99, next);
   saveCart();
   updateCartUI();
   renderCart();
@@ -941,6 +947,17 @@ function initSmoothAnchors() {
   });
 }
 
+/* Cross-page hash links (e.g. contact -> index.html#story) can land in the
+   wrong spot: the Most Requested section starts hidden and is injected after
+   the products fetch, which pushes every section below it down. Once the page
+   is fully rendered, snap to the real target. */
+function realignToHash() {
+  if (typeof window === "undefined" || !window.location || !window.location.hash) return;
+  const target = document.getElementById(window.location.hash.slice(1));
+  if (!target || typeof target.scrollIntoView !== "function") return;
+  target.scrollIntoView({ block: "start", behavior: "instant" });
+}
+
 /* Highlight the nav item that matches where you are:
    - generated pages -> fixed active item per page mode / product page
    - homepage -> scroll-spy over the section anchors (#home, #featured, #collection, #story) */
@@ -1284,6 +1301,7 @@ async function loadProducts() {
 
     renderCart();
     updateCartUI();
+    realignToHash();
   } catch (error) {
     console.error(error);
     if (countEl) countEl.textContent = "Data error";
