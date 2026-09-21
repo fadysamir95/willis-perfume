@@ -168,6 +168,7 @@
     <thead>
       <tr>
         <th>إظهار</th>
+        <th title="يظهر في قسم الأكثر طلبًا">مميز</th>
         <th>المنتج</th>
         <th>الجنس</th>
         <th>السعر 35مل</th>
@@ -206,6 +207,7 @@ let products = [];
 let dirty = false;
 let modalProduct = null;
 let imageOptions = [];
+let dataHashAtLoad = null;
 
 /* Works whatever host/port the server runs on; if the file is opened
    directly (file://) there is no API and we show a guide instead. */
@@ -247,6 +249,7 @@ async function load() {
     if (!r.ok) throw new Error("HTTP " + r.status);
     products = await r.json();
     if (!Array.isArray(products)) throw new Error("البيانات مش مصفوفة");
+    dataHashAtLoad = r.headers && r.headers.get ? r.headers.get("X-Data-Hash") : null;
     renderStats();
     renderTable();
   } catch (e) {
@@ -299,6 +302,7 @@ function renderTable() {
     return `
     <tr data-id="${esc(p.id)}">
       <td><input type="checkbox" class="cell-vis" data-id="${esc(p.id)}" ${p.visible === false ? "" : "checked"} title="إظهار/إخفاء"></td>
+      <td><input type="checkbox" class="cell-feat" data-id="${esc(p.id)}" ${p.featured === true ? "checked" : ""} title="مميز — يظهر في قسم الأكثر طلبًا"></td>
       <td>
         <div class="prod-cell">
           <img src="${esc(thumb(p))}" alt="" onerror="this.style.opacity=.25">
@@ -331,6 +335,8 @@ document.addEventListener("change", e => {
   if (!p) return;
   if (e.target.classList.contains("cell-vis")) {
     p.visible = e.target.checked;
+  } else if (e.target.classList.contains("cell-feat")) {
+    p.featured = e.target.checked;
   } else if (e.target.classList.contains("cell-size")) {
     if (!p.sizes) p.sizes = {};
     p.sizes[e.target.dataset.size] = Number(e.target.value) || 0;
@@ -391,13 +397,23 @@ async function onSave() {
       if (ids.has(p.id)) { toast("id مكرر: " + p.id); return; }
       ids.add(p.id);
     }
+    /* stale-write guard: refuse to overwrite if the data file changed since page load */
+    const check = await fetch(apiUrl("/api/products"));
+    const currentHash = check.ok && check.headers && check.headers.get
+      ? check.headers.get("X-Data-Hash") || ""
+      : "";
+    if (dataHashAtLoad && currentHash && dataHashAtLoad !== currentHash) {
+      const go = confirm("⚠️ ملف البيانات اتعدل في مكان تاني (تبويب/جهاز تاني) بعد ما فتحت الداش بورد دي.\n\nلو حفظت دلوقتي هتكتب فوق التعديلات دي.\n\nتستمر في الحفظ؟");
+      if (!go) { toast("تم إلغاء الحفظ — حدّث الصفحة (F5) لترى أحدث البيانات"); return; }
+    }
     const r = await fetch(apiUrl("/api/products"), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "X-Base-Hash": dataHashAtLoad || "" },
       body: JSON.stringify(products)
     });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
+    dataHashAtLoad = j.hash || currentHash || dataHashAtLoad;
     dirty = false;
     toast(`تم الحفظ ✔ (${j.count} منتج) — لاتنسَ إعادة توليد الموقع`);
   } catch (e) {
@@ -440,7 +456,7 @@ function openModal(p, isNew) {
     categories: [], fragrance_family: "", short_profile: [],
     description: "", notes: { top: [], heart: [], base: [] },
     sizes: { "35ml": 0, "55ml": 0, "110ml": 0 },
-    stock: 20, order: products.length + 1, visible: true,
+    stock: 20, order: products.length + 1, visible: true, featured: false,
     ar: { description: "", family: "", profile: [], notes: { top: [], heart: [], base: [] } },
     image: "images/bottle.webp"
   } : p;
@@ -493,6 +509,7 @@ function openModal(p, isNew) {
       <small style="color:var(--muted)">إذا رفعت صورة جديدة هتتحول webp تلقائيًا وتتسمّى images/{id}.webp</small>
     </div>
     <div class="field"><label><input type="checkbox" id="f_visible" ${modalProduct.visible === false ? "" : "checked"}> إظهار المنتج في الموقع</label></div>
+    <div class="field"><label><input type="checkbox" id="f_featured" ${modalProduct.featured === true ? "checked" : ""}> ★ مميز — يظهر في قسم "الأكثر طلبًا"</label></div>
   `;
 
   const imgSel = $("f_img_sel");
@@ -552,6 +569,7 @@ $("modalSave").addEventListener("click", () => {
   mp.stock = $("f_stock").value === "" ? null : Math.max(0, Number($("f_stock").value) || 0);
   mp.order = Number($("f_order").value) || 0;
   mp.visible = $("f_visible").checked;
+  mp.featured = $("f_featured").checked;
   mp.sizes = {
     "35ml": Number($("f_s35").value) || 0,
     "55ml": Number($("f_s55").value) || 0,

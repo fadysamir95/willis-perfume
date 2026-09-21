@@ -3318,3 +3318,45 @@ a {
   margin-left: clamp(28px, 3vw, 54px);
   margin-right: auto;
 }
+
+/* ============================================================
+   Most requested (featured) strip on the homepage
+   ============================================================ */
+.featured-section {
+  padding: 55px 18px 10px;
+  background: var(--ivory);
+}
+
+.featured-view-all {
+  flex: 0 0 auto;
+  color: var(--gold-dark);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: .4px;
+}
+
+.featured-view-all:hover { color: var(--gold); }
+
+.featured-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 2px 18px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(60, 45, 20, .25) transparent;
+}
+
+.featured-track .product-card {
+  flex: 0 0 236px;
+  scroll-snap-align: start;
+}
+
+.featured-track::-webkit-scrollbar { height: 6px; }
+.featured-track::-webkit-scrollbar-thumb { background: rgba(60, 45, 20, .25); border-radius: 6px; }
+
+@media (max-width: 480px) {
+  .featured-track { margin: 0 -18px; padding-left: 18px; padding-right: 18px; }
+}

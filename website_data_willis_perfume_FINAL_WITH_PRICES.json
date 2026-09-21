@@ -73,7 +73,8 @@
       }
     },
     "order": 1,
-    "visible": true
+    "visible": false,
+    "featured": false
   },
   {
     "id": "fortune-rush",
@@ -154,7 +155,8 @@
       }
     },
     "order": 2,
-    "visible": true
+    "visible": false,
+    "featured": false
   },
   {
     "id": "pink-crush",
@@ -227,7 +229,8 @@
       }
     },
     "order": 3,
-    "visible": true
+    "visible": true,
+    "featured": true
   },
   {
     "id": "cedar-way",
@@ -304,7 +307,8 @@
       }
     },
     "order": 4,
-    "visible": true
+    "visible": true,
+    "featured": true
   },
   {
     "id": "tropical-veil",
@@ -374,7 +378,8 @@
       }
     },
     "order": 5,
-    "visible": true
+    "visible": true,
+    "featured": true
   },
   {
     "id": "iris-noir",
@@ -439,7 +444,8 @@
       }
     },
     "order": 6,
-    "visible": true
+    "visible": true,
+    "featured": true
   },
   {
     "id": "citrus-ink",
@@ -512,7 +518,8 @@
       }
     },
     "order": 7,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "urban-pulse",
@@ -587,7 +594,8 @@
       }
     },
     "order": 8,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "velvet-muse",
@@ -660,7 +668,8 @@
       }
     },
     "order": 9,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "noir-reserve",
@@ -717,7 +726,8 @@
       }
     },
     "order": 10,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "woody-pulse",
@@ -786,7 +796,8 @@
       }
     },
     "order": 11,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "milky-amber",
@@ -825,7 +836,7 @@
     },
     "image": "images/milky-amber.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Giardini-Di-Toscana/Bianco-Latte-64757.html",
-    "stock": 2,
+    "stock": 0,
     "ar": {
       "description": "عطر كريمي ومريح يتمحور حول الكراميل والعسل، مع لمسة فانيليا ناعمة ومسك أبيض في القاعدة.",
       "family": "فانيليا حلو",
@@ -849,7 +860,8 @@
       }
     },
     "order": 12,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "fresh-orchard",
@@ -895,7 +907,7 @@
     },
     "image": "images/fresh-orchard.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Parfums-de-Marly/Greenley-62101.html",
-    "stock": 20,
+    "stock": 18,
     "ar": {
       "description": "عطر منعش وحيوي بالتفاح الأخضر والبرغموت واليوسفي، يُختتم بالأرز والطحلب والمسك والأخشاب الناعمة.",
       "family": "حمضي عطري",
@@ -926,7 +938,8 @@
       }
     },
     "order": 13,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "saffron-flame",
@@ -971,7 +984,7 @@
     },
     "image": "images/saffron-flame.webp",
     "reference_link": "https://www.fragrantica.com/perfume/Stephane-Humbert-Lucas-777/God-of-Fire-72381.html",
-    "stock": 2,
+    "stock": 5,
     "ar": {
       "description": "عطر استوائي جريء يقوده المانجو والليمون والزنجبيل، مع ياسمين وأرز فوق قاعدة عود وعنبر ومسك غنية.",
       "family": "شرقي خشبي",
@@ -1001,7 +1014,8 @@
       }
     },
     "order": 14,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "silk-veil",
@@ -1078,7 +1092,8 @@
       }
     },
     "order": 15,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "musk-aura",
@@ -1139,7 +1154,8 @@
       }
     },
     "order": 16,
-    "visible": true
+    "visible": true,
+    "featured": true
   },
   {
     "id": "golden-bloom",
@@ -1216,7 +1232,8 @@
       }
     },
     "order": 17,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "solar-glow",
@@ -1281,7 +1298,8 @@
       }
     },
     "order": 18,
-    "visible": true
+    "visible": true,
+    "featured": true
   },
   {
     "id": "amber-ray",
@@ -1354,7 +1372,8 @@
       }
     },
     "order": 19,
-    "visible": true
+    "visible": false,
+    "featured": false
   },
   {
     "id": "sandal-rush",
@@ -1419,7 +1438,8 @@
       }
     },
     "order": 20,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "berry-cloud",
@@ -1504,7 +1524,8 @@
       }
     },
     "order": 21,
-    "visible": true
+    "visible": false,
+    "featured": false
   },
   {
     "id": "heavenly-bloom",
@@ -1581,7 +1602,8 @@
       }
     },
     "order": 22,
-    "visible": true
+    "visible": false,
+    "featured": false
   },
   {
     "id": "green-sprint",
@@ -1653,7 +1675,8 @@
       }
     },
     "order": 23,
-    "visible": true
+    "visible": true,
+    "featured": false
   },
   {
     "id": "aqua-drive",
@@ -1732,7 +1755,8 @@
       }
     },
     "order": 24,
-    "visible": true
+    "visible": true,
+    "featured": true
   },
   {
     "id": "blush-aura",
@@ -1803,6 +1827,7 @@
       }
     },
     "order": 25,
-    "visible": true
+    "visible": true,
+    "featured": true
   }
 ]

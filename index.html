@@ -70,20 +70,58 @@
   </script>
 
   <!-- ======================================================================
-       GOOGLE ANALYTICS (GA4)
-       Replace "G-XXXXXXXXXX" with your real Measurement ID, e.g. G-ABCDE12345.
+       SITE CONFIG — single source of truth for domain / GA4 / Pixel / WhatsApp.
+       Edit site-config.js, then run: node tools/generate-pages.js
        ====================================================================== -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script src="site-config.js"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    /* Apply the real site domain from SITE_CONFIG to canonical / OG / JSON-LD
+       at runtime. Does nothing while siteUrl is still the placeholder. */
+    (function () {
+      var cfg = window.SITE_CONFIG || {};
+      var site = (cfg.siteUrl || "").replace(/\/+$/, "");
+      if (!site || site === "https://willis-perfume.com") return;
+      var swap = function (v) { return v.replace(/https:\/\/willis-perfume\.com/g, site); };
+      var metas = document.querySelectorAll("meta");
+      var i, n, c;
+      for (i = 0; i < metas.length; i++) {
+        n = metas[i].getAttribute("property") || metas[i].getAttribute("name");
+        c = metas[i].content;
+        if (c && c.indexOf("willis-perfume.com") !== -1) metas[i].content = swap(c);
+      }
+      var link = document.querySelector('link[rel="canonical"]');
+      if (link && link.href && link.href.indexOf("willis-perfume.com") !== -1) link.href = swap(link.href);
+      var lds = document.querySelectorAll('script[type="application/ld+json"]');
+      for (i = 0; i < lds.length; i++) {
+        var txt = lds[i].textContent || "";
+        if (txt.indexOf("willis-perfume.com") !== -1) lds[i].textContent = swap(txt);
+      }
+    })();
   </script>
 
   <!-- ======================================================================
-       META PIXEL (Facebook / Instagram ads)
-       Replace "1234567890123456" with your real Pixel ID.
+       GOOGLE ANALYTICS (GA4) — id comes from window.SITE_CONFIG.ga4Id
+       (site-config.js). While the placeholder is present the tracker is
+       NOT loaded — no bogus analytics requests before launch.
+       ====================================================================== -->
+  <script>
+    (function () {
+      var cfg = window.SITE_CONFIG || {};
+      var id = cfg.ga4Id;
+      if (!id || id.indexOf("XXXX") !== -1) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", id);
+    })();
+  </script>
+
+  <!-- ======================================================================
+       META PIXEL (Facebook / Instagram ads) — id comes from window.SITE_CONFIG.pixelId.
        ====================================================================== -->
   <script>
     !function(f,b,e,v,n,t,s)
@@ -94,13 +132,18 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1234567890123456');
-    fbq('track', 'PageView');
+    (function () {
+      var cfg = window.SITE_CONFIG || {};
+      var id = cfg.pixelId;
+      if (!id || id.indexOf("XXXX") !== -1) return;
+      fbq('init', id);
+      fbq('track', 'PageView');
+      var im = document.createElement("img");
+      im.height = 1; im.width = 1; im.style.display = "none"; im.alt = "";
+      im.src = "https://www.facebook.com/tr?id=" + encodeURIComponent(id) + "&ev=PageView&noscript=1";
+      document.head.appendChild(im);
+    })();
   </script>
-  <noscript>
-    <img height="1" width="1" style="display:none" alt=""
-         src="https://www.facebook.com/tr?id=1234567890123456&ev=PageView&noscript=1" />
-  </noscript>
 </head>
 <body>
   <div class="page-shell">
@@ -211,6 +254,17 @@
             <i></i>
           </div>
         </div>
+      </section>
+
+      <section class="featured-section hidden" id="featured" aria-label="Best sellers">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow" data-i18n="featured.eyebrow">CUSTOMER FAVORITES</span>
+            <h2 data-i18n="featured.title">Most Requested</h2>
+          </div>
+          <a class="featured-view-all" href="#collection" data-i18n="featured.viewAll">View all &rarr;</a>
+        </div>
+        <div class="featured-track" id="featuredTrack"></div>
       </section>
 
       <section class="collection-section" id="collection">
@@ -452,7 +506,9 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script>window.SITE_URL = "https://willis-perfume.com";</script>
+  <script>
+    window.SITE_URL = (window.SITE_CONFIG && window.SITE_CONFIG.siteUrl) || "https://willis-perfume.com";
+  </script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>

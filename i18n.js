@@ -32,6 +32,9 @@ const I18N = {
     "hero.f3": "A Scent<br>for Every Story",
     "hero.side": "MORE<br>THAN<br>A FRAGRANCE",
 
+    "featured.eyebrow": "CUSTOMER FAVORITES",
+    "featured.title": "Most Requested",
+    "featured.viewAll": "View all",
     "coll.eyebrow": "THE COLLECTION",
     "coll.title": "Our Collection",
     "coll.count": "{n} fragrances",
@@ -197,6 +200,9 @@ const I18N = {
     "hero.f3": "عطر<br>لكل حكاية",
     "hero.side": "أكثر<br>من مجرد<br>عطر",
 
+    "featured.eyebrow": "اختيارات العملاء",
+    "featured.title": "الأكثر طلبًا",
+    "featured.viewAll": "عرض الكل",
     "coll.eyebrow": "المجموعة",
     "coll.title": "مجموعتنا",
     "coll.count": "{n} عطر",

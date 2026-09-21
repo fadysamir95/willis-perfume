@@ -6,7 +6,7 @@ const DATA_URL = BASE_PATH + "website_data_willis_perfume_FINAL_WITH_PRICES.json
   Replace this with Willi's real WhatsApp number in international format.
   Egypt example format: 2010XXXXXXXX
 */
-const WHATSAPP_NUMBER = "201272566695";
+const WHATSAPP_NUMBER = (window.SITE_CONFIG && window.SITE_CONFIG.whatsapp) || "201272566695";
 
 const CART_STORAGE_KEY = "willis_cart_v1";
 
@@ -690,28 +690,12 @@ function filteredProducts() {
     .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
 }
 
-function renderProducts() {
-  const productsContainer = document.getElementById("products-container");
-  if (!productsContainer) return;
+function productCardHTML(product) {
+  const size = getDefaultSize(product);
+  const price = Number(product.sizes?.[size] || 0).toLocaleString();
+  const available = isAvailable(product);
 
-  const products = filteredProducts();
-
-  const countEl = document.getElementById("resultCount");
-  if (countEl) countEl.textContent = t("coll.count", { n: products.length });
-
-  const emptyState = document.getElementById("emptyState");
-
-  if (!products.length) {
-    productsContainer.innerHTML = "";
-    emptyState?.classList.remove("hidden");
-  } else {
-    emptyState?.classList.add("hidden");
-    productsContainer.innerHTML = products.map(product => {
-      const size = getDefaultSize(product);
-      const price = Number(product.sizes?.[size] || 0).toLocaleString();
-      const available = isAvailable(product);
-
-      return `
+  return `
         <article class="product-card" data-product-id="${escapeHTML(product.id)}" role="group" aria-label="${escapeHTML(product.brand_name)}">
           <div class="product-image-wrap">
             <span class="product-gender">${gt(product.gender)}</span>
@@ -742,8 +726,47 @@ function renderProducts() {
           </div>
         </article>
       `;
-    }).join("");
+}
+
+function renderProducts() {
+  const productsContainer = document.getElementById("products-container");
+  if (!productsContainer) return;
+
+  const products = filteredProducts();
+
+  const countEl = document.getElementById("resultCount");
+  if (countEl) countEl.textContent = t("coll.count", { n: products.length });
+
+  const emptyState = document.getElementById("emptyState");
+
+  if (!products.length) {
+    productsContainer.innerHTML = "";
+    emptyState?.classList.remove("hidden");
+  } else {
+    emptyState?.classList.add("hidden");
+    productsContainer.innerHTML = products.map(productCardHTML).join("");
   }
+}
+
+/* "Most requested" strip on the homepage (visible + featured products only). */
+function featuredProducts() {
+  return state.products
+    .filter(p => p.visible !== false && p.featured === true)
+    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0))
+    .slice(0, 10);
+}
+
+function renderFeatured() {
+  const section = document.getElementById("featured");
+  const track = document.getElementById("featuredTrack");
+  if (!section || !track) return;
+  const items = featuredProducts();
+  if (!items.length) {
+    section.classList.add("hidden");
+    return;
+  }
+  section.classList.remove("hidden");
+  track.innerHTML = items.map(productCardHTML).join("");
 }
 
 function resetFilters() {
@@ -921,51 +944,54 @@ function initFilters() {
   document.getElementById("resetFilters")?.addEventListener("click", resetFilters);
 }
 
+function handleCardClick(event) {
+  const details = event.target.closest(".view-details");
+  if (details) {
+    const card = details.closest(".product-card");
+    const product = card && state.products.find(p => p.id === card.dataset.productId);
+    if (product) openProductModal(product);
+    return;
+  }
+
+  const addButton = event.target.closest(".add-to-cart");
+  if (addButton && !addButton.disabled) {
+    const card = addButton.closest(".product-card");
+    const product = card && state.products.find(p => p.id === card.dataset.productId);
+    if (product) {
+      addToCart(product, addButton.dataset.size || getDefaultSize(product));
+    }
+    return;
+  }
+
+  const quickBtn = event.target.closest(".quick-order-btn");
+  if (quickBtn) {
+    const card = quickBtn.closest(".product-card");
+    const product = card && state.products.find(p => p.id === card.dataset.productId);
+    if (product) {
+      const price = Number(product.sizes?.[getDefaultSize(product)] || 0);
+      analyticsEvent("InitiateCheckout", "begin_checkout", {
+        value: price,
+        currency: "EGP",
+        content_ids: [product.id],
+        content_type: "product",
+        items: [{
+          item_id: product.id,
+          item_name: product.brand_name,
+          price,
+          quantity: 1
+        }]
+      });
+    }
+    return;
+  }
+}
+
 function initCards() {
   const container = document.getElementById("products-container");
-  if (!container) return;
+  if (container) container.addEventListener("click", handleCardClick);
 
-  container.addEventListener("click", event => {
-    const details = event.target.closest(".view-details");
-    if (details) {
-      const card = details.closest(".product-card");
-      const product = card && state.products.find(p => p.id === card.dataset.productId);
-      if (product) openProductModal(product);
-      return;
-    }
-
-    const addButton = event.target.closest(".add-to-cart");
-    if (addButton && !addButton.disabled) {
-      const card = addButton.closest(".product-card");
-      const product = card && state.products.find(p => p.id === card.dataset.productId);
-      if (product) {
-        addToCart(product, addButton.dataset.size || getDefaultSize(product));
-      }
-      return;
-    }
-
-    const quickBtn = event.target.closest(".quick-order-btn");
-    if (quickBtn) {
-      const card = quickBtn.closest(".product-card");
-      const product = card && state.products.find(p => p.id === card.dataset.productId);
-      if (product) {
-        const price = Number(product.sizes?.[getDefaultSize(product)] || 0);
-        analyticsEvent("InitiateCheckout", "begin_checkout", {
-          value: price,
-          currency: "EGP",
-          content_ids: [product.id],
-          content_type: "product",
-          items: [{
-            item_id: product.id,
-            item_name: product.brand_name,
-            price,
-            quantity: 1
-          }]
-        });
-      }
-      return;
-    }
-  });
+  const featuredTrack = document.getElementById("featuredTrack");
+  if (featuredTrack) featuredTrack.addEventListener("click", handleCardClick);
 }
 
 function initMenu() {
@@ -1140,6 +1166,7 @@ document.addEventListener("keydown", event => {
 /* Re-render everything when the user switches language */
 document.addEventListener("langchange", () => {
   if (document.getElementById("products-container")) renderProducts();
+  renderFeatured();
 
   renderCart();
   updateCartUI();
@@ -1171,6 +1198,7 @@ async function loadProducts() {
       renderPageProduct();
     } else {
       renderProducts();
+      renderFeatured();
     }
 
     renderCart();
