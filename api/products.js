@@ -118,7 +118,9 @@ module.exports = async function handler(req, res) {
     const B = require("@vercel/blob");
     const raw = String(e && e.message || e);
     let friendly;
-    if (e instanceof B.BlobStoreNotFoundError) {
+    if (/Cannot use public access on a private store|private access/i.test(raw)) {
+      friendly = "الـ Blob store متعيّنة في وضع Private ❗ — الموقع والصور محتاجين store بوضع Public. من Vercel: Storage ← Create جديدة وهيستخدمها، واختار <b>Public</b> عند الإنشاء (كلاسيكي: اسم willis-blob-public) واربطها بنفس المشروع — بيضيف المتغير تلقائيًا. بعدها تقدر تحذف الستور القديمة.";
+    } else if (e instanceof B.BlobStoreNotFoundError) {
       friendly = "Blob store مش موجود — افتح تبويب Storage في Vercel، اعمل Create لـ Blob store واربطها بالمشروع ده، ثم أعِد الـ deploy";
     } else if (e instanceof B.BlobStoreSuspendedError) {
       friendly = "Blob store موقوف (suspended) من Vercel — تحتاج تتواصل مع الدعم أو تعمل store جديد";

@@ -66,6 +66,10 @@ module.exports = async function handler(req, res) {
 
     return sendJson(res, 200, { path: blob.url });
   } catch (e) {
-    return sendJson(res, 500, { error: String(e && e.message || e) });
+    const raw = String(e && e.message || e);
+    const friendly = /Cannot use public access on a private store|private access/i.test(raw)
+      ? "الـ Blob store في وضع Private — لازم تكون Public. Storage ← Create بلوب جديدة واختار Public واربطها بالمشروع (ممكن تحذف القديمة)."
+      : raw;
+    return sendJson(res, 500, { error: friendly, detail: raw });
   }
 };
