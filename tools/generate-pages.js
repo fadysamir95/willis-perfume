@@ -8,7 +8,22 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const DATA_PATH = process.env.DATA_PATH || path.join(ROOT, "website_data_willis_perfume_FINAL_WITH_PRICES.json");
 const OUT_DIR = process.env.OUT_DIR || path.join(ROOT, "products");
-const SITE_URL = process.env.SITE_URL || "https://willis-perfume.com";
+
+/* Read the single source of truth (site-config.js) so generated pages,
+   sitemap.xml and robots.txt all use the configured domain / analytics IDs.
+   Editable env override: SITE_URL */
+let SITE_CONFIG = {};
+try {
+  const vm = require("vm");
+  const cfgCtx = { window: {} };
+  vm.createContext(cfgCtx);
+  vm.runInContext(fs.readFileSync(path.join(ROOT, "site-config.js"), "utf8"), cfgCtx);
+  SITE_CONFIG = cfgCtx.window.SITE_CONFIG || {};
+} catch (e) {
+  console.warn("⚠ site-config.js not readable — using defaults:", e.message);
+}
+
+const SITE_URL = process.env.SITE_URL || SITE_CONFIG.siteUrl || "https://willis-perfume.com";
 
 const data = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
 
@@ -48,19 +63,27 @@ const isVisible = product => product.visible !== false;
 
 const ANALYTICS_SNIPPETS = `
   <!-- ======================================================================
-       GOOGLE ANALYTICS (GA4) — replace G-XXXXXXXXXX with your real ID.
+       ANALYTICS — ids come from ../site-config.js (window.SITE_CONFIG) at
+       runtime. Edit site-config.js and re-run: node tools/generate-pages.js
        ====================================================================== -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"><\/script>
+  <!-- GOOGLE ANALYTICS (GA4) — not loaded while the ID is still a placeholder -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    (function () {
+      var cfg = window.SITE_CONFIG || {};
+      var id = cfg.ga4Id;
+      if (!id || id.indexOf("XXXX") !== -1) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", id);
+    })();
   <\/script>
 
-  <!-- ======================================================================
-       META PIXEL — replace 1234567890123456 with your real Pixel ID.
-       ====================================================================== -->
+  <!-- META PIXEL — not initialized while the ID is still a placeholder -->
   <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -70,13 +93,18 @@ const ANALYTICS_SNIPPETS = `
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1234567890123456');
-    fbq('track', 'PageView');
-  <\/script>
-  <noscript>
-    <img height="1" width="1" style="display:none" alt=""
-         src="https://www.facebook.com/tr?id=1234567890123456&ev=PageView&noscript=1" />
-  </noscript>`;
+    (function () {
+      var cfg = window.SITE_CONFIG || {};
+      var id = cfg.pixelId;
+      if (!id || id.indexOf("XXXX") !== -1) return;
+      fbq('init', id);
+      fbq('track', 'PageView');
+      var im = document.createElement("img");
+      im.height = 1; im.width = 1; im.style.display = "none"; im.alt = "";
+      im.src = "https://www.facebook.com/tr?id=" + encodeURIComponent(id) + "&ev=PageView&noscript=1";
+      document.head.appendChild(im);
+    })();
+  <\/script>`;
 
 function headHTML(product) {
   const url = `${SITE_URL}/products/${product.id}.html`;
@@ -142,7 +170,8 @@ function headHTML(product) {
   <meta name="twitter:description" content="${esc(desc)}" />
   <meta name="twitter:image" content="${image}" />
 
-  <script>window.SITE_URL = "https://willis-perfume.com"; window.BASE_PATH = "../";<\/script>
+  <script src="../site-config.js"><\/script>
+  <script>window.BASE_PATH = "../"; window.SITE_URL = (window.SITE_CONFIG && window.SITE_CONFIG.siteUrl) || "https://willis-perfume.com";<\/script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -368,6 +397,16 @@ ${urls.map(u => `  <url>\n    <loc>${u}</loc>\n    <changefreq>weekly</changefre
 `;
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), sitemap, "utf8");
 console.log(`✔ sitemap.xml (${urls.length} URLs)`);
+
+/* ---------- robots.txt (domain comes from SITE_CONFIG) ---------- */
+const robots = `User-agent: *
+Allow: /
+
+# Let Google / Bing read the sitemap
+Sitemap: ${SITE_URL}/sitemap.xml
+`;
+fs.writeFileSync(path.join(ROOT, "robots.txt"), robots, "utf8");
+console.log(`✔ robots.txt (Sitemap: ${SITE_URL}/sitemap.xml)`);
 
 /* ---------- summary ---------- */
 console.log(`\nℹ ${visible.length} visible / ${data.length} total`);

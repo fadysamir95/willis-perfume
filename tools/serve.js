@@ -49,6 +49,14 @@ function readBody(req) {
   });
 }
 
+/* Content hash of the data file — lets the admin panel detect when the file
+   changed elsewhere (another tab/device) before it overwrites it. */
+const crypto = require("crypto");
+function dataHash() {
+  if (!fs.existsSync(DATA_PATH)) return "";
+  return crypto.createHash("md5").update(fs.readFileSync(DATA_PATH)).digest("hex");
+}
+
 http.createServer(async (req, res) => {
   const urlPath = decodeURIComponent(req.url.split("?")[0]);
   const method = req.method.toUpperCase();
@@ -58,6 +66,7 @@ http.createServer(async (req, res) => {
     try {
       if (!fs.existsSync(DATA_PATH)) return sendJSON(res, 404, { error: "data file missing" });
       const data = JSON.parse(fs.readFileSync(DATA_PATH, "utf8"));
+      res.setHeader("X-Data-Hash", dataHash());
       return sendJSON(res, 200, data);
     } catch (e) {
       return sendJSON(res, 500, { error: String(e && e.message || e) });
@@ -75,8 +84,15 @@ http.createServer(async (req, res) => {
         }
         if (p.size != null && p.sizes == null) continue;
       }
-      fs.writeFileSync(DATA_PATH, JSON.stringify(body, null, 2), "utf8");
-      return sendJSON(res, 200, { ok: true, count: body.length });
+      /* Stale-write guard: if the client loaded an older copy (base hash) and
+         the file changed since, refuse unless the client insists. */
+      const baseHash = req.headers["x-base-hash"] || "";
+      const cur = dataHash();
+      if (baseHash && cur && baseHash !== cur) {
+        return sendJSON(res, 409, { error: "stale data — file changed since the dashboard loaded; refresh and retry" });
+      }
+      fs.writeFileSync(DATA_PATH, JSON.stringify(body, null, 2) + "\n", "utf8");
+      return sendJSON(res, 200, { ok: true, count: body.length, hash: dataHash() });
     } catch (e) {
       return sendJSON(res, 500, { error: String(e && e.message || e) });
     }

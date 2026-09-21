@@ -25,7 +25,8 @@
   <meta name="twitter:description" content="A crisp and refreshing fragrance with green apple, bergamot and mandarin, finished with cedar, moss, musk and soft woods." />
   <meta name="twitter:image" content="https://willis-perfume.com/images/fresh-orchard.webp" />
 
-  <script>window.SITE_URL = "https://willis-perfume.com"; window.BASE_PATH = "../";</script>
+  <script src="../site-config.js"></script>
+  <script>window.BASE_PATH = "../"; window.SITE_URL = (window.SITE_CONFIG && window.SITE_CONFIG.siteUrl) || "https://willis-perfume.com";</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,19 +87,27 @@
   </script>
 
   <!-- ======================================================================
-       GOOGLE ANALYTICS (GA4) — replace G-XXXXXXXXXX with your real ID.
+       ANALYTICS — ids come from ../site-config.js (window.SITE_CONFIG) at
+       runtime. Edit site-config.js and re-run: node tools/generate-pages.js
        ====================================================================== -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <!-- GOOGLE ANALYTICS (GA4) — not loaded while the ID is still a placeholder -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    (function () {
+      var cfg = window.SITE_CONFIG || {};
+      var id = cfg.ga4Id;
+      if (!id || id.indexOf("XXXX") !== -1) return;
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", id);
+    })();
   </script>
 
-  <!-- ======================================================================
-       META PIXEL — replace 1234567890123456 with your real Pixel ID.
-       ====================================================================== -->
+  <!-- META PIXEL — not initialized while the ID is still a placeholder -->
   <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -108,13 +117,18 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1234567890123456');
-    fbq('track', 'PageView');
+    (function () {
+      var cfg = window.SITE_CONFIG || {};
+      var id = cfg.pixelId;
+      if (!id || id.indexOf("XXXX") !== -1) return;
+      fbq('init', id);
+      fbq('track', 'PageView');
+      var im = document.createElement("img");
+      im.height = 1; im.width = 1; im.style.display = "none"; im.alt = "";
+      im.src = "https://www.facebook.com/tr?id=" + encodeURIComponent(id) + "&ev=PageView&noscript=1";
+      document.head.appendChild(im);
+    })();
   </script>
-  <noscript>
-    <img height="1" width="1" style="display:none" alt=""
-         src="https://www.facebook.com/tr?id=1234567890123456&ev=PageView&noscript=1" />
-  </noscript>
 </head>
 <body data-product-id="fresh-orchard">
   <div class="page-shell">

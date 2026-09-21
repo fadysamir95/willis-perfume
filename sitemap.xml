@@ -6,16 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://willis-perfume.com/products/white-code.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://willis-perfume.com/products/fortune-rush.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://willis-perfume.com/products/pink-crush.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -96,22 +86,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://willis-perfume.com/products/amber-ray.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://willis-perfume.com/products/sandal-rush.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://willis-perfume.com/products/berry-cloud.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://willis-perfume.com/products/heavenly-bloom.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
