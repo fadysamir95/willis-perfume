@@ -213,6 +213,18 @@
   </div>
 </div>
 
+<div class="modal-back" id="lockBack" style="align-items:center">
+  <div class="modal" style="max-width:380px">
+    <h2>🔒 لوحة محمية برقم PIN</h2>
+    <p id="lockMsg" style="color:var(--muted);margin:0 0 14px;line-height:1.8">اكتب رقم الحماية عشان تفتح اللوحة.</p>
+    <input type="password" id="lockPin" placeholder="رقم الحماية (PIN)" style="width:100%;margin-bottom:14px;direction:ltr" autocomplete="off">
+    <div class="actions" style="justify-content:flex-start">
+      <button class="btn green" id="lockSubmit">دخول</button>
+      <button class="btn" id="lockCancel">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -232,14 +244,31 @@ const API_BASE = location.protocol === "file:" ? null : location.origin;
 function apiUrl(route) { return API_BASE ? API_BASE + route : route; }
 
 const IS_REMOTE = !!API_BASE && !/^(localhost|127\.0\.0\.1|\[::1\]|::1)$/i.test(location.hostname);
-const ADMIN_PIN = (() => { try { return (localStorage.getItem("willis_admin_pin") || "").trim(); } catch (e) { return ""; } })();
+let adminPin = (() => { try { return (localStorage.getItem("willis_admin_pin") || "").trim(); } catch (e) { return ""; } })();
 
 /* fetch wrapper that injects the optional admin PIN header */
 function apiFetch(route, opts) {
   opts = opts || {};
   const headers = Object.assign({}, opts.headers);
-  if (ADMIN_PIN) headers["x-admin-pin"] = ADMIN_PIN;
+  if (adminPin) headers["x-admin-pin"] = adminPin;
   return fetch(apiUrl(route), Object.assign({}, opts, { headers }));
+}
+
+/* ---------- PIN lock screen ---------- */
+function openLockScreen(msg) {
+  if (msg) $("lockMsg").textContent = msg;
+  $("lockPin").value = adminPin;
+  $("lockBack").classList.add("open");
+  setTimeout(() => { try { $("lockPin").focus(); } catch (e) {} }, 60);
+}
+function submitLock() {
+  const v = $("lockPin").value.trim();
+  if (!v) { toast("اكتب الرقم أولاً"); return; }
+  adminPin = v;
+  try { localStorage.setItem("willis_admin_pin", v); } catch (e) {}
+  $("lockBack").classList.remove("open");
+  if ($("pinInput") && !$("pinInput").value) $("pinInput").value = v;
+  load();
 }
 
 function showGuide(msg) {
@@ -275,7 +304,7 @@ async function load() {
   try {
     const r = await apiFetch("/api/products");
     if (r.status === 401) {
-      showGuide('اللوحة محمية برقم PIN 🔒 — اكتب الرقم السري في خانة "PIN أمان" بالأعلى (بيتحفظ تلقائيًا) ثم اعمل تحديث للصفحة (F5).');
+      openLockScreen('اللوحة محمية برقم PIN 🔒 — اكتب الرقم عشان تقدر تفتح اللوحة وتعدّل المنتجات.');
       return;
     }
     let j = null;
@@ -440,10 +469,11 @@ $("addBtn").addEventListener("click", () => openModal(null, true));
 /* optional admin PIN (online mode) + JSON download */
 $("pinInput").addEventListener("change", () => {
   const v = $("pinInput").value.trim();
+  adminPin = v;
   try { localStorage.setItem("willis_admin_pin", v); } catch (e) {}
-  toast(v ? "تم حفظ رقم الحماية — حدّث الصفحة (F5) لو اللوحة بتطلبها" : "تمت إزالة رقم الحماية");
+  toast(v ? "تم حفظ رقم الحماية" : "تمت إزالة رقم الحماية");
 });
-if (ADMIN_PIN) $("pinInput").value = ADMIN_PIN;
+if (adminPin) $("pinInput").value = adminPin;
 $("dlBtn").addEventListener("click", downloadJSON);
 
 function downloadJSON() {
@@ -491,7 +521,7 @@ async function onSave() {
       body: JSON.stringify(products)
     });
     const j = await r.json();
-    if (r.status === 401) { toast("تم رفض الحفظ — PIN غير صحيح، عدّل خانة PIN أمان ثم أعِد المحاولة"); return; }
+    if (r.status === 401) { openLockScreen("رقم الحماية غلط ❗ — جرب تاني."); return; }
     if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
     dataHashAtLoad = j.hash || currentHash || dataHashAtLoad;
     dirty = false;
@@ -639,6 +669,12 @@ function refreshImgPreview() {
 
 $("modalCancel").addEventListener("click", () => $("modalBack").classList.remove("open"));
 $("modalBack").addEventListener("click", e => { if (e.target === $("modalBack")) $("modalBack").classList.remove("open"); });
+
+/* lock screen */
+$("lockSubmit").addEventListener("click", submitLock);
+$("lockCancel").addEventListener("click", () => $("lockBack").classList.remove("open"));
+$("lockBack").addEventListener("click", e => { if (e.target === $("lockBack")) $("lockBack").classList.remove("open"); });
+$("lockPin").addEventListener("keydown", e => { if (e.key === "Enter") submitLock(); });
 
 $("modalSave").addEventListener("click", () => {
   const mp = modalProduct;
