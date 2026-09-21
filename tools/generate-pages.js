@@ -283,8 +283,8 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
 
       <nav class="desktop-nav" aria-label="Main navigation">
         <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
-        <a href="${back}index.html#collection" data-i18n="nav.collection">Collection</a>
         <a href="${back}index.html#featured" data-i18n="nav.featured">Most Requested</a>
+        <a href="${back}index.html#collection" data-i18n="nav.collection">Collection</a>
         <a href="${back}index.html#story" data-i18n="nav.about">About Us</a>
         <a href="${back}contact.html" data-i18n="nav.contact">Contact</a>
       </nav>
@@ -321,8 +321,8 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
       </div>
       <nav>
         <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
-        <a href="${back}index.html#collection" data-i18n="nav.collection">Collection</a>
         <a href="${back}index.html#featured" data-i18n="nav.featured">Most Requested</a>
+        <a href="${back}index.html#collection" data-i18n="nav.collection">Collection</a>
         <button data-gender="Men" data-i18n="gender.men">Men</button>
         <button data-gender="Women" data-i18n="gender.women">Women</button>
         <button data-gender="Unisex" data-i18n="gender.unisex">Unisex</button>
