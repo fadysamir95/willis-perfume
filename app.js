@@ -1,5 +1,13 @@
 const BASE_PATH = window.BASE_PATH || "";
-const DATA_URL = BASE_PATH + "website_data_willis_perfume_FINAL_WITH_PRICES.json";
+/* Product data source:
+   - over http(s): the same-origin /api/products endpoint (Vercel function on
+     the live site, tools/serve.js locally) so edits made from the online
+     admin appear instantly; falls back to the local JSON if missing.
+   - opened as file://: the local JSON directly. */
+const LOCAL_DATA_URL = BASE_PATH + "website_data_willis_perfume_FINAL_WITH_PRICES.json";
+const DATA_URL = (typeof location !== "undefined" && location.protocol === "file:")
+  ? LOCAL_DATA_URL
+  : BASE_PATH + "api/products";
 
 /*
   WhatsApp number source of truth is site-config.js (window.SITE_CONFIG.whatsapp).
@@ -31,8 +39,14 @@ function getProductImageCandidates(product) {
   const id = String(product.id || "").trim().toLowerCase();
   const candidates = IMAGE_EXTENSIONS.map(ext => `images/${id}.${ext}`);
 
-  if (product.image && !candidates.includes(product.image)) {
-    candidates.push(product.image);
+  if (product.image) {
+    if (/^https?:/i.test(product.image)) {
+      /* absolute URL (e.g. an image uploaded to Blob from the online admin)
+         wins over the static candidates */
+      candidates.unshift(product.image);
+    } else if (!candidates.includes(product.image)) {
+      candidates.push(product.image);
+    }
   }
 
   candidates.push("images/bottle.webp");
@@ -1360,7 +1374,11 @@ async function loadProducts() {
   const countEl = document.getElementById("resultCount");
 
   try {
-    const response = await fetch(DATA_URL, { cache: "no-store" });
+    let response = await fetch(DATA_URL, { cache: "no-store" });
+    if (!response.ok && DATA_URL !== LOCAL_DATA_URL) {
+      /* online API missing (e.g. plain static hosting) -> use the local JSON */
+      response = await fetch(LOCAL_DATA_URL, { cache: "no-store" });
+    }
 
     if (!response.ok) {
       throw new Error(`Could not load product data (${response.status})`);

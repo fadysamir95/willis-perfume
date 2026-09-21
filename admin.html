@@ -103,6 +103,18 @@
     background: rgba(0,0,0,.07); padding: 1px 7px; border-radius: 5px;
     font-family: Consolas, monospace; direction: ltr; display: inline-block;
   }
+  .api-guide.ok {
+    background: #e3f2e8; border-color: #b4d6c0; color: #1d5c38;
+  }
+  .toolbar input[type=password] {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font: inherit;
+    background: var(--card);
+    color: var(--ink);
+    width: 130px;
+  }
   footer { padding: 20px 22px; color: var(--muted); font-size: 12px; }
   #toast {
     position: fixed; bottom: 18px; right: 50%; transform: translateX(50%);
@@ -157,11 +169,14 @@
     <option value="hidden">مخفي</option>
   </select>
   <button class="btn gold" id="addBtn">+ إضافة منتج</button>
+  <input type="password" id="pinInput" placeholder="PIN أمان (اختياري)" title="رقم حماية اللوحة أونلاين — يُضبط من متغير ADMIN_PIN في إعدادات Vercel. محليًا غير مطلوب." autocomplete="off">
   <button class="btn green" id="saveBtn">💾 حفظ الكل</button>
   <button class="btn blue" id="genBtn">🔄 إعادة توليد الموقع</button>
+  <button class="btn" id="dlBtn" title="تنزيل ملف JSON الحالي — ضعه مكان الملف المحلي لإعادة توليد الـ SEO">⬇ JSON</button>
 </div>
 
 <div id="apiGuide" class="api-guide hidden"></div>
+<div id="remoteNote" class="api-guide ok hidden"></div>
 
 <div class="table-wrap">
   <table>
@@ -185,7 +200,7 @@
 
 <div class="gen-out hidden" id="genOut"><pre id="genText"></pre></div>
 
-<footer>الملفات بتتكتب مباشرة في <b>website_data_willis_perfume_FINAL_WITH_PRICES.json</b> — بعد الحفظ اضغط "إعادة توليد الموقع" عشان الصفحات والسايت ماب يتحدثوا. <br>للبدء السريع: دبل كليك على <b>start-admin.bat</b> في مجلد المشروع.</footer>
+<footer><b>محليًا (start-admin.bat):</b> الحفظ يكتب في الملف المحلي ثم راجع "إعادة توليد الموقع" عشان الصفحات والسايت ماب يتحدثوا، بعدها اعملي <code>git push</code> عشان Vercel يتحدث. <b>أونلاين (على الموقع المنشور):</b> الحفظ يتم في السحابة (Vercel Blob) ويظهر فورًا على الموقع — وزر "إعادة توليد الموقع" بيختفي لأن تحديث ملفات الـ SEO يتم من جهازك (زر ⬇ JSON ثم <code>node tools/generate-pages.js</code> ثم push).</footer>
 
 <div class="modal-back" id="modalBack">
   <div class="modal">
@@ -210,9 +225,22 @@ let imageOptions = [];
 let dataHashAtLoad = null;
 
 /* Works whatever host/port the server runs on; if the file is opened
-   directly (file://) there is no API and we show a guide instead. */
+   directly (file://) there is no API and we show a guide instead.
+   On the deployed site the same-origin /api/* are Vercel functions backed
+   by Blob storage, so the dashboard works online with the exact same code. */
 const API_BASE = location.protocol === "file:" ? null : location.origin;
 function apiUrl(route) { return API_BASE ? API_BASE + route : route; }
+
+const IS_REMOTE = !!API_BASE && !/^(localhost|127\.0\.0\.1|\[::1\]|::1)$/i.test(location.hostname);
+const ADMIN_PIN = (() => { try { return (localStorage.getItem("willis_admin_pin") || "").trim(); } catch (e) { return ""; } })();
+
+/* fetch wrapper that injects the optional admin PIN header */
+function apiFetch(route, opts) {
+  opts = opts || {};
+  const headers = Object.assign({}, opts.headers);
+  if (ADMIN_PIN) headers["x-admin-pin"] = ADMIN_PIN;
+  return fetch(apiUrl(route), Object.assign({}, opts, { headers }));
+}
 
 function showGuide(msg) {
   const g = $("apiGuide");
@@ -245,16 +273,33 @@ async function load() {
     return;
   }
   try {
-    const r = await fetch(apiUrl("/api/products"));
+    const r = await apiFetch("/api/products");
+    if (r.status === 401) {
+      showGuide('اللوحة محمية برقم PIN 🔒 — اكتب الرقم السري في خانة "PIN أمان" بالأعلى (بيتحفظ تلقائيًا) ثم اعمل تحديث للصفحة (F5).');
+      return;
+    }
     if (!r.ok) throw new Error("HTTP " + r.status);
     products = await r.json();
     if (!Array.isArray(products)) throw new Error("البيانات مش مصفوفة");
     dataHashAtLoad = r.headers && r.headers.get ? r.headers.get("X-Data-Hash") : null;
     renderStats();
     renderTable();
+    if (IS_REMOTE) applyRemoteMode();
   } catch (e) {
-    showGuide(`تعذر تحميل المنتجات (${e.message}) — تأكد إن السيرفر شغال: <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>`);
+    const remoteHint = IS_REMOTE
+      ? ' — لو الموقع منشور على Vercel تأكد إن <b>Blob Storage</b> متصل ومتغير <code>BLOB_READ_WRITE_TOKEN</code> شغال (صفحة Storage في Vercel). محليًا: شغّل <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>'
+      : ' — تأكد إن السيرفر شغال: <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>';
+    showGuide(`تعذر تحميل المنتجات (${e.message})${remoteHint}`);
   }
+}
+
+function applyRemoteMode() {
+  const g = $("genBtn"); if (g) g.classList.add("hidden");
+  const n = $("remoteNote");
+  const total = products.length;
+  n.innerHTML = `وضع السحابة ✅ — ${total} منتج محمّل من Vercel Blob. الحفظ يظهر <b>فورًا على الموقع المنشور</b>.<br>
+    ملاحظة: تحديث ملفات الـ SEO (سايت ماب وصفحات المنتجات) يتم من جهازك — حمّل الـ JSON من زر <b>⬇ JSON</b>، ضعه مكان الملف المحلي، ثم شغّل <code>node tools/generate-pages.js</code> واعمل <code>git push</code>.`;
+  n.classList.remove("hidden");
 }
 
 function filtered() {
@@ -378,6 +423,26 @@ $("saveBtn").addEventListener("click", onSave);
 $("genBtn").addEventListener("click", onRegenerate);
 $("addBtn").addEventListener("click", () => openModal(null, true));
 
+/* optional admin PIN (online mode) + JSON download */
+$("pinInput").addEventListener("change", () => {
+  const v = $("pinInput").value.trim();
+  try { localStorage.setItem("willis_admin_pin", v); } catch (e) {}
+  toast(v ? "تم حفظ رقم الحماية — حدّث الصفحة (F5) لو اللوحة بتطلبها" : "تمت إزالة رقم الحماية");
+});
+if (ADMIN_PIN) $("pinInput").value = ADMIN_PIN;
+$("dlBtn").addEventListener("click", downloadJSON);
+
+function downloadJSON() {
+  if (!products.length) { toast("مفيش بيانات للحفظ"); return; }
+  const blob = new Blob([JSON.stringify(products, null, 2) + "\n"], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "website_data_willis_perfume_FINAL_WITH_PRICES.json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast("تم تنزيل الـ JSON — ضعه مكان الملف المحلي لإعادة التوليد");
+}
+
 async function onSave() {
   if (!API_BASE) { showGuide('التشغيل غلط — شغّل السيرفر أولاً (استخدم start-admin.bat)'); return; }
   try {
@@ -398,7 +463,7 @@ async function onSave() {
       ids.add(p.id);
     }
     /* stale-write guard: refuse to overwrite if the data file changed since page load */
-    const check = await fetch(apiUrl("/api/products"));
+    const check = await apiFetch("/api/products");
     const currentHash = check.ok && check.headers && check.headers.get
       ? check.headers.get("X-Data-Hash") || ""
       : "";
@@ -406,16 +471,19 @@ async function onSave() {
       const go = confirm("⚠️ ملف البيانات اتعدل في مكان تاني (تبويب/جهاز تاني) بعد ما فتحت الداش بورد دي.\n\nلو حفظت دلوقتي هتكتب فوق التعديلات دي.\n\nتستمر في الحفظ؟");
       if (!go) { toast("تم إلغاء الحفظ — حدّث الصفحة (F5) لترى أحدث البيانات"); return; }
     }
-    const r = await fetch(apiUrl("/api/products"), {
+    const r = await apiFetch("/api/products", {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Base-Hash": dataHashAtLoad || "" },
       body: JSON.stringify(products)
     });
     const j = await r.json();
+    if (r.status === 401) { toast("تم رفض الحفظ — PIN غير صحيح، عدّل خانة PIN أمان ثم أعِد المحاولة"); return; }
     if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
     dataHashAtLoad = j.hash || currentHash || dataHashAtLoad;
     dirty = false;
-    toast(`تم الحفظ ✔ (${j.count} منتج) — لاتنسَ إعادة توليد الموقع`);
+    toast(IS_REMOTE
+      ? `تم الحفظ في السحابة ✔ (${j.count} منتج) — التغييرات ظاهرة فورًا على الموقع`
+      : `تم الحفظ ✔ (${j.count} منتج) — لاتنسَ إعادة توليد الموقع`);
   } catch (e) {
     toast("خطأ في الحفظ: " + e.message);
   }
@@ -426,7 +494,7 @@ async function onRegenerate() {
   $("genOut").classList.remove("hidden");
   $("genText").textContent = "جارٍ إعادة التوليد...";
   try {
-    const r = await fetch(apiUrl("/api/regenerate"), { method: "POST" });
+    const r = await apiFetch("/api/regenerate", { method: "POST" });
     const j = await r.json();
     $("genText").textContent = j.ok
       ? "✅ تمت إعادة توليد الصفحات والسايت ماب بنجاح."
@@ -445,7 +513,8 @@ function arr(v) {
 async function loadImages() {
   if (!API_BASE) { imageOptions = []; return; }
   try {
-    const r = await fetch(apiUrl("/api/images"));
+    const r = await apiFetch("/api/images");
+    if (r.status === 401) { imageOptions = []; return; }
     imageOptions = await r.json();
   } catch (e) { imageOptions = []; }
 }
@@ -528,7 +597,7 @@ function openModal(p, isNew) {
     reader.onload = async () => {
       toast("جارٍ تحويل الصورة...");
       try {
-        const r = await fetch(apiUrl("/api/upload"), {
+        const r = await apiFetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, data: reader.result })
