@@ -2,11 +2,11 @@ const BASE_PATH = window.BASE_PATH || "";
 const DATA_URL = BASE_PATH + "website_data_willis_perfume_FINAL_WITH_PRICES.json";
 
 /*
-  IMPORTANT:
-  Replace this with Willi's real WhatsApp number in international format.
-  Egypt example format: 2010XXXXXXXX
+  WhatsApp number source of truth is site-config.js (window.SITE_CONFIG.whatsapp).
+  If the config is ever missing, WhatsApp actions are disabled instead of
+  opening broken wa.me links.
 */
-const WHATSAPP_NUMBER = (window.SITE_CONFIG && window.SITE_CONFIG.whatsapp) || "201272566695";
+const WHATSAPP_NUMBER = (window.SITE_CONFIG && window.SITE_CONFIG.whatsapp) || "";
 
 const CART_STORAGE_KEY = "willis_cart_v1";
 
@@ -281,6 +281,7 @@ function openCart() {
   cartOverlay?.classList?.add("open");
   cartDrawer?.setAttribute("aria-hidden", "false");
   document.body.classList.add("cart-open");
+  trapFocus(cartDrawer);
 }
 
 function closeCart() {
@@ -288,6 +289,7 @@ function closeCart() {
   cartOverlay?.classList?.remove("open");
   cartDrawer?.setAttribute("aria-hidden", "true");
   document.body.classList.remove("cart-open");
+  untrapFocus(cartDrawer);
 }
 
 /* Auto-open the cart after adding a product — but never fight an
@@ -295,6 +297,71 @@ function closeCart() {
 function openCartIfNeeded() {
   if (!cartDrawer) return;
   if (!document.body.classList.contains("cart-open")) openCart();
+}
+
+/* ================================
+   Focus management (accessibility)
+   Overlays (product modal / cart drawer / side menu) trap the Tab key so
+   keyboard users stay inside the dialog, and focus returns to the element
+   that opened it when it closes. A small stack keeps nested overlays
+   (e.g. modal -> auto-opened cart) working correctly.
+   ================================ */
+
+const trapStack = [];
+let trapLastFocus = null;
+
+function getFocusable(container) {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )).filter(el => el.getClientRects().length > 0);
+}
+
+function focusFirst(container) {
+  const focusables = getFocusable(container);
+  if (focusables.length) focusables[0].focus();
+}
+
+function handleTrapKeydown(event) {
+  if (event.key !== "Tab" || !trapStack.length) return;
+  const container = trapStack[trapStack.length - 1];
+  const focusables = getFocusable(container);
+  if (!focusables.length) return;
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  const active = document.activeElement;
+
+  if (event.shiftKey) {
+    if (active === first || !container.contains(active)) {
+      event.preventDefault();
+      last.focus();
+    }
+  } else if (active === last || !container.contains(active)) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function trapFocus(container) {
+  if (!container) return;
+  if (!trapStack.length) {
+    trapLastFocus = document.activeElement;
+    document.addEventListener("keydown", handleTrapKeydown, true);
+  }
+  trapStack.push(container);
+  focusFirst(container);
+}
+
+function untrapFocus(container) {
+  const idx = trapStack.lastIndexOf(container);
+  if (idx !== -1) trapStack.splice(idx, 1);
+  if (!trapStack.length) {
+    document.removeEventListener("keydown", handleTrapKeydown, true);
+    if (trapLastFocus && typeof trapLastFocus.focus === "function") trapLastFocus.focus();
+    trapLastFocus = null;
+  } else {
+    focusFirst(trapStack[trapStack.length - 1]);
+  }
 }
 
 let toastTimer = null;
@@ -320,6 +387,7 @@ function waOrderFooter() {
 }
 
 function quickOrderUrl(product) {
+  if (!WHATSAPP_NUMBER) return "#";
   const size = getDefaultSize(product);
   const price = Number(product.sizes?.[size] || 0).toLocaleString();
 
@@ -376,6 +444,7 @@ ${t("wa.total", { total })}${waOrderFooter()}`
 }
 
 function openWhatsApp(message) {
+  if (!WHATSAPP_NUMBER) return; /* config missing — nothing to open */
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -524,9 +593,10 @@ function buildProductDetail(product) {
     .map(item => `<span class="profile-chip">${escapeHTML(item)}</span>`)
     .join("");
 
-  const sizeButtons = ["35ml", "55ml", "110ml"].map(size => `
-    <button class="size-btn ${state.selectedSize === size ? "active" : ""}" data-size="${size}">
-      <span>${size.replace("ml", " ML")}</span>
+  const sizeKeys = Object.keys(product.sizes || {});
+  const sizeButtons = sizeKeys.map(size => `
+    <button class="size-btn ${state.selectedSize === size ? "active" : ""}" data-size="${escapeHTML(size)}">
+      <span>${escapeHTML(size.replace("ml", " ML"))}</span>
       <strong>${Number(product.sizes?.[size] || 0).toLocaleString()} ${currency()}</strong>
     </button>
   `).join("");
@@ -856,6 +926,7 @@ function openProductModal(product) {
   modalBackdrop?.classList.add("open");
   productModal.setAttribute("aria-hidden", "false");
   document.body.classList.add("modal-open");
+  trapFocus(productModal);
 }
 
 function closeProductModal() {
@@ -865,6 +936,7 @@ function closeProductModal() {
   productModal.setAttribute("aria-hidden", "true");
   document.body.classList.remove("modal-open");
   state.selectedProduct = null;
+  untrapFocus(productModal);
 }
 
 /* ================================
@@ -1104,6 +1176,7 @@ function initMenu() {
     sideMenu.setAttribute("aria-hidden", "false");
     menuBtn.setAttribute("aria-expanded", "true");
     document.body.classList.add("menu-open");
+    trapFocus(sideMenu);
   });
 
   const close = () => {
@@ -1112,6 +1185,7 @@ function initMenu() {
     sideMenu.setAttribute("aria-hidden", "true");
     menuBtn.setAttribute("aria-expanded", "false");
     document.body.classList.remove("menu-open");
+    untrapFocus(sideMenu);
   };
 
   closeMenu?.addEventListener("click", close);
@@ -1188,12 +1262,16 @@ function initCartEvents() {
 }
 
 function generalWhatsAppUrl() {
+  if (!WHATSAPP_NUMBER) return "#";
   const message = `${t("wa.header")}\n\n${t("wa.name")}\n${t("wa.phone")}`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 function initWhatsAppButtons() {
-  const openGeneral = () => window.open(generalWhatsAppUrl(), "_blank", "noopener,noreferrer");
+  const openGeneral = () => {
+    const url = generalWhatsAppUrl();
+    if (url && url !== "#") window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   document.getElementById("whatsappNav")?.addEventListener("click", openGeneral);
   document.getElementById("desktopWhatsApp")?.addEventListener("click", openGeneral);
@@ -1257,6 +1335,7 @@ document.addEventListener("keydown", event => {
     sideMenu.setAttribute("aria-hidden", "true");
     document.getElementById("menuBtn")?.setAttribute("aria-expanded", "false");
     document.body.classList.remove("menu-open");
+    untrapFocus(sideMenu);
   }
 });
 

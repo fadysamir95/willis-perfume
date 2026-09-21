@@ -3638,3 +3638,69 @@ a.contact-card:hover {
 @media (min-width: 1050px) {
   .contact-page { padding-inline: 11vw; }
 }
+
+/* ======================================================================
+   Mobile product-card layout (merged from style-mobile-fix.css)
+   Keeps the existing desktop design untouched. Goal: clean 2-column cards
+   with a hard visual boundary between the product image and all product
+   information.
+   ====================================================================== */
+@media (max-width: 699px) {
+  .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .product-image-wrap {
+    position: relative;
+    flex: 0 0 auto;
+    overflow: hidden;
+  }
+
+  .product-image {
+    display: block;
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+  }
+
+  .product-body {
+    position: relative;
+    z-index: 4;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 14px 9px 11px;
+    background: var(--white);
+  }
+
+  .product-name {
+    position: relative;
+    z-index: 5;
+    margin: 0 0 5px;
+    font-size: clamp(19px, 5.2vw, 22px);
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+  }
+
+  .inspired {
+    position: relative;
+    z-index: 5;
+    min-height: 30px;
+    margin-bottom: 8px;
+    line-height: 1.45;
+  }
+
+  .profile-row,
+  .price-line,
+  .view-details {
+    position: relative;
+    z-index: 5;
+  }
+}

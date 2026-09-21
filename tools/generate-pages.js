@@ -74,7 +74,7 @@ const ANALYTICS_SNIPPETS = `
     (function () {
       var cfg = window.SITE_CONFIG || {};
       var id = cfg.ga4Id;
-      if (!id || id.indexOf("XXXX") !== -1) return;
+      if (!cfg.isAnalyticsReady || !cfg.isAnalyticsReady("ga4Id")) return;
       var s = document.createElement("script");
       s.async = true;
       s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
@@ -99,7 +99,7 @@ const ANALYTICS_SNIPPETS = `
     (function () {
       var cfg = window.SITE_CONFIG || {};
       var id = cfg.pixelId;
-      if (!id || id.indexOf("XXXX") !== -1) return;
+      if (!cfg.isAnalyticsReady || !cfg.isAnalyticsReady("pixelId")) return;
       fbq('init', id);
       fbq('track', 'PageView');
       var im = document.createElement("img");
@@ -109,7 +109,7 @@ const ANALYTICS_SNIPPETS = `
     })();
   <\/script>`;
 
-const FONTS_LINK = "https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap";
+const FONTS_LINK = "https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&family=Cairo:wght@400;500;600;700&display=swap";
 
 /* ---------- <head> for product pages (in products/) ---------- */
 function headHTML(product) {
@@ -183,7 +183,6 @@ function headHTML(product) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="${FONTS_LINK}" rel="stylesheet">
   <link rel="stylesheet" href="../style.css" />
-  <link rel="stylesheet" href="../style-mobile-fix.css" />
 
   <script type="application/ld+json">
   ${JSON.stringify(productSchema, null, 2)}
@@ -256,7 +255,6 @@ function listHeadHTML(mode) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="${FONTS_LINK}" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="style-mobile-fix.css" />
 
   <script type="application/ld+json">
   ${JSON.stringify(breadcrumbSchema, null, 2)}
@@ -614,6 +612,23 @@ for (const product of data) {
   const imgRefs = [product.image, ...(product.image_gallery || [])].filter(Boolean);
   const missing = imgRefs.filter(p => !fs.existsSync(path.join(ROOT, p)));
   if (missing.length) warnings.push(`${product.id}: image not found — ${missing.join(", ")}`);
+}
+
+/* Images that don't belong to any product (visible OR hidden). Hidden/unreleased
+   products legitimately keep their images, so only true orphans are flagged. */
+const productIdSet = new Set(data.map(p => p.id));
+const IMAGE_DIR = path.join(ROOT, "images");
+const SPECIAL_IMAGE_NAMES = new Set([
+  "bottle", "logo", "og-image", "apple-touch-icon", "favicon-32x32",
+  "leaf-gold-1", "leaf-gold-2", "leaf-gold-3"
+].map(n => n.toLowerCase()));
+const productExts = ["webp", "png", "jpg", "jpeg"];
+if (fs.existsSync(IMAGE_DIR)) {
+  const orphans = fs.readdirSync(IMAGE_DIR)
+    .filter(f => /\.(webp|png|jpg|jpeg)$/i.test(f))
+    .map(f => f.replace(/\.[^.]+$/, "").toLowerCase())
+    .filter(base => !productIdSet.has(base) && !SPECIAL_IMAGE_NAMES.has(base));
+  if (orphans.length) warnings.push(`orphan image(s) with no matching product: ${orphans.join(", ")}`);
 }
 
 if (process.exitCode) {

@@ -30,9 +30,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="style-mobile-fix.css" />
 
   <script type="application/ld+json">
   {
@@ -64,7 +63,7 @@
     (function () {
       var cfg = window.SITE_CONFIG || {};
       var id = cfg.ga4Id;
-      if (!id || id.indexOf("XXXX") !== -1) return;
+      if (!cfg.isAnalyticsReady || !cfg.isAnalyticsReady("ga4Id")) return;
       var s = document.createElement("script");
       s.async = true;
       s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
@@ -89,7 +88,7 @@
     (function () {
       var cfg = window.SITE_CONFIG || {};
       var id = cfg.pixelId;
-      if (!id || id.indexOf("XXXX") !== -1) return;
+      if (!cfg.isAnalyticsReady || !cfg.isAnalyticsReady("pixelId")) return;
       fbq('init', id);
       fbq('track', 'PageView');
       var im = document.createElement("img");
