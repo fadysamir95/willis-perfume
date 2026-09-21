@@ -130,7 +130,7 @@ function headHTML(product) {
   <meta name="twitter:description" content="${esc(desc)}" />
   <meta name="twitter:image" content="${image}" />
 
-  <script>window.BASE_PATH = "../";<\/script>
+  <script>window.SITE_URL = "https://willis-perfume.com"; window.BASE_PATH = "../";<\/script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -154,6 +154,7 @@ function shellBody(product, prevId, nextId) {
   return `
 <body data-product-id="${esc(product.id)}">
   <div class="page-shell">
+    <div class="announcement-bar" data-i18n="announce.text" role="note">Free shipping on orders above 1000 EGP · Cash on delivery nationwide</div>
     <header class="site-header">
       <a class="brand" href="../index.html" aria-label="Willi's Perfume home">
         <img src="${back}images/logo.webp" alt="Willi's Perfume logo" width="43" height="43">

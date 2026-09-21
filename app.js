@@ -152,6 +152,20 @@ function addToCart(product, size, qty = 1) {
     name: product.brand_name,
     size: size.replace("ml", " ML")
   }));
+
+  const price = Number(product.sizes?.[size] || 0);
+  analyticsEvent("AddToCart", "add_to_cart", {
+    value: Number((price * qty).toFixed(2)),
+    currency: "EGP",
+    content_ids: [product.id],
+    content_type: "product",
+    items: [{
+      item_id: product.id,
+      item_name: product.brand_name,
+      price,
+      quantity: qty
+    }]
+  });
 }
 
 function changeCartQty(productId, size, delta) {
@@ -347,6 +361,103 @@ function openWhatsApp(message) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
+/* ---------- Analytics (GA4 + Meta Pixel) ---------- */
+function analyticsEvent(pixelEvent, ga4Event, params) {
+  try { if (typeof fbq === "function") fbq("track", pixelEvent, params); } catch (e) { /* noop */ }
+  try { if (typeof gtag === "function") gtag("event", ga4Event, params); } catch (e) { /* noop */ }
+}
+
+/* ---------- Product page URL + share / notify helpers ---------- */
+function productPageUrl(product) {
+  if (window.SITE_URL) return `${window.SITE_URL}/products/${product.id}.html`;
+  return BASE_PATH + "products/" + product.id + ".html";
+}
+
+function notifyMessage(product, size) {
+  return `${t("wa.notifyMsg", {
+    name: product.brand_name,
+    size: (size || getDefaultSize(product)).replace("ml", " ML")
+  })}\n\n${t("wa.name")}\n${t("wa.phone")}`;
+}
+
+function shareMessage(product) {
+  const size = getDefaultSize(product);
+  return `${t("wa.shareMsg", {
+    name: product.brand_name,
+    price: Number(product.sizes?.[size] || 0).toLocaleString(),
+    currency: currency()
+  })}${productPageUrl(product)}`;
+}
+
+function copyShareLink(product) {
+  const url = productPageUrl(product);
+  const done = () => showToast(t("toast.copied"));
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      navigator.clipboard.writeText(url).then(done, done);
+      return;
+    }
+  } catch (e) { /* fall through to prompt */ }
+  try {
+    if (window.prompt) window.prompt(product.brand_name, url);
+  } catch (e) { /* noop */ }
+  done();
+}
+
+/* ---------- Related products ---------- */
+function relatedProducts(product, limit = 4) {
+  const others = state.products.filter(p => p.id !== product.id);
+
+  const score = p => {
+    let s = 0;
+    if (p.fragrance_family && p.fragrance_family === product.fragrance_family) s += 3;
+    const sharedCat = (p.categories || []).filter(c => (product.categories || []).includes(c)).length;
+    s += sharedCat * 2;
+    if (p.inspired_by && p.inspired_by === product.inspired_by) s += 1;
+    return s;
+  };
+
+  const sameGender = others
+    .filter(p => p.gender === product.gender)
+    .map(p => ({ p, s: score(p) }))
+    .sort((a, b) => b.s - a.s)
+    .map(x => x.p);
+
+  if (sameGender.length >= limit) return sameGender.slice(0, limit);
+
+  const picked = new Set(sameGender.map(p => p.id));
+  const rest = others
+    .filter(p => !picked.has(p.id))
+    .map(p => ({ p, s: score(p) }))
+    .sort((a, b) => b.s - a.s)
+    .map(x => x.p);
+
+  return [...sameGender, ...rest].slice(0, limit);
+}
+
+function relatedSectionHTML(product) {
+  const related = relatedProducts(product);
+  if (!related.length) return "";
+
+  const cards = related.map(p => {
+    const size = getDefaultSize(p);
+    return `
+      <button type="button" class="related-card" data-related-id="${escapeHTML(p.id)}" aria-label="${escapeHTML(p.brand_name)}">
+        <img src="${escapeHTML(getProductImageCandidates(p)[0])}" alt="" loading="lazy">
+        <strong>${escapeHTML(p.brand_name)}</strong>
+        <span>${Number(p.sizes?.[size] || 0).toLocaleString()} ${currency()}</span>
+      </button>
+    `;
+  }).join("");
+
+  return `
+    <div class="related-section">
+      <h3 class="notes-title">${t("detail.related")}</h3>
+      <div class="related-grid">${cards}</div>
+    </div>
+  `;
+}
+
 /* ================================
    Stock & gallery helpers
    ================================ */
@@ -417,6 +528,11 @@ function buildProductDetail(product) {
     <button class="whatsapp-btn" id="orderWhatsApp">
       <span>◔</span> ${t("modal.orderWa")}
     </button>
+    <button class="notify-btn" id="notifyBtn"
+            data-product-id="${escapeHTML(product.id)}"
+            data-size="${escapeHTML(state.selectedSize)}">
+      ${t("detail.notify")}
+    </button>
   `;
 
   return `
@@ -448,6 +564,23 @@ function buildProductDetail(product) {
     <div class="size-grid">${sizeButtons}</div>` : ""}
 
     ${actions}
+
+    <div class="share-row">
+      <span>${t("detail.share")}</span>
+      <button type="button" class="share-btn" id="shareWhatsApp" data-product-id="${escapeHTML(product.id)}" aria-label="WhatsApp">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+          <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.72.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.71.97.99-3.62-.24-.37a9.77 9.77 0 1 1 8.34 4.6zM12 2a10 10 0 0 0-8.55 15.22L2 22l4.92-1.29A10 10 0 1 0 12 2z"/>
+        </svg>
+      </button>
+      <button type="button" class="share-btn" id="copyLink" data-product-id="${escapeHTML(product.id)}" aria-label="${t("detail.share")}">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </button>
+    </div>
+
+    ${relatedSectionHTML(product)}
   `;
 }
 
@@ -487,6 +620,18 @@ function attachProductDetail(rootEl, product) {
       btn.dataset.galleryIndex = String(next);
       img.src = images[next];
       img.dataset.imageIndex = "0";
+    });
+  });
+
+  rootEl.querySelectorAll(".related-card").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const related = state.products.find(p => p.id === btn.dataset.relatedId);
+      if (!related) return;
+      if (PAGE_PRODUCT_ID) {
+        window.location.href = BASE_PATH + "products/" + related.id + ".html";
+      } else {
+        openProductModal(related);
+      }
     });
   });
 }
@@ -780,6 +925,29 @@ function initCards() {
       if (product) {
         addToCart(product, addButton.dataset.size || getDefaultSize(product));
       }
+      return;
+    }
+
+    const quickBtn = event.target.closest(".quick-order-btn");
+    if (quickBtn) {
+      const card = quickBtn.closest(".product-card");
+      const product = card && state.products.find(p => p.id === card.dataset.productId);
+      if (product) {
+        const price = Number(product.sizes?.[getDefaultSize(product)] || 0);
+        analyticsEvent("InitiateCheckout", "begin_checkout", {
+          value: price,
+          currency: "EGP",
+          content_ids: [product.id],
+          content_type: "product",
+          items: [{
+            item_id: product.id,
+            item_name: product.brand_name,
+            price,
+            quantity: 1
+          }]
+        });
+      }
+      return;
     }
   });
 }
@@ -835,7 +1003,28 @@ function initCartEvents() {
 
   document.getElementById("checkoutBtn")?.addEventListener("click", () => {
     const message = checkoutMessage();
-    if (message) openWhatsApp(message);
+    if (message) {
+      const items = state.cart
+        .filter(item => productInData(item.id))
+        .map(item => {
+          const product = state.products.find(x => x.id === item.id);
+          return {
+            item_id: item.id,
+            item_name: product ? product.brand_name : item.id,
+            price: Number(product?.sizes?.[item.size] || 0),
+            quantity: item.qty
+          };
+        });
+
+      analyticsEvent("Purchase", "purchase", {
+        value: getCartTotal(),
+        currency: "EGP",
+        content_type: "product",
+        items
+      });
+
+      openWhatsApp(message);
+    }
   });
 
   document.getElementById("clearCartBtn")?.addEventListener("click", () => {
@@ -887,6 +1076,29 @@ document.addEventListener("click", event => {
   const waBtn = event.target.closest("#orderWhatsApp");
   if (waBtn && state.selectedProduct) {
     openWhatsApp(modalOrderMessage(state.selectedProduct, state.selectedSize));
+    return;
+  }
+
+  const notifyBtn = event.target.closest("#notifyBtn");
+  if (notifyBtn) {
+    const product = state.products.find(p => p.id === notifyBtn.dataset.productId);
+    if (product) {
+      openWhatsApp(notifyMessage(product, notifyBtn.dataset.size || getDefaultSize(product)));
+    }
+    return;
+  }
+
+  const shareWa = event.target.closest("#shareWhatsApp");
+  if (shareWa) {
+    const product = state.products.find(p => p.id === shareWa.dataset.productId);
+    if (product) openWhatsApp(shareMessage(product));
+    return;
+  }
+
+  const copyBtn = event.target.closest("#copyLink");
+  if (copyBtn) {
+    const product = state.products.find(p => p.id === copyBtn.dataset.productId);
+    if (product) copyShareLink(product);
   }
 });
 

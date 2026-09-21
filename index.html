@@ -104,6 +104,7 @@
 </head>
 <body>
   <div class="page-shell">
+    <div class="announcement-bar" data-i18n="announce.text" role="note">Free shipping on orders above 1000 EGP · Cash on delivery nationwide</div>
     <header class="site-header">
       <a class="brand" href="#home" aria-label="Willi's Perfume home">
         <img src="images/logo.webp" alt="Willi's Perfume logo" width="43" height="43">
@@ -350,6 +351,41 @@
           </figure>
         </div>
       </section>
+
+      <section class="faq-section" id="faq" aria-label="Frequently asked questions">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow" data-i18n="faq.eyebrow">GOOD TO KNOW</span>
+            <h2 data-i18n="faq.title">Frequently Asked Questions</h2>
+          </div>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary data-i18n="faq.q1">How do I order?</summary>
+            <p data-i18n="faq.a1">Choose a fragrance from the collection, add it to your cart, then press "Checkout via WhatsApp" — or message us directly on WhatsApp and we'll help you choose your size.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q2">How much does delivery cost?</summary>
+            <p data-i18n="faq.a2">Shipping is 35 EGP inside Cairo and 50 EGP to other governorates. It's free for orders above 1,000 EGP.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q3">What payment methods do you accept?</summary>
+            <p data-i18n="faq.a3">Cash on delivery, Vodafone Cash or InstaPay — just tell us your preferred method in the WhatsApp order message.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q4">Can I exchange or return my order?</summary>
+            <p data-i18n="faq.a4">Yes — you can exchange or return any item within 24 hours of receiving it. Just message us on WhatsApp.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q5">Are the fragrances original?</summary>
+            <p data-i18n="faq.a5">Yes — our fragrances are inspired by iconic scents and made with high-quality oils for a consistent, long-lasting performance.</p>
+          </details>
+          <details class="faq-item">
+            <summary data-i18n="faq.q6">When will my order ship?</summary>
+            <p data-i18n="faq.a6">Orders are shipped within 24 hours, and delivery takes 2–5 working days depending on your governorate.</p>
+          </details>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer" id="footer">
@@ -416,6 +452,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script>window.SITE_URL = "https://willis-perfume.com";</script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>

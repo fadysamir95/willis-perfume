@@ -384,6 +384,32 @@ const I18N = {
 
     "pager.prev": "Previous fragrance",
     "pager.next": "Next fragrance",
+
+    "announce.text": "Free shipping on orders above 1000 EGP · Cash on delivery nationwide",
+
+    "detail.related": "You may also like",
+    "detail.notify": "Notify me when it's back",
+    "detail.share": "Share",
+
+    "toast.copied": "Link copied to clipboard",
+
+    "wa.notifyMsg": "Hi, please notify me when \"{name}\" ({size}) is back in stock.",
+    "wa.shareMsg": "Check out \"{name}\" from Willi's Perfume — {price} {currency} — ",
+
+    "faq.eyebrow": "GOOD TO KNOW",
+    "faq.title": "Frequently Asked Questions",
+    "faq.q1": "How do I order?",
+    "faq.a1": "Choose a fragrance from the collection, add it to your cart, then press \"Checkout via WhatsApp\" — or message us directly on WhatsApp and we'll help you choose your size.",
+    "faq.q2": "How much does delivery cost?",
+    "faq.a2": "Shipping is 35 EGP inside Cairo and 50 EGP to other governorates. It's free for orders above 1,000 EGP.",
+    "faq.q3": "What payment methods do you accept?",
+    "faq.a3": "Cash on delivery, Vodafone Cash or InstaPay — just tell us your preferred method in the WhatsApp order message.",
+    "faq.q4": "Can I exchange or return my order?",
+    "faq.a4": "Yes — you can exchange or return any item within 24 hours of receiving it. Just message us on WhatsApp.",
+    "faq.q5": "Are the fragrances original?",
+    "faq.a5": "Yes — our fragrances are inspired by iconic scents and made with high-quality oils for a consistent, long-lasting performance.",
+    "faq.q6": "When will my order ship?",
+    "faq.a6": "Orders are shipped within 24 hours, and delivery takes 2–5 working days depending on your governorate.",
   },
 
   ar: {
@@ -523,6 +549,32 @@ const I18N = {
 
     "pager.prev": "العطر السابق",
     "pager.next": "العطر التالي",
+
+    "announce.text": "شحن مجاني للطلبات فوق 1000 ج.م · الدفع عند الاستلام لجميع المحافظات",
+
+    "detail.related": "قد يعجبك أيضاً",
+    "detail.notify": "أخبرني عند توفره",
+    "detail.share": "مشاركة",
+
+    "toast.copied": "تم نسخ الرابط",
+
+    "wa.notifyMsg": "مرحباً، أرجو إخباري عند توفر \"{name}\" ({size}) من جديد.",
+    "wa.shareMsg": "جرّب \"{name}\" من عطور ويلي — {price} {currency} — ",
+
+    "faq.eyebrow": "معلومات مهمة",
+    "faq.title": "الأسئلة الشائعة",
+    "faq.q1": "كيف أطلب؟",
+    "faq.a1": "اختر عطراً من المجموعة وأضفه إلى السلة ثم اضغط \"إتمام الطلب عبر واتساب\" — أو راسلنا مباشرة على واتساب وسنساعدك في اختيار القياس.",
+    "faq.q2": "كم تكلفة الشحن؟",
+    "faq.a2": "الشحن 35 ج.م داخل القاهرة و50 ج.م للمحافظات الأخرى، ومجاني للطلبات فوق 1000 ج.م.",
+    "faq.q3": "ما طرق الدفع المتاحة؟",
+    "faq.a3": "الدفع عند الاستلام أو فودافون كاش أو إنستاباي — أخبرنا بطريقتك المفضلة في رسالة الواتساب.",
+    "faq.q4": "هل يمكنني الاستبدال أو الإرجاع؟",
+    "faq.a4": "نعم — يمكنك الاستبدال أو الإرجاع خلال 24 ساعة من استلام الطلب، فقط راسلنا على واتساب.",
+    "faq.q5": "هل العطور أصلية؟",
+    "faq.a5": "نعم — عطورنا مستوحاة من عطور شهيرة وتُصنع بزيوت عالية الجودة لأداء ثابت وثبات طويل.",
+    "faq.q6": "متى يتم شحن الطلب؟",
+    "faq.a6": "يتم شحن الطلبات خلال 24 ساعة، ويصل الطلب خلال 2–5 أيام عمل حسب محافظتك.",
   }
 };
 
