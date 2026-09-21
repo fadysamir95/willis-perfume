@@ -2673,94 +2673,122 @@ a {
 
 /* ---------- Shipping & delivery section ---------- */
 .shipping-section {
-  padding: 8px 18px 0;
+  padding: 6px 18px 70px;
   background: var(--ivory);
 }
 
 .shipping-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
 }
 
 .ship-card {
-  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 26px 22px 24px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   background: var(--white);
-  text-align: center;
   box-shadow: 0 9px 24px rgba(55, 41, 21, .05);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.ship-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(55, 41, 21, .1);
 }
 
 .ship-icon {
   display: inline-grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 10px;
-  border-radius: 50%;
-  background: #f4ead8;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #f6edd9, #eee0c3);
   color: var(--gold-dark);
-  font-size: 20px;
+}
+
+.ship-icon svg {
+  display: block;
 }
 
 .ship-card h3 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 20px;
-  line-height: 1.1;
+  font-size: 21px;
+  line-height: 1.05;
+  font-weight: 700;
 }
 
 .ship-card p {
   margin: 0;
   color: var(--muted);
-  font-size: 10px;
-  line-height: 1.7;
+  font-size: 11px;
+  line-height: 1.8;
 }
 
 /* ---------- Testimonials section ---------- */
 .testimonials-section {
-  padding: 46px 18px 80px;
+  padding: 10px 18px 85px;
   background: var(--ivory);
 }
 
 .testimonials-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .testimonial-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 13px;
   margin: 0;
-  padding: 24px 20px;
+  padding: 30px 26px 24px;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--radius-md);
   background: var(--white);
   box-shadow: 0 9px 24px rgba(55, 41, 21, .05);
 }
 
+.testimonial-card::before {
+  content: "“";
+  color: var(--gold-soft);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 46px;
+  line-height: .7;
+}
+
 .stars {
-  color: #d99a2b;
-  font-size: 13px;
-  letter-spacing: 3px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #c9993f;
+}
+
+.stars svg {
+  display: block;
 }
 
 .testimonial-card blockquote {
   flex: 1;
   margin: 0;
-  color: #57524b;
-  font-size: 10.5px;
-  line-height: 1.85;
+  color: #4f4942;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 18px;
+  line-height: 1.55;
 }
 
 .testimonial-card figcaption {
   color: var(--gold-dark);
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 16px;
+  font-size: 9px;
   font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 /* ---------- Not-found (standalone product pages) ---------- */
@@ -2787,17 +2815,51 @@ a {
 }
 
 /* ---------- Responsive: new sections ---------- */
+@media (max-width: 1024px) {
+  .shipping-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 899px) {
-  .shipping-grid,
   .testimonials-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+  }
+
+  .testimonial-card {
+    max-width: 480px;
+    margin-inline: auto;
+    width: 100%;
+    padding: 28px 24px 22px;
   }
 }
 
 @media (max-width: 559px) {
-  .shipping-grid,
-  .testimonials-grid {
+  .shipping-grid {
     grid-template-columns: 1fr;
+  }
+
+  .ship-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 16px;
+  }
+
+  .ship-icon {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+
+  .ship-card h3 {
+    font-size: 19px;
+  }
+
+  .ship-card p {
+    font-size: 10.5px;
   }
 }
 
@@ -3009,6 +3071,18 @@ a {
 [dir="rtl"] .whatsapp-btn span {
   margin-right: 0;
   margin-left: 8px;
+}
+
+[dir="rtl"] .ship-card {
+  align-items: flex-end;
+}
+
+[dir="rtl"] .testimonial-card::before {
+  content: "«";
+}
+
+[dir="rtl"] .testimonial-card blockquote {
+  font-family: "Cairo", "Cormorant Garamond", serif;
 }
 
 [dir="rtl"] .desktop-nav {
