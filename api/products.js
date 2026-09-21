@@ -131,6 +131,13 @@ module.exports = async function handler(req, res) {
     } else {
       friendly = raw;
     }
-    return sendJson(res, 500, { error: friendly, detail: raw });
+    return sendJson(res, 500, {
+      error: friendly,
+      detail: raw,
+      env: {
+        hasToken: !!process.env.BLOB_READ_WRITE_TOKEN,
+        hasStoreId: !!process.env.BLOB_STORE_ID
+      }
+    });
   }
 };

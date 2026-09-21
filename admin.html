@@ -281,7 +281,10 @@ async function load() {
     let j = null;
     try { j = await r.json(); } catch (e) { /* non-JSON error */ }
     if (!r.ok) {
-      throw new Error(j && j.error ? j.error : "HTTP " + r.status);
+      const err = new Error(j && j.error ? j.error : "HTTP " + r.status);
+      err.detail = j && j.detail ? j.detail : "";
+      err.env = j && j.env ? j.env : null;
+      throw err;
     }
     products = j;
     if (!Array.isArray(products)) throw new Error("البيانات مش مصفوفة");
@@ -291,9 +294,16 @@ async function load() {
     if (IS_REMOTE) applyRemoteMode();
   } catch (e) {
     const remoteHint = IS_REMOTE
-      ? ' — لو الموقع منشور على Vercel تأكد إن <b>Blob Storage</b> متصل ومتغير <code>BLOB_READ_WRITE_TOKEN</code> شغال (صفحة Storage في Vercel). محليًا: شغّل <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>'
+      ? '<br><br>دليل سريع: افتح <b>Vercel</b> ← تبويب <b>Storage</b>، تأكد إن فيه store واحدة بس بتاعة <b>Public</b> مربوطة بالمشروع ده، وامسح أي متغيرات قديمة من <b>Settings ← Environment Variables</b> (BLOB_READ_WRITE_TOKEN و BLOB_STORE_ID) ثم اعمل <b>Redeploy</b>. محليًا: شغّل <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>'
       : ' — تأكد إن السيرفر شغال: <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>';
-    showGuide(`تعذر تحميل المنتجات (${e.message})${remoteHint}`);
+    let extra = "";
+    if (e.detail && e.detail !== e.message) {
+      extra = `<br><small style="direction:ltr;display:inline-block;word-break:break-all">detail: ${esc(e.detail).slice(0, 260)}</small>`;
+    }
+    if (e.env) {
+      extra += `<br><small>فحص المتغيرات: BLOB_READ_WRITE_TOKEN = ${e.env.hasToken ? "موجود ✔" : "غير موجود ✖"} · BLOB_STORE_ID = ${e.env.hasStoreId ? "موجود" : "غير موجود"}</small>`;
+    }
+    showGuide(`تعذر تحميل المنتجات (${e.message})${extra}${remoteHint}`);
   }
 }
 
