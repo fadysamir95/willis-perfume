@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Let Google / Bing read the sitemap
+Sitemap: https://willis-perfume.com/sitemap.xml

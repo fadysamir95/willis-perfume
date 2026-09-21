@@ -2586,3 +2586,432 @@ a {
 @media (min-width: 1050px) {
   .toast { bottom: 30px; }
 }
+
+/* ==========================================================
+   IMPROVEMENTS — stock, quick order, language toggle,
+   shipping & testimonials sections, RTL support
+   ========================================================== */
+
+/* ---------- Stock chip (card & modal image) ---------- */
+.stock-chip {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  z-index: 4;
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: #c98f2e;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.stock-chip.out {
+  background: #a94442;
+}
+
+/* ---------- Quick WhatsApp order button (card image) ---------- */
+.quick-order-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  background: #1fae62;
+  box-shadow: 0 6px 14px rgba(31, 174, 98, .32);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.quick-order-btn:hover {
+  transform: scale(1.09);
+  box-shadow: 0 8px 18px rgba(31, 174, 98, .4);
+}
+
+/* ---------- Card add-to-cart polish ---------- */
+.add-to-cart span {
+  font-size: 15px;
+  line-height: 0;
+}
+
+.add-to-cart:disabled {
+  background: #c9bda8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ---------- Language toggle ---------- */
+.lang-toggle {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid #d8c8ad;
+  border-radius: 999px;
+  background: #fffaf1;
+  color: #6f501f;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.lang-toggle:hover {
+  border-color: var(--gold);
+  background: #fdf6ea;
+}
+
+.menu-lang-toggle {
+  margin: 16px 0 4px;
+}
+
+/* ---------- Shipping & delivery section ---------- */
+.shipping-section {
+  padding: 8px 18px 0;
+  background: var(--ivory);
+}
+
+.shipping-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.ship-card {
+  padding: 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  text-align: center;
+  box-shadow: 0 9px 24px rgba(55, 41, 21, .05);
+}
+
+.ship-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  background: #f4ead8;
+  color: var(--gold-dark);
+  font-size: 20px;
+}
+
+.ship-card h3 {
+  margin: 0 0 6px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.ship-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* ---------- Testimonials section ---------- */
+.testimonials-section {
+  padding: 46px 18px 80px;
+  background: var(--ivory);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.testimonial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 0;
+  padding: 24px 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--white);
+  box-shadow: 0 9px 24px rgba(55, 41, 21, .05);
+}
+
+.stars {
+  color: #d99a2b;
+  font-size: 13px;
+  letter-spacing: 3px;
+}
+
+.testimonial-card blockquote {
+  flex: 1;
+  margin: 0;
+  color: #57524b;
+  font-size: 10.5px;
+  line-height: 1.85;
+}
+
+.testimonial-card figcaption {
+  color: var(--gold-dark);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ---------- Not-found (standalone product pages) ---------- */
+.not-found {
+  padding: 70px 18px;
+  text-align: center;
+}
+
+.not-found h2 {
+  font-size: 64px;
+  margin: 0;
+  color: var(--gold);
+}
+
+.not-found p {
+  margin: 10px 0 20px;
+  color: var(--muted);
+}
+
+.not-found .view-details {
+  display: inline-block;
+  width: auto;
+  padding: 0 26px;
+}
+
+/* ---------- Responsive: new sections ---------- */
+@media (max-width: 899px) {
+  .shipping-grid,
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 559px) {
+  .shipping-grid,
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- RTL (Arabic) support ---------- */
+[dir="rtl"] body {
+  font-family: "Cairo", "Montserrat", system-ui, sans-serif;
+}
+
+[dir="rtl"] .Cormorant,
+[dir="rtl"] .brand-copy strong,
+[dir="rtl"] .product-name,
+[dir="rtl"] .cart-title,
+[dir="rtl"] .cart-item-name,
+[dir="rtl"] .cart-total-line strong,
+[dir="rtl"] .detail-title,
+[dir="rtl"] .qty-row > span,
+[dir="rtl"] .family-box strong,
+[dir="rtl"] .note-card span,
+[dir="rtl"] .size-btn strong,
+[dir="rtl"] .ship-card h3,
+[dir="rtl"] .testimonial-card figcaption,
+[dir="rtl"] .story-card h2,
+[dir="rtl"] .section-heading h2 {
+  font-family: "Cairo", "Montserrat", sans-serif;
+}
+
+[dir="rtl"] .search-icon {
+  margin-right: 0;
+  margin-left: 9px;
+  transform: rotate(20deg);
+}
+
+[dir="rtl"] .cart-badge {
+  right: auto;
+  left: -9px;
+}
+
+[dir="rtl"] .mobile-cart-wrap .cart-badge {
+  right: auto;
+  left: -12px;
+}
+
+[dir="rtl"] .stock-chip,
+[dir="rtl"] .quick-order-btn {
+  right: auto;
+  left: 9px;
+}
+
+[dir="rtl"] .quick-order-btn {
+  left: 10px;
+}
+
+[dir="rtl"] .cart-drawer {
+  right: auto;
+  left: 0;
+  transform: translateX(-105%);
+  box-shadow: 20px 0 50px rgba(0, 0, 0, .12);
+}
+
+[dir="rtl"] .cart-drawer.open {
+  transform: translateX(0);
+}
+
+[dir="rtl"] .detail-image .stock-chip {
+  right: auto;
+  left: 12px;
+}
+
+[dir="rtl"] .hero-side-copy {
+  left: auto;
+  right: 14px;
+  text-align: right;
+}
+
+[dir="rtl"] .primary-btn {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 699px) {
+  [dir="rtl"] .product-gender {
+    left: auto;
+    right: 8px;
+  }
+
+  [dir="rtl"] .stock-chip,
+  [dir="rtl"] .quick-order-btn {
+    right: auto;
+    left: 8px;
+  }
+}
+
+/* ==========================================================
+   STANDALONE PRODUCT PAGES  (products/<id>.html)
+   ========================================================== */
+
+.product-main {
+  background: var(--ivory);
+  min-height: 60vh;
+}
+
+@media (min-width: 1050px) {
+  /* The site header is absolutely positioned above the hero on the home page;
+     product pages have no hero, so give the content room. */
+  .product-main { padding-top: 82px; }
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 26px 18px 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.breadcrumbs a {
+  color: var(--gold-dark);
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover { text-decoration: underline; }
+
+.breadcrumbs .current { color: #4f4942; }
+
+.product-page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 18px 18px 34px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: #fbf8f3;
+  box-shadow: 0 24px 70px rgba(35, 25, 12, .1);
+}
+
+.product-page .detail-image {
+  border-radius: 14px;
+}
+
+.product-page .gallery-btn {
+  top: 14px;
+  left: auto;
+  right: 14px;
+}
+
+.product-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 680px;
+  margin: 18px auto 0;
+  padding: 0 18px 70px;
+}
+
+.product-pager a {
+  color: var(--gold-dark);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.product-pager a:hover { text-decoration: underline; }
+
+.product-pager a:nth-child(2) { color: var(--muted); }
+
+/* More photos button (detail image) */
+.gallery-btn {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 4;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .9);
+  color: #6f501f;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(35, 25, 12, .14);
+}
+
+[dir="rtl"] .gallery-btn {
+  right: auto;
+  left: 14px;
+}
+
+/* ---------- More RTL refinements ---------- */
+[dir="rtl"] .side-menu {
+  left: 0;
+  right: auto;
+  transform: translateX(-105%);
+  box-shadow: 20px 0 50px rgba(0, 0, 0, .12);
+}
+
+[dir="rtl"] .side-menu.open { transform: translateX(0); }
+
+[dir="rtl"] .side-menu nav a,
+[dir="rtl"] .side-menu nav button { text-align: right; }
+
+[dir="rtl"] .modal-close {
+  right: auto;
+  left: 15px;
+}
+
+[dir="rtl"] .whatsapp-btn span {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+[dir="rtl"] .desktop-nav {
+  margin-left: clamp(28px, 3vw, 54px);
+  margin-right: auto;
+}

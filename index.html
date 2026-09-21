@@ -1,22 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#f7f3ec" />
-  <meta name="description" content="Willi's Perfume — discover your signature scent." />
-  <title>Willi's Perfume — Wear Your Will</title>
+
+  <!-- ===== Primary meta ===== -->
+  <title>Willi's Perfume — Wear Your Will | Signature Fragrances Egypt</title>
+  <meta name="description" content="Willi's Perfume — discover your signature scent. Premium fragrances inspired by iconic scents, with delivery all over Egypt and cash on delivery." />
+  <meta name="author" content="Willi's Perfume" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- ===== Canonical (replace willis-perfume.com with the real domain on launch) ===== -->
+  <link rel="canonical" href="https://willis-perfume.com/" />
+
+  <!-- ===== Favicons ===== -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+
+  <!-- ===== Open Graph / Facebook ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Willi's Perfume" />
+  <meta property="og:title" content="Willi's Perfume — Wear Your Will" />
+  <meta property="og:description" content="Discover your signature scent. Premium fragrances inspired by iconic scents — delivery all over Egypt, cash on delivery." />
+  <meta property="og:url" content="https://willis-perfume.com/" />
+  <meta property="og:image" content="https://willis-perfume.com/images/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="ar_EG" />
+
+  <!-- ===== Twitter ===== -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Willi's Perfume — Wear Your Will" />
+  <meta name="twitter:description" content="Discover your signature scent. Premium fragrances inspired by iconic scents — delivery all over Egypt, cash on delivery." />
+  <meta name="twitter:image" content="https://willis-perfume.com/images/og-image.png" />
+
+  <!-- ===== Fonts (Cairo added for Arabic / RTL) ===== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="style-mobile-fix.css" />
+
+  <!-- ===== Structured data ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Willi's Perfume",
+    "url": "https://willis-perfume.com/",
+    "description": "Willi's Perfume — discover your signature scent.",
+    "inLanguage": ["en", "ar"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Willi's Perfume",
+    "url": "https://willis-perfume.com/",
+    "logo": "https://willis-perfume.com/images/logo.webp",
+    "sameAs": [
+      "https://www.instagram.com/willis_perfume/",
+      "https://www.facebook.com/profile.php?id=61590332657028"
+    ]
+  }
+  </script>
+
+  <!-- ======================================================================
+       GOOGLE ANALYTICS (GA4)
+       Replace "G-XXXXXXXXXX" with your real Measurement ID, e.g. G-ABCDE12345.
+       ====================================================================== -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- ======================================================================
+       META PIXEL (Facebook / Instagram ads)
+       Replace "1234567890123456" with your real Pixel ID.
+       ====================================================================== -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1234567890123456');
+    fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" alt=""
+         src="https://www.facebook.com/tr?id=1234567890123456&ev=PageView&noscript=1" />
+  </noscript>
 </head>
 <body>
   <div class="page-shell">
     <header class="site-header">
       <a class="brand" href="#home" aria-label="Willi's Perfume home">
-        <img src="images/logo.png" alt="Willi's Perfume logo">
+        <img src="images/logo.webp" alt="Willi's Perfume logo" width="43" height="43">
         <span class="brand-copy">
           <strong>Willi’s Perfume</strong>
           <small>WEAR YOUR WILL</small>
@@ -24,10 +114,10 @@
       </a>
 
       <nav class="desktop-nav" aria-label="Main navigation">
-        <a class="active" href="#home">Home</a>
-        <a href="#collection">Collection</a>
-        <a href="#story">About Us</a>
-        <a href="#footer">Contact</a>
+        <a class="active" href="#home" data-i18n="nav.home">Home</a>
+        <a href="#collection" data-i18n="nav.collection">Collection</a>
+        <a href="#story" data-i18n="nav.about">About Us</a>
+        <a href="#footer" data-i18n="nav.contact">Contact</a>
       </nav>
 
       <div class="desktop-actions">
@@ -37,17 +127,18 @@
         <a class="social-icon facebook-icon" href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M13.7 7.2h2V4.4c-.35-.05-1.55-.15-2.9-.15-2.87 0-4.84 1.75-4.84 4.98v2.78H4.8v3.1h3.16v7.7h3.86v-7.7h3.07l.49-3.1h-3.56V9.55c0-.9.24-2.35 1.88-2.35Z" fill="#fff"/></svg>
         </a>
+        <button class="lang-toggle" type="button" aria-label="Switch to Arabic">العربية</button>
         <button class="cart-icon-btn" id="desktopCartBtn" aria-label="Open cart" aria-expanded="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7.5h12l-1.1 12a1.8 1.8 0 0 1-1.8 1.6H8.9a1.8 1.8 0 0 1-1.8-1.6L6 7.5Z"/><path d="M9 10V5.8A3 3 0 0 1 12 3a3 3 0 0 1 3 2.8V10"/></svg>
           <span class="cart-badge" id="desktopCartBadge">0</span>
         </button>
         <button class="desktop-whatsapp" id="desktopWhatsApp">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.4-4.2A8.5 8.5 0 1 1 20.5 11.8Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.3 8.6c.2-.4.5-.5.9-.5h.6c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c.7 1.2 1.6 2.1 2.9 2.8l.7-.7c.2-.2.4-.2.7-.1l1.8.8c.3.1.4.3.4.5v.6c0 .4-.2.7-.5.9-.5.3-1.2.4-1.8.2-3.4-1-5.8-3.4-6.8-6.8-.2-.6-.1-1.3.2-1.8Z" fill="currentColor"/></svg>
-          <span>Order on WhatsApp</span>
+          <span data-i18n="header.orderWa">Order on WhatsApp</span>
         </button>
       </div>
 
-      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" data-i18n-aria="menu.open" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </header>
@@ -55,37 +146,38 @@
     <div class="menu-overlay" id="menuOverlay"></div>
     <aside class="side-menu" id="sideMenu" aria-hidden="true">
       <div class="menu-top">
-        <span>Menu</span>
-        <button class="icon-btn close-menu" id="closeMenu" aria-label="Close menu">×</button>
+        <span data-i18n="menu.label">Menu</span>
+        <button class="icon-btn close-menu" id="closeMenu" aria-label="Close menu" data-i18n-aria="menu.close">×</button>
       </div>
       <nav>
-        <a href="#home">Home</a>
-        <a href="#collection">Our Collection</a>
-        <button data-gender="Men">Men</button>
-        <button data-gender="Women">Women</button>
-        <button data-gender="Unisex">Unisex</button>
+        <a href="#home" data-i18n="nav.home">Home</a>
+        <a href="#collection" data-i18n="nav.collection">Our Collection</a>
+        <button data-gender="Men" data-i18n="gender.men">Men</button>
+        <button data-gender="Women" data-i18n="gender.women">Women</button>
+        <button data-gender="Unisex" data-i18n="gender.unisex">Unisex</button>
       </nav>
       <div class="menu-divider"></div>
-      <p class="menu-caption">Find a scent that feels like you.</p>
+      <p class="menu-caption" data-i18n="menu.caption">Find a scent that feels like you.</p>
+      <button class="lang-toggle menu-lang-toggle" type="button" aria-label="Switch to Arabic">العربية</button>
       <div class="menu-socials">
-        <a href="https://www.instagram.com/willis_perfume/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
-        <a href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" aria-label="Facebook">Facebook</a>
-        <a href="#" id="menuWhatsApp" aria-label="WhatsApp">WhatsApp</a>
+        <a href="https://www.instagram.com/willis_perfume/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-i18n="menu.instagram">Instagram</a>
+        <a href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" aria-label="Facebook" data-i18n="menu.facebook">Facebook</a>
+        <a href="#" id="menuWhatsApp" aria-label="WhatsApp" data-i18n="menu.whatsapp">WhatsApp</a>
       </div>
     </aside>
 
     <main id="home">
       <section class="hero">
         <div class="hero-copy">
-          <span class="eyebrow">WILLI’S PERFUME</span>
-          <h1>Find Your<br><em>Signature Scent</em></h1>
-          <p>Discover carefully selected fragrances inspired by iconic scents, made for your own style.</p>
-          <a class="primary-btn" href="#collection">Explore Collection <span>→</span></a>
+          <span class="eyebrow" data-i18n="hero.eyebrow">WILLI’S PERFUME</span>
+          <h1 data-i18n-html="hero.title">Find Your<br><em>Signature Scent</em></h1>
+          <p data-i18n="hero.subtitle">Discover carefully selected fragrances inspired by iconic scents, made for your own style.</p>
+          <a class="primary-btn" href="#collection"><span data-i18n="hero.cta">Explore Collection</span> <span>→</span></a>
 
           <div class="hero-features">
-            <div><b>◊</b><span>Premium<br>Quality</span></div>
-            <div><b>◇</b><span>Inspired by<br>Iconic Scents</span></div>
-            <div><b>♕</b><span>A Scent<br>for Every Story</span></div>
+            <div><b>◊</b><span data-i18n-html="hero.f1">Premium<br>Quality</span></div>
+            <div><b>◇</b><span data-i18n-html="hero.f2">Inspired by<br>Iconic Scents</span></div>
+            <div><b>♕</b><span data-i18n-html="hero.f3">A Scent<br>for Every Story</span></div>
           </div>
         </div>
 
@@ -107,14 +199,14 @@
           <span class="hero-particle p2"></span>
           <span class="hero-particle p3"></span>
 
-          <img src="images/bottle.png" alt="Willi's Perfume bottle" class="hero-bottle">
+          <img src="images/bottle.webp" alt="Willi's Perfume bottle" class="hero-bottle" width="540" height="810">
 
           <div class="hero-stone hero-stone-back"></div>
           <div class="hero-stone hero-stone-middle"></div>
           <div class="hero-stone hero-stone-front"></div>
 
           <div class="hero-side-copy">
-            <span>MORE<br>THAN<br>A FRAGRANCE</span>
+            <span data-i18n-html="hero.side">MORE<br>THAN<br>A FRAGRANCE</span>
             <i></i>
           </div>
         </div>
@@ -123,120 +215,182 @@
       <section class="collection-section" id="collection">
         <div class="section-heading">
           <div>
-            <span class="eyebrow">THE COLLECTION</span>
-            <h2>Our Collection</h2>
+            <span class="eyebrow" data-i18n="coll.eyebrow">THE COLLECTION</span>
+            <h2 data-i18n="coll.title">Our Collection</h2>
           </div>
           <span class="count-badge" id="resultCount">25 fragrances</span>
         </div>
 
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
-          <input id="searchInput" type="search" placeholder="Search your fragrance..." autocomplete="off">
-          <button id="clearSearch" class="clear-search" aria-label="Clear search">×</button>
+          <input id="searchInput" type="search" placeholder="Search your fragrance..." data-i18n-placeholder="coll.search" autocomplete="off">
+          <button id="clearSearch" class="clear-search" aria-label="Clear search" data-i18n-aria="coll.clear">×</button>
         </div>
 
         <div class="filter-row" id="genderFilters" aria-label="Filter by gender">
-          <button class="filter-chip active" data-gender="All">All</button>
-          <button class="filter-chip" data-gender="Men">Men</button>
-          <button class="filter-chip" data-gender="Women">Women</button>
-          <button class="filter-chip" data-gender="Unisex">Unisex</button>
+          <button class="filter-chip active" data-gender="All" data-i18n="filter.all">All</button>
+          <button class="filter-chip" data-gender="Men" data-i18n="filter.men">Men</button>
+          <button class="filter-chip" data-gender="Women" data-i18n="filter.women">Women</button>
+          <button class="filter-chip" data-gender="Unisex" data-i18n="filter.unisex">Unisex</button>
         </div>
 
         <div class="category-row" id="categoryFilters" aria-label="Filter by category">
-          <button class="category-chip active" data-category="All">All styles</button>
-          <button class="category-chip" data-category="Elegant">Elegant</button>
-          <button class="category-chip" data-category="Summer">Summer</button>
-          <button class="category-chip" data-category="Formal">Formal</button>
-          <button class="category-chip" data-category="Night">Night</button>
-          <button class="category-chip" data-category="Attractive">Attractive</button>
-          <button class="category-chip" data-category="Luxury">Luxury</button>
+          <button class="category-chip active" data-category="All" data-i18n="cat.all">All styles</button>
+          <button class="category-chip" data-category="Elegant" data-i18n="cat.Elegant">Elegant</button>
+          <button class="category-chip" data-category="Summer" data-i18n="cat.Summer">Summer</button>
+          <button class="category-chip" data-category="Formal" data-i18n="cat.Formal">Formal</button>
+          <button class="category-chip" data-category="Night" data-i18n="cat.Night">Night</button>
+          <button class="category-chip" data-category="Attractive" data-i18n="cat.Attractive">Attractive</button>
+          <button class="category-chip" data-category="Luxury" data-i18n="cat.Luxury">Luxury</button>
         </div>
 
         <div id="products-container" class="products-grid"></div>
 
         <div id="emptyState" class="empty-state hidden">
           <div>⌕</div>
-          <h3>No fragrance found</h3>
-          <p>Try another name, inspired fragrance, or filter.</p>
-          <button class="secondary-btn" id="resetFilters">Show all fragrances</button>
+          <h3 data-i18n="coll.empty.title">No fragrance found</h3>
+          <p data-i18n="coll.empty.text">Try another name, inspired fragrance, or filter.</p>
+          <button class="secondary-btn" id="resetFilters" data-i18n="coll.empty.reset">Show all fragrances</button>
+        </div>
+      </section>
+
+      <!-- ===== Shipping & delivery ===== -->
+      <section class="shipping-section" id="shipping">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow" data-i18n="ship.eyebrow">DELIVERY & RETURNS</span>
+            <h2 data-i18n="ship.title">Shipping & Delivery</h2>
+          </div>
+        </div>
+
+        <div class="shipping-grid">
+          <div class="ship-card">
+            <span class="ship-icon" aria-hidden="true">⏱</span>
+            <h3 data-i18n="ship.t1Title">Fast Delivery</h3>
+            <p data-i18n="ship.t1Text">Your order ships within 24 hours and arrives in 2–5 working days across Egypt.</p>
+          </div>
+          <div class="ship-card">
+            <span class="ship-icon" aria-hidden="true">⑂</span>
+            <h3 data-i18n="ship.t2Title">Clear Pricing</h3>
+            <p data-i18n="ship.t2Text">Shipping is 35 EGP inside Cairo and 50 EGP to other governorates. Free shipping on orders above 1000 EGP.</p>
+          </div>
+          <div class="ship-card">
+            <span class="ship-icon" aria-hidden="true">$</span>
+            <h3 data-i18n="ship.t3Title">Cash on Delivery</h3>
+            <p data-i18n="ship.t3Text">Pay by cash, Vodafone Cash or InstaPay when your order arrives.</p>
+          </div>
+          <div class="ship-card">
+            <span class="ship-icon" aria-hidden="true">⇄</span>
+            <h3 data-i18n="ship.t4Title">Easy Exchange</h3>
+            <p data-i18n="ship.t4Text">Exchange or return any product within 24 hours of receiving it — just message us on WhatsApp.</p>
+          </div>
         </div>
       </section>
 
       <section class="story-section" id="story">
         <div class="story-card">
-          <span class="eyebrow">WILLI’S PHILOSOPHY</span>
-          <h2>More Than<br><em>a Fragrance</em></h2>
-          <p>A scent can become part of the way people remember you. Choose the one that feels like your signature.</p>
+          <span class="eyebrow" data-i18n="story.eyebrow">WILLI’S PHILOSOPHY</span>
+          <h2 data-i18n-html="story.title">More Than<br><em>a Fragrance</em></h2>
+          <p data-i18n="story.text">A scent can become part of the way people remember you. Choose the one that feels like your signature.</p>
           <span class="story-line"></span>
           <strong>WEAR YOUR WILL</strong>
+        </div>
+      </section>
+
+      <!-- ===== Testimonials ===== -->
+      <section class="testimonials-section" id="testimonials">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow" data-i18n="testi.eyebrow">WORD OF MOUTH</span>
+            <h2 data-i18n="testi.title">What Our Customers Say</h2>
+          </div>
+        </div>
+
+        <div class="testimonials-grid">
+          <figure class="testimonial-card">
+            <div class="stars" aria-hidden="true">★★★★★</div>
+            <blockquote data-i18n="testi.t1">The White Code is exactly what I wanted — long lasting and elegant. Ordering on WhatsApp took two minutes.</blockquote>
+            <figcaption>— <span data-i18n="testi.n1">Ahmed S.</span></figcaption>
+          </figure>
+          <figure class="testimonial-card">
+            <div class="stars" aria-hidden="true">★★★★★</div>
+            <blockquote data-i18n="testi.t2">Milky Amber smells luxurious for the price. Delivery arrived in two days, beautifully packed.</blockquote>
+            <figcaption>— <span data-i18n="testi.n2">Nour M.</span></figcaption>
+          </figure>
+          <figure class="testimonial-card">
+            <div class="stars" aria-hidden="true">★★★★★</div>
+            <blockquote data-i18n="testi.t3">Great service — I ordered three perfumes and they even helped me choose my scent over WhatsApp.</blockquote>
+            <figcaption>— <span data-i18n="testi.n3">Omar K.</span></figcaption>
+          </figure>
         </div>
       </section>
     </main>
 
     <footer class="site-footer" id="footer">
-      <img src="images/logo.png" alt="" class="footer-logo">
+      <img src="images/logo.webp" alt="" class="footer-logo" width="58" height="58">
       <h3>Willi’s Perfume</h3>
-      <p>Wear Your Will</p>
-      <small>© 2026 Willi’s Perfume. All rights reserved.</small>
+      <p data-i18n="footer.about">Wear Your Will</p>
+      <small data-i18n="footer.rights">© 2026 Willi’s Perfume. All rights reserved.</small>
     </footer>
   </div>
 
   <div class="modal-backdrop" id="modalBackdrop"></div>
   <section class="product-modal" id="productModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <button class="modal-close" id="modalClose" aria-label="Close product details">×</button>
+    <button class="modal-close" id="modalClose" aria-label="Close product details" data-i18n-aria="modal.close">×</button>
     <div class="modal-content" id="modalContent"></div>
   </section>
 
   <nav class="mobile-nav" aria-label="Mobile navigation">
     <a href="#home" class="mobile-nav-item active">
-      <span>⌂</span><small>Home</small>
+      <span>⌂</span><small data-i18n="mnav.home">Home</small>
     </a>
     <a href="#collection" class="mobile-nav-item">
-      <span>▦</span><small>Collection</small>
+      <span>▦</span><small data-i18n="mnav.collection">Collection</small>
     </a>
-    <button class="mobile-nav-item" id="cartNav" aria-label="Open cart">
+    <button class="mobile-nav-item" id="cartNav" aria-label="Open cart" data-i18n-aria="cart.open">
       <span class="mobile-cart-wrap">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7.5h12l-1.1 12a1.8 1.8 0 0 1-1.8 1.6H8.9a1.8 1.8 0 0 1-1.8-1.6L6 7.5Z"/><path d="M9 10V5.8A3 3 0 0 1 12 3a3 3 0 0 1 3 2.8V10"/></svg>
         <span class="cart-badge" id="mobileCartBadge">0</span>
       </span>
-      <small>Cart</small>
+      <small data-i18n="mnav.cart">Cart</small>
     </button>
     <button class="mobile-nav-item" id="whatsappNav">
-      <span class="nav-whatsapp-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.4-4.2A8.5 8.5 0 1 1 20.5 11.8Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.3 8.6c.2-.4.5-.5.9-.5h.6c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c.7 1.2 1.6 2.1 2.9 2.8l.7-.7c.2-.2.4-.2.7-.1l1.8.8c.3.1.4.3.4.5v.6c0 .4-.2.7-.5.9-.5.3-1.2.4-1.8.2-3.4-1-5.8-3.4-6.8-6.8-.2-.6-.1-1.3.2-1.8Z" fill="currentColor"/></svg></span><small>WhatsApp</small>
+      <span class="nav-whatsapp-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.4-4.2A8.5 8.5 0 1 1 20.5 11.8Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.3 8.6c.2-.4.5-.5.9-.5h.6c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c.7 1.2 1.6 2.1 2.9 2.8l.7-.7c.2-.2.4-.2.7-.1l1.8.8c.3.1.4.3.4.5v.6c0 .4-.2.7-.5.9-.5.3-1.2.4-1.8.2-3.4-1-5.8-3.4-6.8-6.8-.2-.6-.1-1.3.2-1.8Z" fill="currentColor"/></svg></span><small data-i18n="mnav.whatsapp">WhatsApp</small>
     </button>
   </nav>
 
   <div class="cart-overlay" id="cartOverlay"></div>
   <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
     <div class="cart-head">
-      <span class="cart-title">Your Cart</span>
-      <button class="icon-btn close-cart" id="closeCart" aria-label="Close cart">×</button>
+      <span class="cart-title" data-i18n="cart.title">Your Cart</span>
+      <button class="icon-btn close-cart" id="closeCart" aria-label="Close cart" data-i18n-aria="cart.close">×</button>
     </div>
 
     <div class="cart-items-wrap">
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-empty" id="cartEmpty">
         <span class="cart-empty-icon">▢</span>
-        <h3>Your cart is empty</h3>
-        <p>Add a fragrance you love and it will appear here.</p>
-        <button class="secondary-btn" id="continueShopping">Continue shopping</button>
+        <h3 data-i18n="cart.emptyTitle">Your cart is empty</h3>
+        <p data-i18n="cart.emptyText">Add a fragrance you love and it will appear here.</p>
+        <button class="secondary-btn" id="continueShopping" data-i18n="cart.continue">Continue shopping</button>
       </div>
     </div>
 
     <div class="cart-footer" id="cartFooter">
       <div class="cart-total-line">
-        <span>Total</span>
+        <span data-i18n="cart.total">Total</span>
         <strong id="cartTotal">0 EGP</strong>
       </div>
-      <button class="checkout-btn" id="checkoutBtn">
+      <button class="checkout-btn" id="checkoutBtn" data-i18n="cart.checkout">
         Checkout via WhatsApp
       </button>
-      <button class="clear-cart-btn" id="clearCartBtn">Clear cart</button>
+      <button class="clear-cart-btn" id="clearCartBtn" data-i18n="cart.clear">Clear cart</button>
     </div>
   </aside>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="i18n.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

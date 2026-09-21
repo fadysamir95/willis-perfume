@@ -41,7 +41,8 @@
       "110ml": 745
     },
     "image": "images/white-code.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Prada/Prada-L-Homme-39029.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Prada/Prada-L-Homme-39029.html",
+    "stock": "in"
   },
   {
     "id": "fortune-rush",
@@ -88,7 +89,8 @@
       "110ml": 715
     },
     "image": "images/fortune-rush.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Paco-Rabanne/1-Million-Lucky-48903.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Paco-Rabanne/1-Million-Lucky-48903.html",
+    "stock": "low"
   },
   {
     "id": "pink-crush",
@@ -131,7 +133,8 @@
       "110ml": 650
     },
     "image": "images/pink-crush.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Katy-Perry/Katy-Perry-s-Mad-Love-39443.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Katy-Perry/Katy-Perry-s-Mad-Love-39443.html",
+    "stock": "in"
   },
   {
     "id": "cedar-way",
@@ -176,7 +179,8 @@
       "110ml": 685
     },
     "image": "images/cedar-way.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Sospiro-Perfumes/Vibrato-75930.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Sospiro-Perfumes/Vibrato-75930.html",
+    "stock": "in"
   },
   {
     "id": "tropical-veil",
@@ -217,7 +221,8 @@
       "110ml": 715
     },
     "image": "images/tropical-veil.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Jean-Paul-Gaultier/Le-Beau-Paradise-Garden-88836.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Jean-Paul-Gaultier/Le-Beau-Paradise-Garden-88836.html",
+    "stock": "in"
   },
   {
     "id": "iris-noir",
@@ -256,7 +261,8 @@
       "110ml": 850
     },
     "image": "images/iris-noir.webp",
-    "reference_link": "https://www.fragrantica.com/p/107428"
+    "reference_link": "https://www.fragrantica.com/p/107428",
+    "stock": "in"
   },
   {
     "id": "citrus-ink",
@@ -299,7 +305,8 @@
       "110ml": 740
     },
     "image": "images/citrus-ink.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Louis-Vuitton/Imagination-67370.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Louis-Vuitton/Imagination-67370.html",
+    "stock": "in"
   },
   {
     "id": "urban-pulse",
@@ -343,7 +350,8 @@
       "110ml": 700
     },
     "image": "images/urban-pulse.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Yves-Saint-Laurent/Y-Le-Parfum-64718.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Yves-Saint-Laurent/Y-Le-Parfum-64718.html",
+    "stock": "in"
   },
   {
     "id": "velvet-muse",
@@ -386,7 +394,8 @@
       "110ml": 715
     },
     "image": "images/velvet-muse.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Accento-55156.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Accento-55156.html",
+    "stock": "in"
   },
   {
     "id": "noir-reserve",
@@ -421,7 +430,8 @@
       "110ml": 785
     },
     "image": "images/noir-reserve.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Chanel/Bleu-de-Chanel-L-Exclusif-113429.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Chanel/Bleu-de-Chanel-L-Exclusif-113429.html",
+    "stock": "in"
   },
   {
     "id": "woody-pulse",
@@ -462,7 +472,8 @@
       "110ml": 720
     },
     "image": "images/woody-pulse.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Essential-Parfums/Bois-Imperial-64338.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Essential-Parfums/Bois-Imperial-64338.html",
+    "stock": "in"
   },
   {
     "id": "milky-amber",
@@ -500,7 +511,8 @@
       "110ml": 725
     },
     "image": "images/milky-amber.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Giardini-Di-Toscana/Bianco-Latte-64757.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Giardini-Di-Toscana/Bianco-Latte-64757.html",
+    "stock": "low"
   },
   {
     "id": "fresh-orchard",
@@ -545,7 +557,8 @@
       "110ml": 780
     },
     "image": "images/fresh-orchard.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Parfums-de-Marly/Greenley-62101.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Parfums-de-Marly/Greenley-62101.html",
+    "stock": "in"
   },
   {
     "id": "saffron-flame",
@@ -589,7 +602,8 @@
       "110ml": 750
     },
     "image": "images/saffron-flame.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Stephane-Humbert-Lucas-777/God-of-Fire-72381.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Stephane-Humbert-Lucas-777/God-of-Fire-72381.html",
+    "stock": "low"
   },
   {
     "id": "silk-veil",
@@ -634,7 +648,8 @@
       "110ml": 720
     },
     "image": "images/silk-veil.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Amouage/Guidance-78656.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Amouage/Guidance-78656.html",
+    "stock": "low"
   },
   {
     "id": "musk-aura",
@@ -671,7 +686,8 @@
       "110ml": 725
     },
     "image": "images/musk-aura.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Ajmal/Musk-Silk-58837.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Ajmal/Musk-Silk-58837.html",
+    "stock": "in"
   },
   {
     "id": "golden-bloom",
@@ -716,7 +732,8 @@
       "110ml": 730
     },
     "image": "images/golden-bloom.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Tiziana-Terenzi/Kirke-32172.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Tiziana-Terenzi/Kirke-32172.html",
+    "stock": "out"
   },
   {
     "id": "solar-glow",
@@ -755,7 +772,8 @@
       "110ml": 750
     },
     "image": "images/solar-glow.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Dolce-Gabbana/Dolce-Gabbana-Pour-Femme-Intense-18837.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Dolce-Gabbana/Dolce-Gabbana-Pour-Femme-Intense-18837.html",
+    "stock": "in"
   },
   {
     "id": "amber-ray",
@@ -798,7 +816,8 @@
       "110ml": 725
     },
     "image": "images/amber-ray.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Elie-Saab/Le-Parfum-Lumi-re-69136.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Elie-Saab/Le-Parfum-Lumi-re-69136.html",
+    "stock": "in"
   },
   {
     "id": "sandal-rush",
@@ -837,7 +856,8 @@
       "110ml": 715
     },
     "image": "images/sandal-rush.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Giorgio-Armani/Emporio-Armani-Stronger-With-You-Sandalwood-102519.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Giorgio-Armani/Emporio-Armani-Stronger-With-You-Sandalwood-102519.html",
+    "stock": "in"
   },
   {
     "id": "berry-cloud",
@@ -886,7 +906,8 @@
       "110ml": 755
     },
     "image": "images/berry-cloud.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Burberry/Burberry-Her-51694.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Burberry/Burberry-Her-51694.html",
+    "stock": "in"
   },
   {
     "id": "heavenly-bloom",
@@ -931,7 +952,8 @@
       "110ml": 690
     },
     "image": "images/heavenly-bloom.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Victoria-s-Secret/Love-is-Heavenly-2016-39089.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Victoria-s-Secret/Love-is-Heavenly-2016-39089.html",
+    "stock": "in"
   },
   {
     "id": "green-sprint",
@@ -973,7 +995,8 @@
       "110ml": 690
     },
     "image": "images/green-sprint.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Torino21-70424.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Torino21-70424.html",
+    "stock": "in"
   },
   {
     "id": "aqua-drive",
@@ -1019,7 +1042,8 @@
       "110ml": 710
     },
     "image": "images/aqua-drive.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Chanel/Allure-Homme-Sport-607.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Chanel/Allure-Homme-Sport-607.html",
+    "stock": "in"
   },
   {
     "id": "blush-aura",
@@ -1061,6 +1085,7 @@
       "110ml": 700
     },
     "image": "images/blush-aura.webp",
-    "reference_link": "https://www.fragrantica.com/perfume/Assaf/Arrogate-Pink-110870.html"
+    "reference_link": "https://www.fragrantica.com/perfume/Assaf/Arrogate-Pink-110870.html",
+    "stock": "in"
   }
 ]

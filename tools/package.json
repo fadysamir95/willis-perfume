@@ -1,0 +1,14 @@
+{
+  "name": "willis-perfume-build",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Build tooling for Willi's Perfume static site (image optimization + product page generation).",
+  "scripts": {
+    "images": "node build-images.js",
+    "pages": "node generate-pages.js",
+    "build": "node build-images.js && node generate-pages.js"
+  },
+  "dependencies": {
+    "sharp": "^0.33.5"
+  }
+}
