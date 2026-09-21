@@ -22,7 +22,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 90px;
+  scroll-padding-top: 128px; /* sticky promo bar (36px) + header (72–82px) */
 }
 
 body {
@@ -51,10 +51,16 @@ a {
   overflow: clip;
 }
 
-.site-header {
+.site-topbar {
+  /* Announcement bar + header stick together as one unit on every page.
+     position:sticky needs an ancestor without overflow scroll containers —
+     .page-shell now uses overflow:clip so this keeps working. */
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 60;
+}
+
+.site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1289,15 +1295,13 @@ a {
   90% { opacity: .25; }
 }
 
-/* Desktop editorial navigation, like the approved V5 direction. */
+/* Desktop editorial navigation, like the approved V5 direction.
+   The header is no longer absolute — it sits inside .site-topbar (sticky),
+   so it stays on screen while scrolled and never covers the promo bar. */
 @media (min-width: 1050px) {
   .site-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     z-index: 60;
-    background: rgba(247,243,236,.42);
+    background: rgba(247,243,236,.88);
     border-bottom: 1px solid rgba(255,255,255,.34);
   }
 
@@ -2851,11 +2855,7 @@ a {
   .announcement-bar { white-space: nowrap; }
 }
 
-/* The header pins to the viewport top when the page scrolls. */
-@media (min-width: 1050px) {
-  .site-header { top: 0; }
-  .product-main { padding-top: calc(82px + 36px); }
-}
+/* The header + promo bar stick together via .site-topbar (top: 0). */
 
 /* ---------- FAQ items ---------- */
 .faq-item {
