@@ -94,6 +94,15 @@
     font-size: 12px; white-space: pre-wrap; max-height: 320px; overflow: auto;
   }
   .hidden { display: none; }
+  .api-guide {
+    margin: 16px 22px 0; padding: 14px 18px; border-radius: 10px;
+    background: #fbe4e4; border: 1px solid #e5b8b8; color: #7a2020;
+    line-height: 1.8; font-size: 14px;
+  }
+  .api-guide code {
+    background: rgba(0,0,0,.07); padding: 1px 7px; border-radius: 5px;
+    font-family: Consolas, monospace; direction: ltr; display: inline-block;
+  }
   footer { padding: 20px 22px; color: var(--muted); font-size: 12px; }
   #toast {
     position: fixed; bottom: 18px; right: 50%; transform: translateX(50%);
@@ -152,6 +161,8 @@
   <button class="btn blue" id="genBtn">🔄 إعادة توليد الموقع</button>
 </div>
 
+<div id="apiGuide" class="api-guide hidden"></div>
+
 <div class="table-wrap">
   <table>
     <thead>
@@ -173,7 +184,7 @@
 
 <div class="gen-out hidden" id="genOut"><pre id="genText"></pre></div>
 
-<footer>الملفات بتتكتب مباشرة في <b>website_data_willis_perfume_FINAL_WITH_PRICES.json</b> — بعد الحفظ اضغط "إعادة توليد الموقع" عشان الصفحات والسايت ماب يتحدثوا.</footer>
+<footer>الملفات بتتكتب مباشرة في <b>website_data_willis_perfume_FINAL_WITH_PRICES.json</b> — بعد الحفظ اضغط "إعادة توليد الموقع" عشان الصفحات والسايت ماب يتحدثوا. <br>للبدء السريع: دبل كليك على <b>start-admin.bat</b> في مجلد المشروع.</footer>
 
 <div class="modal-back" id="modalBack">
   <div class="modal">
@@ -196,11 +207,22 @@ let dirty = false;
 let modalProduct = null;
 let imageOptions = [];
 
+/* Works whatever host/port the server runs on; if the file is opened
+   directly (file://) there is no API and we show a guide instead. */
+const API_BASE = location.protocol === "file:" ? null : location.origin;
+function apiUrl(route) { return API_BASE ? API_BASE + route : route; }
+
+function showGuide(msg) {
+  const g = $("apiGuide");
+  if (g) { g.innerHTML = msg; g.classList.remove("hidden"); }
+  toast(msg.replace(/<[^>]+>/g, " ").slice(0, 140));
+}
+
 function toast(msg) {
   const el = $("toast");
   el.textContent = msg;
   el.classList.add("show");
-  setTimeout(() => el.classList.remove("show"), 2200);
+  setTimeout(() => el.classList.remove("show"), 2600);
 }
 
 function statusOf(p) {
@@ -216,14 +238,19 @@ function statusOf(p) {
 }
 
 async function load() {
+  if (!API_BASE) {
+    showGuide('التشغيل غلط ❗ — فتحت الصفحة كملف مباشر.<br><br>شغّل السيرفر من الطرفية أولاً:<br><code>node tools/serve.js</code><br>ثم افتح <b>http://localhost:8080/admin.html</b><br><br>أو الأسهل: دبل كليك على ملف <b>start-admin.bat</b> في مجلد المشروع — هيفتح كل حاجة لوحده.');
+    return;
+  }
   try {
-    const r = await fetch("api/products");
+    const r = await fetch(apiUrl("/api/products"));
     if (!r.ok) throw new Error("HTTP " + r.status);
     products = await r.json();
+    if (!Array.isArray(products)) throw new Error("البيانات مش مصفوفة");
     renderStats();
     renderTable();
   } catch (e) {
-    toast("تعذر تحميل المنتجات: " + e.message);
+    showGuide(`تعذر تحميل المنتجات (${e.message}) — تأكد إن السيرفر شغال: <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>`);
   }
 }
 
@@ -346,6 +373,7 @@ $("genBtn").addEventListener("click", onRegenerate);
 $("addBtn").addEventListener("click", () => openModal(null, true));
 
 async function onSave() {
+  if (!API_BASE) { showGuide('التشغيل غلط — شغّل السيرفر أولاً (استخدم start-admin.bat)'); return; }
   try {
     /* normalize ids & orders */
     products.forEach((p, i) => {
@@ -363,7 +391,7 @@ async function onSave() {
       if (ids.has(p.id)) { toast("id مكرر: " + p.id); return; }
       ids.add(p.id);
     }
-    const r = await fetch("api/products", {
+    const r = await fetch(apiUrl("/api/products"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(products)
@@ -378,10 +406,11 @@ async function onSave() {
 }
 
 async function onRegenerate() {
+  if (!API_BASE) { showGuide('التشغيل غلط — شغّل السيرفر أولاً (استخدم start-admin.bat)'); return; }
   $("genOut").classList.remove("hidden");
   $("genText").textContent = "جارٍ إعادة التوليد...";
   try {
-    const r = await fetch("api/regenerate", { method: "POST" });
+    const r = await fetch(apiUrl("/api/regenerate"), { method: "POST" });
     const j = await r.json();
     $("genText").textContent = j.ok
       ? "✅ تمت إعادة توليد الصفحات والسايت ماب بنجاح."
@@ -398,8 +427,9 @@ function arr(v) {
 }
 
 async function loadImages() {
+  if (!API_BASE) { imageOptions = []; return; }
   try {
-    const r = await fetch("api/images");
+    const r = await fetch(apiUrl("/api/images"));
     imageOptions = await r.json();
   } catch (e) { imageOptions = []; }
 }
@@ -481,7 +511,7 @@ function openModal(p, isNew) {
     reader.onload = async () => {
       toast("جارٍ تحويل الصورة...");
       try {
-        const r = await fetch("api/upload", {
+        const r = await fetch(apiUrl("/api/upload"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, data: reader.result })
