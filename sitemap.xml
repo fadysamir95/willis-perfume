@@ -6,6 +6,16 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://willis-perfume.com/collection.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://willis-perfume.com/featured.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://willis-perfume.com/products/pink-crush.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

@@ -11,6 +11,10 @@ const WHATSAPP_NUMBER = (window.SITE_CONFIG && window.SITE_CONFIG.whatsapp) || "
 const CART_STORAGE_KEY = "willis_cart_v1";
 
 const PAGE_PRODUCT_ID = document.body?.dataset?.productId || "";
+const PAGE_MODE = document.body?.dataset?.pageMode || ""; // "", "featured", "collection"
+
+/* Homepage "Our Collection" preview: show this many, then link to collection.html */
+const HOMEPAGE_PREVIEW_CAP = 8;
 
 function escapeHTML(value = "") {
   return String(value)
@@ -536,10 +540,7 @@ function buildProductDetail(product) {
       <span>◔</span> ${t("modal.orderWa")}
     </button>
   ` : `
-    <p class="out-note">${t("stock.out")} — ${t("modal.orderWa")}</p>
-    <button class="whatsapp-btn" id="orderWhatsApp">
-      <span>◔</span> ${t("modal.orderWa")}
-    </button>
+    <p class="out-note">${t("stock.out")}</p>
     <button class="notify-btn" id="notifyBtn"
             data-product-id="${escapeHTML(product.id)}"
             data-size="${escapeHTML(state.selectedSize)}">
@@ -732,10 +733,23 @@ function renderProducts() {
   const productsContainer = document.getElementById("products-container");
   if (!productsContainer) return;
 
-  const products = filteredProducts();
+  const allProducts = filteredProducts();
 
   const countEl = document.getElementById("resultCount");
-  if (countEl) countEl.textContent = t("coll.count", { n: products.length });
+  if (countEl) countEl.textContent = t("coll.count", { n: allProducts.length });
+
+  /* Homepage preview: show a curated grid, then a "view all" link to collection.html.
+     Filtering (search / gender / category) shows every matching product instead. */
+  const filtering = state.search.trim() || state.gender !== "All" || state.category !== "All";
+  const viewAllWrap = document.getElementById("viewAllWrap");
+
+  let products = allProducts;
+  if (viewAllWrap && !filtering && allProducts.length > HOMEPAGE_PREVIEW_CAP) {
+    products = allProducts.slice(0, HOMEPAGE_PREVIEW_CAP);
+    viewAllWrap.classList.remove("hidden");
+  } else if (viewAllWrap) {
+    viewAllWrap.classList.add("hidden");
+  }
 
   const emptyState = document.getElementById("emptyState");
 
@@ -748,25 +762,44 @@ function renderProducts() {
   }
 }
 
-/* "Most requested" strip on the homepage (visible + featured products only). */
-function featuredProducts() {
+/* "Most requested" — visible + featured products only, sorted by manual order. */
+function featuredProducts(limit = HOMEPAGE_PREVIEW_CAP) {
   return state.products
     .filter(p => p.visible !== false && p.featured === true)
     .sort((a, b) => Number(a.order || 0) - Number(b.order || 0))
-    .slice(0, 10);
+    .slice(0, limit);
 }
 
 function renderFeatured() {
   const section = document.getElementById("featured");
-  const track = document.getElementById("featuredTrack");
-  if (!section || !track) return;
+  const grid = document.getElementById("featuredGrid");
+  if (!section || !grid) return;
   const items = featuredProducts();
   if (!items.length) {
     section.classList.add("hidden");
     return;
   }
   section.classList.remove("hidden");
-  track.innerHTML = items.map(productCardHTML).join("");
+  grid.innerHTML = items.map(productCardHTML).join("");
+}
+
+/* featured.html — a full page listing every featured product. */
+function renderFeaturedPage() {
+  const container = document.getElementById("products-container");
+  if (!container) return;
+  const items = featuredProducts(Infinity);
+
+  const countEl = document.getElementById("resultCount");
+  if (countEl) countEl.textContent = t("coll.count", { n: items.length });
+
+  const emptyState = document.getElementById("emptyState");
+  if (!items.length) {
+    container.innerHTML = "";
+    emptyState?.classList.remove("hidden");
+  } else {
+    emptyState?.classList.add("hidden");
+    container.innerHTML = items.map(productCardHTML).join("");
+  }
 }
 
 function resetFilters() {
@@ -990,8 +1023,8 @@ function initCards() {
   const container = document.getElementById("products-container");
   if (container) container.addEventListener("click", handleCardClick);
 
-  const featuredTrack = document.getElementById("featuredTrack");
-  if (featuredTrack) featuredTrack.addEventListener("click", handleCardClick);
+  const featuredGrid = document.getElementById("featuredGrid");
+  if (featuredGrid) featuredGrid.addEventListener("click", handleCardClick);
 }
 
 function initMenu() {
@@ -1197,7 +1230,8 @@ async function loadProducts() {
     if (PAGE_PRODUCT_ID) {
       renderPageProduct();
     } else {
-      renderProducts();
+      if (PAGE_MODE === "featured") renderFeaturedPage();
+      else renderProducts();
       renderFeatured();
     }
 

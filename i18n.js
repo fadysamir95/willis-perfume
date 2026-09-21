@@ -8,6 +8,7 @@ const I18N = {
   en: {
     "nav.home": "Home",
     "nav.collection": "Collection",
+    "nav.featured": "Most Requested",
     "nav.about": "About Us",
     "nav.contact": "Contact",
     "header.orderWa": "Order on WhatsApp",
@@ -40,6 +41,7 @@ const I18N = {
     "coll.count": "{n} fragrances",
     "coll.search": "Search your fragrance...",
     "coll.clear": "Clear search",
+    "coll.viewAll": "View all products",
     "coll.empty.title": "No fragrance found",
     "coll.empty.text": "Try another name, inspired fragrance, or filter.",
     "coll.empty.reset": "Show all fragrances",
@@ -176,6 +178,7 @@ const I18N = {
   ar: {
     "nav.home": "الرئيسية",
     "nav.collection": "المجموعة",
+    "nav.featured": "الأكثر طلبًا",
     "nav.about": "من نحن",
     "nav.contact": "تواصل معنا",
     "header.orderWa": "اطلب عبر واتساب",
@@ -208,6 +211,7 @@ const I18N = {
     "coll.count": "{n} عطر",
     "coll.search": "ابحث عن عطرك...",
     "coll.clear": "مسح البحث",
+    "coll.viewAll": "عرض كل المنتجات",
     "coll.empty.title": "لم نجد عطراً",
     "coll.empty.text": "جرّب اسماً آخر أو عطراً مستوحى أو فلتراً مختلفاً.",
     "coll.empty.reset": "عرض كل العطور",

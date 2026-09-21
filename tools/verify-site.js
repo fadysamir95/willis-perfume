@@ -20,8 +20,13 @@ function check(name, cond, detail = "") {
   else { failures++; console.log(`  FAIL ${name} ${detail}`); }
 }
 
-/* ---- 1. data-i18n coverage in index.html + products ---- */
-const htmlFiles = [path.join(ROOT, "index.html"), ...fs.readdirSync(path.join(ROOT, "products")).filter(f => f.endsWith(".html")).map(f => path.join(ROOT, "products", f))];
+/* ---- 1. data-i18n coverage: index.html + root list pages + products ---- */
+const rootLists = ["collection.html", "featured.html"].filter(f => fs.existsSync(path.join(ROOT, f)));
+const htmlFiles = [
+  path.join(ROOT, "index.html"),
+  ...rootLists.map(f => path.join(ROOT, f)),
+  ...fs.readdirSync(path.join(ROOT, "products")).filter(f => f.endsWith(".html")).map(f => path.join(ROOT, "products", f))
+];
 const usedKeys = new Set();
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");

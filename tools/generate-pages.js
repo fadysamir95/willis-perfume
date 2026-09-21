@@ -1,5 +1,8 @@
 /*
- * Generate standalone product pages (products/<id>.html) + sitemap.xml.
+ * Generate:
+ *   - standalone product pages (products/<id>.html)
+ *   - list pages at the site root (collection.html, featured.html)
+ *   - sitemap.xml + robots.txt
  * Run from tools/:  node generate-pages.js
  */
 const fs = require("fs");
@@ -106,6 +109,9 @@ const ANALYTICS_SNIPPETS = `
     })();
   <\/script>`;
 
+const FONTS_LINK = "https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap";
+
+/* ---------- <head> for product pages (in products/) ---------- */
 function headHTML(product) {
   const url = `${SITE_URL}/products/${product.id}.html`;
   const title = `${product.brand_name} — Inspired by ${product.inspired_by} | Willi's Perfume`;
@@ -138,7 +144,7 @@ function headHTML(product) {
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
-      { "@type": "ListItem", "position": 2, "name": "Collection", "item": `${SITE_URL}/#collection` },
+      { "@type": "ListItem", "position": 2, "name": "Collection", "item": `${SITE_URL}/collection.html` },
       { "@type": "ListItem", "position": 3, "name": product.brand_name, "item": url }
     ]
   };
@@ -175,7 +181,7 @@ function headHTML(product) {
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="${FONTS_LINK}" rel="stylesheet">
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../style-mobile-fix.css" />
 
@@ -189,15 +195,78 @@ ${ANALYTICS_SNIPPETS}
 </head>`;
 }
 
-/* Shared page chrome (header / menu / footer / cart drawer / mobile nav) */
-function shellBody(product, prevId, nextId) {
-  const back = "../";
+/* ---------- <head> for the root list pages (collection.html / featured.html) ---------- */
+function listHeadHTML(mode) {
+  const featuredList = mode === "featured";
+  const url = `${SITE_URL}/${featuredList ? "featured" : "collection"}.html`;
+  const title = featuredList
+    ? "Most Requested Fragrances | Willi's Perfume"
+    : "Our Collection — Inspired Perfumes | Willi's Perfume";
+  const desc = featuredList
+    ? "The most requested fragrances from Willi's Perfume — shop the customer favorites online with cash on delivery nationwide."
+    : "Browse the full Willi's Perfume collection of inspired fragrances at the best prices. Cash on delivery nationwide.";
+  const image = `${SITE_URL}/images/logo.webp`;
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+      { "@type": "ListItem", "position": 2, "name": featuredList ? "Most Requested" : "Collection", "item": url }
+    ]
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f3ec" />
+  <title>${esc(title)}</title>
+  <meta name="description" content="${esc(desc)}" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="${url}" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Willi's Perfume" />
+  <meta property="og:title" content="${esc(title)}" />
+  <meta property="og:description" content="${esc(desc)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${image}" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="ar_EG" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${esc(title)}" />
+  <meta name="twitter:description" content="${esc(desc)}" />
+  <meta name="twitter:image" content="${image}" />
+
+  <script src="site-config.js"><\/script>
+  <script>window.BASE_PATH = ""; window.SITE_URL = (window.SITE_CONFIG && window.SITE_CONFIG.siteUrl) || "https://willis-perfume.com";<\/script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="${FONTS_LINK}" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style-mobile-fix.css" />
+
+  <script type="application/ld+json">
+  ${JSON.stringify(breadcrumbSchema, null, 2)}
+  <\/script>
+${ANALYTICS_SNIPPETS}
+</head>`;
+}
+
+/* ---------- Shared page chrome (header / menu / footer / cart drawer / mobile nav) ---------- */
+function chromePage({ back, bodyAttrs, navCollection, navFeatured, breadcrumbsHtml, mainHtml }) {
   return `
-<body data-product-id="${esc(product.id)}">
+<body ${bodyAttrs}>
   <div class="page-shell">
     <div class="announcement-bar" data-i18n="announce.text" role="note">Free shipping on orders above 1000 EGP · Cash on delivery nationwide</div>
     <header class="site-header">
-      <a class="brand" href="../index.html" aria-label="Willi's Perfume home">
+      <a class="brand" href="${back}index.html" aria-label="Willi's Perfume home">
         <img src="${back}images/logo.webp" alt="Willi's Perfume logo" width="43" height="43">
         <span class="brand-copy">
           <strong>Willi's Perfume</strong>
@@ -206,10 +275,11 @@ function shellBody(product, prevId, nextId) {
       </a>
 
       <nav class="desktop-nav" aria-label="Main navigation">
-        <a href="../index.html#home" data-i18n="nav.home">Home</a>
-        <a href="../index.html#collection" data-i18n="nav.collection">Collection</a>
-        <a href="../index.html#story" data-i18n="nav.about">About Us</a>
-        <a href="../index.html#footer" data-i18n="nav.contact">Contact</a>
+        <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
+        <a href="${navCollection}" data-i18n="nav.collection">Collection</a>
+        <a href="${navFeatured}" data-i18n="nav.featured">Most Requested</a>
+        <a href="${back}index.html#story" data-i18n="nav.about">About Us</a>
+        <a href="${back}index.html#footer" data-i18n="nav.contact">Contact</a>
       </nav>
 
       <div class="desktop-actions">
@@ -242,8 +312,9 @@ function shellBody(product, prevId, nextId) {
         <button class="icon-btn close-menu" id="closeMenu" aria-label="Close menu" data-i18n-aria="menu.close">×</button>
       </div>
       <nav>
-        <a href="../index.html#home" data-i18n="nav.home">Home</a>
-        <a href="../index.html#collection" data-i18n="nav.collection">Our Collection</a>
+        <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
+        <a href="${navCollection}" data-i18n="nav.collection">Collection</a>
+        <a href="${navFeatured}" data-i18n="nav.featured">Most Requested</a>
         <button data-gender="Men" data-i18n="gender.men">Men</button>
         <button data-gender="Women" data-i18n="gender.women">Women</button>
         <button data-gender="Unisex" data-i18n="gender.unisex">Unisex</button>
@@ -259,21 +330,8 @@ function shellBody(product, prevId, nextId) {
     </aside>
 
     <main>
-      <nav class="breadcrumbs" aria-label="Breadcrumb">
-        <a href="../index.html" data-i18n="nav.home">Home</a>
-        <span>/</span>
-        <a href="../index.html#collection" data-i18n="nav.collection">Collection</a>
-        <span>/</span>
-        <span class="current">${esc(product.brand_name)}</span>
-      </nav>
-
-      <div id="productPage" class="product-page"></div>
-
-      <nav class="product-pager" aria-label="Pagination">
-        <a href="./${prevId}.html"><span aria-hidden="true">‹</span> <span data-i18n="pager.prev">Previous fragrance</span></a>
-        <a href="../index.html#collection" data-i18n="nav.collection">Collection</a>
-        <a href="./${nextId}.html"><span data-i18n="pager.next">Next fragrance</span> <span aria-hidden="true">›</span></a>
-      </nav>
+      ${breadcrumbsHtml}
+      ${mainHtml}
     </main>
 
     <footer class="site-footer" id="footer">
@@ -285,10 +343,10 @@ function shellBody(product, prevId, nextId) {
   </div>
 
   <nav class="mobile-nav" aria-label="Mobile navigation">
-    <a href="../index.html#home" class="mobile-nav-item">
+    <a href="${back}index.html#home" class="mobile-nav-item">
       <span>⌂</span><small data-i18n="mnav.home">Home</small>
     </a>
-    <a href="../index.html#collection" class="mobile-nav-item">
+    <a href="${navCollection}" class="mobile-nav-item">
       <span>▦</span><small data-i18n="mnav.collection">Collection</small>
     </a>
     <button class="mobile-nav-item" id="cartNav" aria-label="Open cart" data-i18n-aria="cart.open">
@@ -330,10 +388,102 @@ function shellBody(product, prevId, nextId) {
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="../i18n.js"><\/script>
-  <script src="../app.js"><\/script>
+  <script src="${back}i18n.js"><\/script>
+  <script src="${back}app.js"><\/script>
 </body>
 </html>`;
+}
+
+/* Standalone product page body (products/<id>.html) */
+function productShellBody(product, prevId, nextId) {
+  const back = "../";
+  return chromePage({
+    back,
+    bodyAttrs: `data-product-id="${esc(product.id)}"`,
+    navCollection: `${back}collection.html`,
+    navFeatured: `${back}featured.html`,
+    breadcrumbsHtml: `
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="${back}index.html" data-i18n="nav.home">Home</a>
+        <span>/</span>
+        <a href="${back}collection.html" data-i18n="nav.collection">Collection</a>
+        <span>/</span>
+        <span class="current">${esc(product.brand_name)}</span>
+      </nav>`,
+    mainHtml: `
+      <div id="productPage" class="product-page"></div>
+
+      <nav class="product-pager" aria-label="Pagination">
+        <a href="./${prevId}.html"><span aria-hidden="true">‹</span> <span data-i18n="pager.prev">Previous fragrance</span></a>
+        <a href="${back}collection.html" data-i18n="nav.collection">Collection</a>
+        <a href="./${nextId}.html"><span data-i18n="pager.next">Next fragrance</span> <span aria-hidden="true">›</span></a>
+      </nav>`
+  });
+}
+
+/* Root list page bodies: collection.html (all products, with search/filters) and
+   featured.html (every featured product). */
+function listShellBody(mode) {
+  const featuredList = mode === "featured";
+  const eyebrowText = featuredList ? "CUSTOMER FAVORITES" : "THE COLLECTION";
+  const titleText = featuredList ? "Most Requested" : "Our Collection";
+  const eyebrowKey = featuredList ? "featured.eyebrow" : "coll.eyebrow";
+  const titleKey = featuredList ? "featured.title" : "coll.title";
+  const pageMode = featuredList ? "featured" : "collection";
+
+  const shopTools = featuredList ? "" : `
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="search" placeholder="Search your fragrance..." data-i18n-placeholder="coll.search" autocomplete="off">
+          <button id="clearSearch" class="clear-search" aria-label="Clear search" data-i18n-aria="coll.clear">×</button>
+        </div>
+
+        <div class="filter-row" id="genderFilters" aria-label="Filter by gender">
+          <button class="filter-chip active" data-gender="All" data-i18n="filter.all">All</button>
+          <button class="filter-chip" data-gender="Men" data-i18n="filter.men">Men</button>
+          <button class="filter-chip" data-gender="Women" data-i18n="filter.women">Women</button>
+          <button class="filter-chip" data-gender="Unisex" data-i18n="filter.unisex">Unisex</button>
+        </div>
+
+        <div class="category-row" id="categoryFilters" aria-label="Filter by category">
+          <button class="category-chip active" data-category="All" data-i18n="cat.all">All styles</button>
+          <button class="category-chip" data-category="Elegant" data-i18n="cat.Elegant">Elegant</button>
+          <button class="category-chip" data-category="Summer" data-i18n="cat.Summer">Summer</button>
+          <button class="category-chip" data-category="Formal" data-i18n="cat.Formal">Formal</button>
+          <button class="category-chip" data-category="Night" data-i18n="cat.Night">Night</button>
+          <button class="category-chip" data-category="Attractive" data-i18n="cat.Attractive">Attractive</button>
+          <button class="category-chip" data-category="Luxury" data-i18n="cat.Luxury">Luxury</button>
+        </div>`;
+
+  return chromePage({
+    back: "",
+    bodyAttrs: `data-page-mode="${pageMode}"`,
+    navCollection: "collection.html",
+    navFeatured: "featured.html",
+    breadcrumbsHtml: `
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <span>/</span>
+        <span class="current" data-i18n="${titleKey}">${titleText}</span>
+      </nav>`,
+    mainHtml: `
+      <section class="list-page">
+        <div class="list-page-head">
+          <span class="eyebrow" data-i18n="${eyebrowKey}">${eyebrowText}</span>
+          <h1 data-i18n="${titleKey}">${titleText}</h1>
+          <span class="count-badge" id="resultCount"></span>
+        </div>
+        ${shopTools}
+        <div id="products-container" class="products-grid"></div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <div>⌕</div>
+          <h3 data-i18n="coll.empty.title">No fragrance found</h3>
+          <p data-i18n="coll.empty.text">Try another name, inspired fragrance, or filter.</p>
+          <button class="secondary-btn" id="resetFilters" data-i18n="coll.empty.reset">Show all fragrances</button>
+        </div>
+      </section>`
+  });
 }
 
 /* ---------- main ---------- */
@@ -375,19 +525,35 @@ const removedPages = fs.readdirSync(OUT_DIR)
   .filter(f => f.endsWith(".html") && !keepSet.has(f));
 for (const f of removedPages) fs.unlinkSync(path.join(OUT_DIR, f));
 
-const urls = [`${SITE_URL}/`];
+const urls = [
+  `${SITE_URL}/`,
+  `${SITE_URL}/collection.html`,
+  `${SITE_URL}/featured.html`
+];
 
 visible.forEach((product, index) => {
   const prev = visible[(index - 1 + visible.length) % visible.length];
   const next = visible[(index + 1) % visible.length];
 
-  const page = headHTML(product) + shellBody(product, prev.id, next.id);
+  const page = headHTML(product) + productShellBody(product, prev.id, next.id);
   const file = path.join(OUT_DIR, `${product.id}.html`);
   fs.writeFileSync(file, page, "utf8");
 
   urls.push(`${SITE_URL}/products/${product.id}.html`);
   console.log(`✔ products/${product.id}.html`);
 });
+
+/* ---------- root list pages ---------- */
+const listPages = [
+  { mode: "collection", name: "collection.html" },
+  { mode: "featured", name: "featured.html" }
+];
+for (const spec of listPages) {
+  const page = listHeadHTML(spec.mode) + listShellBody(spec.mode);
+  const file = path.join(ROOT, spec.name);
+  fs.writeFileSync(file, page, "utf8");
+  console.log(`✔ ${spec.name}`);
+}
 
 /* ---------- sitemap.xml ---------- */
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
