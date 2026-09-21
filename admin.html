@@ -278,8 +278,12 @@ async function load() {
       showGuide('اللوحة محمية برقم PIN 🔒 — اكتب الرقم السري في خانة "PIN أمان" بالأعلى (بيتحفظ تلقائيًا) ثم اعمل تحديث للصفحة (F5).');
       return;
     }
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    products = await r.json();
+    let j = null;
+    try { j = await r.json(); } catch (e) { /* non-JSON error */ }
+    if (!r.ok) {
+      throw new Error(j && j.error ? j.error : "HTTP " + r.status);
+    }
+    products = j;
     if (!Array.isArray(products)) throw new Error("البيانات مش مصفوفة");
     dataHashAtLoad = r.headers && r.headers.get ? r.headers.get("X-Data-Hash") : null;
     renderStats();

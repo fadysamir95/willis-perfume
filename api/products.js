@@ -115,12 +115,20 @@ module.exports = async function handler(req, res) {
 
     return sendJson(res, 405, { error: "method not allowed" });
   } catch (e) {
-    const msg = String(e && e.message || e);
-    const isTokenIssue = /token|BLOB_READ_WRITE_TOKEN|Unauthorized/i.test(msg);
-    return sendJson(res, 500, {
-      error: isTokenIssue
-        ? "Blob storage not connected — create a Blob store in Vercel and redeploy"
-        : msg
-    });
+    const B = require("@vercel/blob");
+    const raw = String(e && e.message || e);
+    let friendly;
+    if (e instanceof B.BlobStoreNotFoundError) {
+      friendly = "Blob store مش موجود — افتح تبويب Storage في Vercel، اعمل Create لـ Blob store واربطها بالمشروع ده، ثم أعِد الـ deploy";
+    } else if (e instanceof B.BlobStoreSuspendedError) {
+      friendly = "Blob store موقوف (suspended) من Vercel — تحتاج تتواصل مع الدعم أو تعمل store جديد";
+    } else if (e instanceof B.BlobAccessError || /token|BLOB_READ_WRITE_TOKEN|Unauthorized|does not exist/i.test(raw) && !/^Vercel Blob: This store does not exist/i.test(raw)) {
+      friendly = "متغير BLOB_READ_WRITE_TOKEN مش شغال — اعمل Create لـ Blob store من تبويب Storage في Vercel (بيضيف المتغير تلقائيًا) ثم اعمل Redeploy";
+    } else if (e instanceof B.BlobServiceNotAvailable || e instanceof B.BlobServiceRateLimited) {
+      friendly = "خدمة Blob غير متاحة مؤقتًا من Vercel — جرب بعد شوية";
+    } else {
+      friendly = raw;
+    }
+    return sendJson(res, 500, { error: friendly, detail: raw });
   }
 };
