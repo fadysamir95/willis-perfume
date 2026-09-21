@@ -21,7 +21,7 @@ function check(name, cond, detail = "") {
 }
 
 /* ---- 1. data-i18n coverage: index.html + root list pages + products ---- */
-const rootLists = ["collection.html", "featured.html"].filter(f => fs.existsSync(path.join(ROOT, f)));
+const rootLists = ["collection.html", "featured.html", "contact.html"].filter(f => fs.existsSync(path.join(ROOT, f)));
 const htmlFiles = [
   path.join(ROOT, "index.html"),
   ...rootLists.map(f => path.join(ROOT, f)),

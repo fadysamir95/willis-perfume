@@ -1457,17 +1457,17 @@ a {
   display: grid;
   place-items: center;
   color: #1e1b18;
+  transition: color .2s ease;
+}
+
+.desktop-actions .social-icon:hover {
+  color: var(--gold-dark);
 }
 
 .desktop-actions .social-icon svg {
   width: 20px;
   height: 20px;
   display: block;
-}
-
-.desktop-actions .facebook-icon svg {
-  width: 21px;
-  height: 21px;
 }
 
 .desktop-whatsapp svg {
@@ -3423,3 +3423,185 @@ a {
 
 /* Gender shortcuts in the side menu are homepage filters — hide on curated pages. */
 body[data-page-mode="featured"] .side-menu nav [data-gender] { display: none; }
+
+/* ============================================================
+   Contact page (contact.html)
+   ============================================================ */
+.contact-page {
+  padding: 40px 18px 90px;
+  background: var(--ivory);
+}
+
+.contact-page .contact-intro {
+  max-width: 520px;
+  margin: 14px auto 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.contact-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 34px;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 24px 26px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+
+a.contact-card:hover {
+  box-shadow: 0 14px 30px rgba(125, 89, 32, .14);
+  transform: translateY(-3px);
+}
+
+.contact-ico {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 0 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(189, 145, 72, .16), rgba(140, 100, 40, .16));
+  color: var(--gold-dark);
+}
+
+.contact-ico svg {
+  width: 24px;
+  height: 24px;
+}
+
+.contact-card h3 {
+  margin: 0 0 8px;
+  font-family: "Marcellus", serif;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.contact-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.contact-value {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--gold-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.contact-socials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.contact-socials a {
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--gold-dark);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s ease, color .2s ease;
+}
+
+.contact-socials a:hover {
+  background: var(--gold-dark);
+  color: #fff;
+}
+
+.contact-form {
+  max-width: 560px;
+  margin: 46px auto 0;
+  padding: 28px 26px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--white);
+}
+
+.contact-form h3 {
+  margin: 0 0 18px;
+  font-family: "Marcellus", serif;
+  font-size: 21px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.contact-form label span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--ivory);
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(189, 145, 72, .18);
+}
+
+.contact-submit {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #bd9148, #8c6428);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter .2s ease;
+}
+
+.contact-submit:hover { filter: brightness(1.06); }
+
+@media (min-width: 700px) {
+  .contact-page { padding-inline: 7vw; }
+}
+
+@media (min-width: 760px) {
+  .contact-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1050px) {
+  .contact-page { padding-inline: 11vw; }
+}

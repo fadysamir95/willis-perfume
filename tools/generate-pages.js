@@ -198,13 +198,19 @@ ${ANALYTICS_SNIPPETS}
 /* ---------- <head> for the root list pages (collection.html / featured.html) ---------- */
 function listHeadHTML(mode) {
   const featuredList = mode === "featured";
-  const url = `${SITE_URL}/${featuredList ? "featured" : "collection"}.html`;
+  const contactList = mode === "contact";
+  const pageName = featuredList ? "featured" : contactList ? "contact" : "collection";
+  const url = `${SITE_URL}/${pageName}.html`;
   const title = featuredList
     ? "Most Requested Fragrances | Willi's Perfume"
-    : "Our Collection — Inspired Perfumes | Willi's Perfume";
+    : contactList
+      ? "Contact Us | Willi's Perfume"
+      : "Our Collection — Inspired Perfumes | Willi's Perfume";
   const desc = featuredList
     ? "The most requested fragrances from Willi's Perfume — shop the customer favorites online with cash on delivery nationwide."
-    : "Browse the full Willi's Perfume collection of inspired fragrances at the best prices. Cash on delivery nationwide.";
+    : contactList
+      ? "Get in touch with Willi's Perfume — chat on WhatsApp, follow us on Instagram and Facebook, or send us a message."
+      : "Browse the full Willi's Perfume collection of inspired fragrances at the best prices. Cash on delivery nationwide.";
   const image = `${SITE_URL}/images/logo.webp`;
 
   const breadcrumbSchema = {
@@ -212,7 +218,7 @@ function listHeadHTML(mode) {
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
-      { "@type": "ListItem", "position": 2, "name": featuredList ? "Most Requested" : "Collection", "item": url }
+      { "@type": "ListItem", "position": 2, "name": featuredList ? "Most Requested" : contactList ? "Contact" : "Collection", "item": url }
     ]
   };
 
@@ -260,7 +266,7 @@ ${ANALYTICS_SNIPPETS}
 }
 
 /* ---------- Shared page chrome (header / menu / footer / cart drawer / mobile nav) ---------- */
-function chromePage({ back, bodyAttrs, navCollection, navFeatured, breadcrumbsHtml, mainHtml }) {
+function chromePage({ back, bodyAttrs, navCollection, breadcrumbsHtml, mainHtml }) {
   return `
 <body ${bodyAttrs}>
   <div class="page-shell">
@@ -278,17 +284,17 @@ function chromePage({ back, bodyAttrs, navCollection, navFeatured, breadcrumbsHt
       <nav class="desktop-nav" aria-label="Main navigation">
         <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
         <a href="${navCollection}" data-i18n="nav.collection">Collection</a>
-        <a href="${navFeatured}" data-i18n="nav.featured">Most Requested</a>
+        <a href="${back}index.html#featured" data-i18n="nav.featured">Most Requested</a>
         <a href="${back}index.html#story" data-i18n="nav.about">About Us</a>
-        <a href="${back}index.html#footer" data-i18n="nav.contact">Contact</a>
+        <a href="${back}contact.html" data-i18n="nav.contact">Contact</a>
       </nav>
 
       <div class="desktop-actions">
         <a class="social-icon" href="https://www.instagram.com/willis_perfume/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.7" r="1" fill="currentColor"/></svg>
         </a>
-        <a class="social-icon facebook-icon" href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M13.7 7.2h2V4.4c-.35-.05-1.55-.15-2.9-.15-2.87 0-4.84 1.75-4.84 4.98v2.78H4.8v3.1h3.16v7.7h3.86v-7.7h3.07l.49-3.1h-3.56V9.55c0-.9.24-2.35 1.88-2.35Z" fill="#fff"/></svg>
+        <a class="social-icon" href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
         </a>
         <button class="lang-toggle" type="button" aria-label="Switch to Arabic">العربية</button>
         <button class="cart-icon-btn" id="desktopCartBtn" aria-label="Open cart" aria-expanded="false">
@@ -316,7 +322,7 @@ function chromePage({ back, bodyAttrs, navCollection, navFeatured, breadcrumbsHt
       <nav>
         <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
         <a href="${navCollection}" data-i18n="nav.collection">Collection</a>
-        <a href="${navFeatured}" data-i18n="nav.featured">Most Requested</a>
+        <a href="${back}index.html#featured" data-i18n="nav.featured">Most Requested</a>
         <button data-gender="Men" data-i18n="gender.men">Men</button>
         <button data-gender="Women" data-i18n="gender.women">Women</button>
         <button data-gender="Unisex" data-i18n="gender.unisex">Unisex</button>
@@ -343,6 +349,12 @@ function chromePage({ back, bodyAttrs, navCollection, navFeatured, breadcrumbsHt
       <small data-i18n="footer.rights">© 2026 Willi's Perfume. All rights reserved.</small>
     </footer>
   </div>
+
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <section class="product-modal" id="productModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <button class="modal-close" id="modalClose" aria-label="Close product details" data-i18n-aria="modal.close">×</button>
+    <div class="modal-content" id="modalContent"></div>
+  </section>
 
   <nav class="mobile-nav" aria-label="Mobile navigation">
     <a href="${back}index.html#home" class="mobile-nav-item">
@@ -403,7 +415,6 @@ function productShellBody(product, prevId, nextId) {
     back,
     bodyAttrs: `data-product-id="${esc(product.id)}"`,
     navCollection: `${back}collection.html`,
-    navFeatured: `${back}featured.html`,
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="${back}index.html" data-i18n="nav.home">Home</a>
@@ -461,7 +472,6 @@ function listShellBody(mode) {
     back: "",
     bodyAttrs: `data-page-mode="${pageMode}"`,
     navCollection: "collection.html",
-    navFeatured: "featured.html",
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="index.html" data-i18n="nav.home">Home</a>
@@ -485,6 +495,106 @@ function listShellBody(mode) {
           <button class="secondary-btn" id="resetFilters" data-i18n="coll.empty.reset">Show all fragrances</button>
         </div>
       </section>`
+  });
+}
+
+/* Root contact page body (contact.html) — contact info + a message form that
+   opens WhatsApp with the typed message already filled in. */
+function contactBody() {
+  return chromePage({
+    back: "",
+    bodyAttrs: 'data-page-mode="contact"',
+    navCollection: "collection.html",
+    breadcrumbsHtml: `
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <span>/</span>
+        <span class="current" data-i18n="contact.title">Contact Us</span>
+      </nav>`,
+    mainHtml: `
+      <section class="contact-page">
+        <div class="list-page-head">
+          <span class="eyebrow" data-i18n="contact.eyebrow">GET IN TOUCH</span>
+          <h1 data-i18n="contact.title">Contact Us</h1>
+          <p class="contact-intro" data-i18n="contact.text">We reply fast on WhatsApp — send us your question or order details anytime.</p>
+        </div>
+
+        <div class="contact-grid">
+          <a class="contact-card" id="contactWhatsApp" href="#" target="_blank" rel="noopener">
+            <span class="contact-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.4-4.2A8.5 8.5 0 1 1 20.5 11.8Z"/><path d="M8.3 8.6c.2-.4.5-.5.9-.5h.6c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c.7 1.2 1.6 2.1 2.9 2.8l.7-.7c.2-.2.4-.2.7-.1l1.8.8c.3.1.4.3.4.5v.6c0 .4-.2.7-.5.9-.5.3-1.2.4-1.8.2-3.4-1-5.8-3.4-6.8-6.8-.2-.6-.1-1.3.2-1.8Z" fill="currentColor"/></svg>
+            </span>
+            <h3 data-i18n="contact.whatsappTitle">WhatsApp</h3>
+            <p data-i18n="contact.whatsappText">Chat with us directly — the fastest way to reach you.</p>
+            <span class="contact-value" id="contactPhone"></span>
+          </a>
+
+          <div class="contact-card">
+            <span class="contact-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.51 4.04 3 5.5l7 7Z"/></svg>
+            </span>
+            <h3 data-i18n="contact.socialsTitle">Follow Us</h3>
+            <p data-i18n="contact.socialsText">Daily drops and scent tips on Instagram and Facebook.</p>
+            <div class="contact-socials">
+              <a href="https://www.instagram.com/willis_perfume/?hl=en" target="_blank" rel="noopener noreferrer" data-i18n="menu.instagram">Instagram</a>
+              <a href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" data-i18n="menu.facebook">Facebook</a>
+            </div>
+          </div>
+
+          <div class="contact-card">
+            <span class="contact-ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35a1 1 0 0 0-.78-.38H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+            </span>
+            <h3 data-i18n="contact.deliveryTitle">Delivery</h3>
+            <p data-i18n="contact.deliveryText">Free shipping on orders above 1000 EGP · Cash on delivery nationwide.</p>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <h3 data-i18n="contact.formTitle">Send us a message</h3>
+          <label>
+            <span data-i18n="contact.formName">Your name</span>
+            <input id="contactName" type="text" required maxlength="60" autocomplete="name">
+          </label>
+          <label>
+            <span data-i18n="contact.formMsg">Your message</span>
+            <textarea id="contactMessage" rows="5" required maxlength="1000"></textarea>
+          </label>
+          <button class="contact-submit" type="submit" data-i18n="contact.formSend">Send via WhatsApp</button>
+        </form>
+      </section>
+
+      <script>
+      (function () {
+        var cfg = window.SITE_CONFIG || {};
+        var wa = String(cfg.whatsapp || "").replace(/\\D/g, "");
+        var card = document.getElementById("contactWhatsApp");
+        var phone = document.getElementById("contactPhone");
+        var form = document.getElementById("contactForm");
+
+        function formatPhone(raw) {
+          var s = raw.replace(/^20/, "");
+          var m = s.match(/^(\\d{3})(\\d{3})(\\d{4})$/);
+          return m ? "20 " + m[1] + " " + m[2] + " " + m[3] : raw;
+        }
+
+        if (wa) {
+          if (phone) phone.textContent = "+" + formatPhone(wa);
+          if (card) card.setAttribute("href", "https://wa.me/" + wa + "?text=" + encodeURIComponent("Hello Willi's Perfume!"));
+        }
+
+        if (form) form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          if (!wa) return;
+          var name = document.getElementById("contactName").value.trim();
+          var msg = document.getElementById("contactMessage").value.trim();
+          var text = "Hello Willi's Perfume!";
+          if (name) text += "\\nMy name: " + name;
+          if (msg) text += "\\nMessage: " + msg;
+          window.open("https://wa.me/" + wa + "?text=" + encodeURIComponent(text), "_blank", "noopener");
+        });
+      })();
+      <\/script>`
   });
 }
 
@@ -530,7 +640,8 @@ for (const f of removedPages) fs.unlinkSync(path.join(OUT_DIR, f));
 const urls = [
   `${SITE_URL}/`,
   `${SITE_URL}/collection.html`,
-  `${SITE_URL}/featured.html`
+  `${SITE_URL}/featured.html`,
+  `${SITE_URL}/contact.html`
 ];
 
 visible.forEach((product, index) => {
@@ -548,10 +659,11 @@ visible.forEach((product, index) => {
 /* ---------- root list pages ---------- */
 const listPages = [
   { mode: "collection", name: "collection.html" },
-  { mode: "featured", name: "featured.html" }
+  { mode: "featured", name: "featured.html" },
+  { mode: "contact", name: "contact.html" }
 ];
 for (const spec of listPages) {
-  const page = listHeadHTML(spec.mode) + listShellBody(spec.mode);
+  const page = listHeadHTML(spec.mode) + (spec.mode === "contact" ? contactBody() : listShellBody(spec.mode));
   const file = path.join(ROOT, spec.name);
   fs.writeFileSync(file, page, "utf8");
   console.log(`✔ ${spec.name}`);
