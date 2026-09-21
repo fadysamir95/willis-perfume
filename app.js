@@ -932,6 +932,43 @@ function initSmoothAnchors() {
   });
 }
 
+/* Highlight the nav item that matches where you are:
+   - generated pages -> fixed active item per page mode / product page
+   - homepage -> scroll-spy over the section anchors (#home, #featured, #collection, #story) */
+function initNavSpy() {
+  const links = [...document.querySelectorAll(".desktop-nav a, .side-menu nav a")];
+  const mark = key => links.forEach(a => a.classList.toggle("active", a.dataset.i18n === key));
+
+  const bodyDataset = document.body ? document.body.dataset : {};
+  if (bodyDataset.pageMode) {
+    if (bodyDataset.pageMode === "featured") return mark("nav.featured");
+    if (bodyDataset.pageMode === "collection") return mark("nav.collection");
+    if (bodyDataset.pageMode === "contact") return mark("nav.contact");
+    return;
+  }
+  if (bodyDataset.productId) return mark("nav.collection");
+
+  const sections = ["home", "featured", "collection", "story"]
+    .map(id => document.getElementById(id))
+    .filter(sec => sec && typeof sec.getBoundingClientRect === "function");
+  if (!sections.length) return;
+
+  const keys = { home: "nav.home", featured: "nav.featured", collection: "nav.collection", story: "nav.about" };
+  const spy = () => {
+    const probe = (window.scrollY || 0) + (window.innerHeight || 0) * 0.35;
+    let current = sections[0];
+    for (const sec of sections) {
+      const top = sec.getBoundingClientRect().top + (window.scrollY || 0);
+      if (top <= probe) current = sec;
+    }
+    mark(keys[current.id]);
+  };
+  if (typeof window.addEventListener === "function") {
+    window.addEventListener("scroll", spy, { passive: true });
+  }
+  spy();
+}
+
 function initFilters() {
   document.querySelectorAll("#genderFilters .filter-chip").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -1259,6 +1296,7 @@ initCartEvents();
 initWhatsAppButtons();
 initHeroMotion();
 initSmoothAnchors();
+initNavSpy();
 
 updateCartUI();
 renderCart();

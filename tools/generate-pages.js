@@ -109,7 +109,7 @@ const ANALYTICS_SNIPPETS = `
     })();
   <\/script>`;
 
-const FONTS_LINK = "https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap";
+const FONTS_LINK = "https://fonts.googleapis.com/css2?family=Marcellus&family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&family=Cairo:wght@400;500;600;700&display=swap";
 
 /* ---------- <head> for product pages (in products/) ---------- */
 function headHTML(product) {
@@ -266,7 +266,7 @@ ${ANALYTICS_SNIPPETS}
 }
 
 /* ---------- Shared page chrome (header / menu / footer / cart drawer / mobile nav) ---------- */
-function chromePage({ back, bodyAttrs, navCollection, breadcrumbsHtml, mainHtml }) {
+function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
   return `
 <body ${bodyAttrs}>
   <div class="page-shell">
@@ -283,7 +283,7 @@ function chromePage({ back, bodyAttrs, navCollection, breadcrumbsHtml, mainHtml 
 
       <nav class="desktop-nav" aria-label="Main navigation">
         <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
-        <a href="${navCollection}" data-i18n="nav.collection">Collection</a>
+        <a href="${back}index.html#collection" data-i18n="nav.collection">Collection</a>
         <a href="${back}index.html#featured" data-i18n="nav.featured">Most Requested</a>
         <a href="${back}index.html#story" data-i18n="nav.about">About Us</a>
         <a href="${back}contact.html" data-i18n="nav.contact">Contact</a>
@@ -321,7 +321,7 @@ function chromePage({ back, bodyAttrs, navCollection, breadcrumbsHtml, mainHtml 
       </div>
       <nav>
         <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
-        <a href="${navCollection}" data-i18n="nav.collection">Collection</a>
+        <a href="${back}index.html#collection" data-i18n="nav.collection">Collection</a>
         <a href="${back}index.html#featured" data-i18n="nav.featured">Most Requested</a>
         <button data-gender="Men" data-i18n="gender.men">Men</button>
         <button data-gender="Women" data-i18n="gender.women">Women</button>
@@ -360,7 +360,7 @@ function chromePage({ back, bodyAttrs, navCollection, breadcrumbsHtml, mainHtml 
     <a href="${back}index.html#home" class="mobile-nav-item">
       <span>⌂</span><small data-i18n="mnav.home">Home</small>
     </a>
-    <a href="${navCollection}" class="mobile-nav-item">
+    <a href="${back}index.html#collection" class="mobile-nav-item">
       <span>▦</span><small data-i18n="mnav.collection">Collection</small>
     </a>
     <button class="mobile-nav-item" id="cartNav" aria-label="Open cart" data-i18n-aria="cart.open">
@@ -414,13 +414,12 @@ function productShellBody(product, prevId, nextId) {
   return chromePage({
     back,
     bodyAttrs: `data-product-id="${esc(product.id)}"`,
-    navCollection: `${back}collection.html`,
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="${back}index.html" data-i18n="nav.home">Home</a>
-        <span>/</span>
+        <span class="sep" aria-hidden="true">›</span>
         <a href="${back}collection.html" data-i18n="nav.collection">Collection</a>
-        <span>/</span>
+        <span class="sep" aria-hidden="true">›</span>
         <span class="current">${esc(product.brand_name)}</span>
       </nav>`,
     mainHtml: `
@@ -471,11 +470,10 @@ function listShellBody(mode) {
   return chromePage({
     back: "",
     bodyAttrs: `data-page-mode="${pageMode}"`,
-    navCollection: "collection.html",
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="index.html" data-i18n="nav.home">Home</a>
-        <span>/</span>
+        <span class="sep" aria-hidden="true">›</span>
         <span class="current" data-i18n="${titleKey}">${titleText}</span>
       </nav>`,
     mainHtml: `
@@ -504,11 +502,10 @@ function contactBody() {
   return chromePage({
     back: "",
     bodyAttrs: 'data-page-mode="contact"',
-    navCollection: "collection.html",
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="index.html" data-i18n="nav.home">Home</a>
-        <span>/</span>
+        <span class="sep" aria-hidden="true">›</span>
         <span class="current" data-i18n="contact.title">Contact Us</span>
       </nav>`,
     mainHtml: `

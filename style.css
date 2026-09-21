@@ -29,8 +29,9 @@ body {
   margin: 0;
   background: var(--ivory);
   color: var(--ink);
-  font-family: "Montserrat", Arial, sans-serif;
+  font-family: "Jost", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body.modal-open,
@@ -811,6 +812,11 @@ a {
   font-weight: 600;
 }
 
+.side-menu nav a.active {
+  color: var(--gold-dark);
+  font-weight: 700;
+}
+
 .menu-divider {
   height: 1px;
   margin: 28px 0 16px;
@@ -1334,6 +1340,8 @@ a {
 
   .desktop-nav a:hover::after,
   .desktop-nav a.active::after { width: 100%; }
+
+  .desktop-nav a.active { color: var(--gold-dark); }
 
   .desktop-actions {
     display: flex;
@@ -3087,7 +3095,7 @@ a {
 
 /* ---------- RTL (Arabic) support ---------- */
 [dir="rtl"] body {
-  font-family: "Cairo", "Montserrat", system-ui, sans-serif;
+  font-family: "Cairo", "Jost", system-ui, sans-serif;
 }
 
 [dir="rtl"] .Cormorant,
@@ -3107,7 +3115,7 @@ a {
 [dir="rtl"] .related-card strong,
 [dir="rtl"] .story-card h2,
 [dir="rtl"] .section-heading h2 {
-  font-family: "Cairo", "Montserrat", sans-serif;
+  font-family: "Cairo", "Jost", sans-serif;
 }
 
 [dir="rtl"] .search-icon {
@@ -3193,23 +3201,48 @@ a {
 .breadcrumbs {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
   max-width: 680px;
   margin: 0 auto;
-  padding: 26px 18px 10px;
-  color: var(--muted);
-  font-size: 11px;
+  padding: 30px 18px 14px;
+  color: #9b8b70;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .3px;
 }
 
 .breadcrumbs a {
   color: var(--gold-dark);
   text-decoration: none;
+  padding: 3px 1px;
+  transition: color .2s ease;
 }
 
-.breadcrumbs a:hover { text-decoration: underline; }
+.breadcrumbs a:hover {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
-.breadcrumbs .current { color: #4f4942; }
+.breadcrumbs .sep {
+  color: #c9bc9f;
+  font-size: 12px;
+  line-height: 1;
+}
+
+[dir="rtl"] .breadcrumbs .sep {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+.breadcrumbs .current {
+  color: #4f4942;
+  font-family: "Marcellus", "Cormorant Garamond", serif;
+  font-size: 12.5px;
+  letter-spacing: .2px;
+}
 
 .product-page {
   max-width: 680px;
