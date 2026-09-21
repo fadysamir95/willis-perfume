@@ -1,0 +1,1066 @@
+[
+  {
+    "id": "white-code",
+    "brand_name": "White Code",
+    "inspired_by": "Prada L’Homme",
+    "gender": "Men",
+    "categories": [
+      "Elegant",
+      "Formal"
+    ],
+    "fragrance_family": "Woody Chypre",
+    "short_profile": [
+      "Clean",
+      "Powdery",
+      "Elegant"
+    ],
+    "description": "A clean and polished scent built around soft iris, fresh neroli and warm woods. Elegant, calm and easy to wear for work or formal occasions.",
+    "notes": {
+      "top": [
+        "Neroli",
+        "Black Pepper",
+        "Cardamom",
+        "Carrot Seeds"
+      ],
+      "heart": [
+        "Iris",
+        "Violet",
+        "Geranium",
+        "Mate"
+      ],
+      "base": [
+        "Amber",
+        "Cedar",
+        "Sandalwood",
+        "Patchouli"
+      ]
+    },
+    "sizes": {
+      "35ml": 240,
+      "55ml": 375,
+      "110ml": 745
+    },
+    "image": "images/white-code.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Prada/Prada-L-Homme-39029.html"
+  },
+  {
+    "id": "fortune-rush",
+    "brand_name": "Fortune Rush",
+    "inspired_by": "1 Million Lucky — Rabanne",
+    "gender": "Men",
+    "categories": [
+      "Attractive",
+      "Night",
+      "Luxury"
+    ],
+    "fragrance_family": "Woody",
+    "short_profile": [
+      "Sweet",
+      "Woody",
+      "Warm"
+    ],
+    "description": "A rich and playful woody scent with juicy plum, hazelnut and honey over warm woods. A confident choice for nights, dates and cooler weather.",
+    "notes": {
+      "top": [
+        "Plum",
+        "Ozonic Notes",
+        "Grapefruit",
+        "Bergamot"
+      ],
+      "heart": [
+        "Hazelnut",
+        "Honey",
+        "Cedar",
+        "Cashmere Wood",
+        "Orange Blossom",
+        "Jasmine"
+      ],
+      "base": [
+        "Amberwood",
+        "Patchouli",
+        "Vetiver",
+        "Oakmoss"
+      ]
+    },
+    "sizes": {
+      "35ml": 230,
+      "55ml": 360,
+      "110ml": 715
+    },
+    "image": "images/fortune-rush.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Paco-Rabanne/1-Million-Lucky-48903.html"
+  },
+  {
+    "id": "pink-crush",
+    "brand_name": "Pink Crush",
+    "inspired_by": "Katy Perry’s Mad Love — Katy Perry",
+    "gender": "Women",
+    "categories": [
+      "Attractive",
+      "Summer",
+      "Elegant"
+    ],
+    "fragrance_family": "Floral Fruity Gourmand",
+    "short_profile": [
+      "Fruity",
+      "Sweet",
+      "Soft"
+    ],
+    "description": "A playful fruity-floral scent with strawberry, apple and pink grapefruit, softened by coconut, musk and sandalwood.",
+    "notes": {
+      "top": [
+        "Sorbet",
+        "Strawberry",
+        "Apple",
+        "Pink Grapefruit"
+      ],
+      "heart": [
+        "Floral Notes",
+        "Peony",
+        "Jasmine"
+      ],
+      "base": [
+        "Coconut",
+        "Musk",
+        "Sandalwood"
+      ]
+    },
+    "sizes": {
+      "35ml": 210,
+      "55ml": 325,
+      "110ml": 650
+    },
+    "image": "images/pink-crush.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Katy-Perry/Katy-Perry-s-Mad-Love-39443.html"
+  },
+  {
+    "id": "cedar-way",
+    "brand_name": "Cedar Way",
+    "inspired_by": "Vibrato — Sospiro",
+    "gender": "Unisex",
+    "categories": [
+      "Summer",
+      "Elegant",
+      "Formal"
+    ],
+    "fragrance_family": "Citrus Fresh Spicy",
+    "short_profile": [
+      "Fresh",
+      "Citrusy",
+      "Woody"
+    ],
+    "description": "A bright and refined fragrance led by grapefruit and bergamot, with gentle florals, ginger and a smooth woody-musky base.",
+    "notes": {
+      "top": [
+        "Grapefruit",
+        "Bergamot",
+        "Jasmine",
+        "Magnolia"
+      ],
+      "heart": [
+        "Ginger",
+        "Herbal Notes",
+        "Powdery Notes"
+      ],
+      "base": [
+        "Musk",
+        "Cedar",
+        "Amber",
+        "Patchouli",
+        "Orris Root"
+      ]
+    },
+    "sizes": {
+      "35ml": 220,
+      "55ml": 345,
+      "110ml": 685
+    },
+    "image": "images/cedar-way.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Sospiro-Perfumes/Vibrato-75930.html"
+  },
+  {
+    "id": "tropical-veil",
+    "brand_name": "Tropical Veil",
+    "inspired_by": "Le Beau Paradise Garden — Jean Paul Gaultier",
+    "gender": "Men",
+    "categories": [
+      "Summer",
+      "Attractive"
+    ],
+    "fragrance_family": "Woody Green Aquatic",
+    "short_profile": [
+      "Fresh",
+      "Tropical",
+      "Woody"
+    ],
+    "description": "A fresh tropical fragrance blending green and watery notes with mint, coconut, fig and a warm sandalwood finish.",
+    "notes": {
+      "top": [
+        "Green Notes",
+        "Watery Notes",
+        "Mint",
+        "Ginger"
+      ],
+      "heart": [
+        "Coconut",
+        "Fig",
+        "Salt"
+      ],
+      "base": [
+        "Tonka Bean",
+        "Sandalwood"
+      ]
+    },
+    "sizes": {
+      "35ml": 230,
+      "55ml": 360,
+      "110ml": 715
+    },
+    "image": "images/tropical-veil.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Jean-Paul-Gaultier/Le-Beau-Paradise-Garden-88836.html"
+  },
+  {
+    "id": "iris-noir",
+    "brand_name": "Iris Noir",
+    "inspired_by": "MYSLF L’Absolu — Yves Saint Laurent",
+    "gender": "Men",
+    "categories": [
+      "Elegant",
+      "Formal",
+      "Luxury"
+    ],
+    "fragrance_family": "Woody Spicy",
+    "short_profile": [
+      "Fresh Spicy",
+      "Woody",
+      "Elegant"
+    ],
+    "description": "A modern woody-spicy scent with bright bergamot, ginger and cardamom, balanced by orange blossom and a deep patchouli base.",
+    "notes": {
+      "top": [
+        "Ginger",
+        "Bergamot",
+        "Cardamom"
+      ],
+      "heart": [
+        "Orange Blossom",
+        "Floral Notes"
+      ],
+      "base": [
+        "Patchouli"
+      ]
+    },
+    "sizes": {
+      "35ml": 280,
+      "55ml": 425,
+      "110ml": 850
+    },
+    "image": "images/iris-noir.webp",
+    "reference_link": "https://www.fragrantica.com/p/107428"
+  },
+  {
+    "id": "citrus-ink",
+    "brand_name": "Citrus Ink",
+    "inspired_by": "Imagination — Louis Vuitton",
+    "gender": "Men",
+    "categories": [
+      "Summer",
+      "Elegant",
+      "Formal"
+    ],
+    "fragrance_family": "Citrus Aromatic",
+    "short_profile": [
+      "Citrusy",
+      "Fresh",
+      "Refined"
+    ],
+    "description": "A bright and sophisticated citrus scent with bergamot, orange and neroli, followed by ginger, black tea and smooth woods.",
+    "notes": {
+      "top": [
+        "Citron",
+        "Calabrian Bergamot",
+        "Sicilian Orange"
+      ],
+      "heart": [
+        "Tunisian Neroli",
+        "Nigerian Ginger",
+        "Ceylon Cinnamon"
+      ],
+      "base": [
+        "Chinese Black Tea",
+        "Ambroxan",
+        "Guaiac Wood",
+        "Olibanum"
+      ]
+    },
+    "sizes": {
+      "35ml": 240,
+      "55ml": 370,
+      "110ml": 740
+    },
+    "image": "images/citrus-ink.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Louis-Vuitton/Imagination-67370.html"
+  },
+  {
+    "id": "urban-pulse",
+    "brand_name": "Urban Pulse",
+    "inspired_by": "Y Le Parfum — Yves Saint Laurent",
+    "gender": "Men",
+    "categories": [
+      "Formal",
+      "Elegant",
+      "Attractive"
+    ],
+    "fragrance_family": "Oriental Fougere",
+    "short_profile": [
+      "Fresh",
+      "Dark",
+      "Modern"
+    ],
+    "description": "A modern and confident scent that mixes crisp apple and grapefruit with lavender, sage and a warm woody base.",
+    "notes": {
+      "top": [
+        "Apple",
+        "Aldehydes",
+        "Grapefruit",
+        "Ginger"
+      ],
+      "heart": [
+        "Lavender",
+        "Sage",
+        "Geranium"
+      ],
+      "base": [
+        "Tonka Bean",
+        "Cedar",
+        "Olibanum",
+        "Patchouli"
+      ]
+    },
+    "sizes": {
+      "35ml": 225,
+      "55ml": 350,
+      "110ml": 700
+    },
+    "image": "images/urban-pulse.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Yves-Saint-Laurent/Y-Le-Parfum-64718.html"
+  },
+  {
+    "id": "velvet-muse",
+    "brand_name": "Velvet Muse",
+    "inspired_by": "Accento — Xerjoff",
+    "gender": "Unisex",
+    "categories": [
+      "Elegant",
+      "Luxury",
+      "Attractive"
+    ],
+    "fragrance_family": "Chypre Floral",
+    "short_profile": [
+      "Fruity",
+      "Floral",
+      "Elegant"
+    ],
+    "description": "A luxurious fruity-floral scent with fresh pineapple and hyacinth, a soft iris and jasmine heart, and a warm musky vanilla base.",
+    "notes": {
+      "top": [
+        "Pineapple",
+        "Hyacinth"
+      ],
+      "heart": [
+        "Iris",
+        "Pink Pepper",
+        "Jasmine"
+      ],
+      "base": [
+        "Musk",
+        "Amber",
+        "Vetiver",
+        "Vanilla",
+        "Patchouli"
+      ]
+    },
+    "sizes": {
+      "35ml": 230,
+      "55ml": 360,
+      "110ml": 715
+    },
+    "image": "images/velvet-muse.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Accento-55156.html"
+  },
+  {
+    "id": "noir-reserve",
+    "brand_name": "Noir Reserve",
+    "inspired_by": "Bleu de Chanel L’Exclusif — Chanel",
+    "gender": "Men",
+    "categories": [
+      "Luxury",
+      "Night",
+      "Formal"
+    ],
+    "fragrance_family": "Woody Aromatic",
+    "short_profile": [
+      "Woody",
+      "Amber",
+      "Deep"
+    ],
+    "description": "A deep and sophisticated woody scent built around amber, sandalwood and labdanum, with a warm and lingering character.",
+    "notes": {
+      "top": [
+        "Amber",
+        "Woody Notes",
+        "Labdanum",
+        "Sandalwood"
+      ],
+      "heart": [],
+      "base": []
+    },
+    "sizes": {
+      "35ml": 255,
+      "55ml": 395,
+      "110ml": 785
+    },
+    "image": "images/noir-reserve.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Chanel/Bleu-de-Chanel-L-Exclusif-113429.html"
+  },
+  {
+    "id": "woody-pulse",
+    "brand_name": "Woody Pulse",
+    "inspired_by": "Bois Impérial — Essential Parfums",
+    "gender": "Unisex",
+    "categories": [
+      "Formal",
+      "Elegant",
+      "Summer"
+    ],
+    "fragrance_family": "Aromatic Woody",
+    "short_profile": [
+      "Woody",
+      "Green",
+      "Fresh Spicy"
+    ],
+    "description": "A modern woody fragrance with basil, fresh spices and vetiver, supported by ambroxan, patchouli and a distinctive woody character.",
+    "notes": {
+      "top": [
+        "Basil",
+        "Timur",
+        "Fresh Spices"
+      ],
+      "heart": [
+        "Akigalawood",
+        "Vetiver"
+      ],
+      "base": [
+        "Ambroxan",
+        "Patchouli",
+        "Woody Notes"
+      ]
+    },
+    "sizes": {
+      "35ml": 230,
+      "55ml": 360,
+      "110ml": 720
+    },
+    "image": "images/woody-pulse.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Essential-Parfums/Bois-Imperial-64338.html"
+  },
+  {
+    "id": "milky-amber",
+    "brand_name": "Milky Amber",
+    "inspired_by": "Bianco Latte — Giardini Di Toscana",
+    "gender": "Unisex",
+    "categories": [
+      "Attractive",
+      "Luxury",
+      "Night"
+    ],
+    "fragrance_family": "Vanilla Sweet",
+    "short_profile": [
+      "Creamy",
+      "Sweet",
+      "Warm"
+    ],
+    "description": "A creamy and comforting scent centered on caramel and honey, with a soft vanilla and white musk drydown.",
+    "notes": {
+      "top": [
+        "Caramel"
+      ],
+      "heart": [
+        "Coumarin",
+        "Honey"
+      ],
+      "base": [
+        "Vanilla",
+        "White Musk"
+      ]
+    },
+    "sizes": {
+      "35ml": 235,
+      "55ml": 365,
+      "110ml": 725
+    },
+    "image": "images/milky-amber.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Giardini-Di-Toscana/Bianco-Latte-64757.html"
+  },
+  {
+    "id": "fresh-orchard",
+    "brand_name": "Fresh Orchard",
+    "inspired_by": "Greenley — Parfums de Marly",
+    "gender": "Unisex",
+    "categories": [
+      "Summer",
+      "Elegant",
+      "Formal"
+    ],
+    "fragrance_family": "Citrus Aromatic",
+    "short_profile": [
+      "Fresh",
+      "Green",
+      "Fruity"
+    ],
+    "description": "A crisp and refreshing fragrance with green apple, bergamot and mandarin, finished with cedar, moss, musk and soft woods.",
+    "notes": {
+      "top": [
+        "Green Apple",
+        "Calabrian Bergamot",
+        "Mandarin Orange"
+      ],
+      "heart": [
+        "Petitgrain",
+        "Cedar",
+        "Cashmeran",
+        "Pomarose",
+        "Violet"
+      ],
+      "base": [
+        "Oakmoss",
+        "Musk",
+        "Amberwood",
+        "Patchouli"
+      ]
+    },
+    "sizes": {
+      "35ml": 250,
+      "55ml": 390,
+      "110ml": 780
+    },
+    "image": "images/fresh-orchard.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Parfums-de-Marly/Greenley-62101.html"
+  },
+  {
+    "id": "saffron-flame",
+    "brand_name": "Saffron Flame",
+    "inspired_by": "God of Fire — Stéphane Humbert Lucas 777",
+    "gender": "Unisex",
+    "categories": [
+      "Luxury",
+      "Attractive",
+      "Night"
+    ],
+    "fragrance_family": "Oriental Woody",
+    "short_profile": [
+      "Fruity",
+      "Tropical",
+      "Warm"
+    ],
+    "description": "A bold tropical fragrance led by mango, lemon and ginger, with jasmine and cedar over a rich oud, amber and musk base.",
+    "notes": {
+      "top": [
+        "Mango",
+        "Lemon",
+        "Ginger",
+        "Red Berries"
+      ],
+      "heart": [
+        "Coumarin",
+        "Jasmine",
+        "Cedar"
+      ],
+      "base": [
+        "Musk",
+        "Oud",
+        "Amber",
+        "Cypriol Oil"
+      ]
+    },
+    "sizes": {
+      "35ml": 240,
+      "55ml": 375,
+      "110ml": 750
+    },
+    "image": "images/saffron-flame.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Stephane-Humbert-Lucas-777/God-of-Fire-72381.html"
+  },
+  {
+    "id": "silk-veil",
+    "brand_name": "Silk Veil",
+    "inspired_by": "Guidance — Amouage",
+    "gender": "Unisex",
+    "categories": [
+      "Luxury",
+      "Elegant",
+      "Night"
+    ],
+    "fragrance_family": "Floral Fruity",
+    "short_profile": [
+      "Fruity",
+      "Floral",
+      "Warm"
+    ],
+    "description": "A rich and distinctive fragrance combining pear and hazelnut with rose, saffron and jasmine, resting on creamy woods and vanilla.",
+    "notes": {
+      "top": [
+        "Pear",
+        "Hazelnut",
+        "Olibanum"
+      ],
+      "heart": [
+        "Osmanthus",
+        "Rose",
+        "Saffron",
+        "Jasmine Sambac"
+      ],
+      "base": [
+        "Sandalwood",
+        "Vanilla",
+        "Akigalawood",
+        "Ambergris",
+        "Labdanum"
+      ]
+    },
+    "sizes": {
+      "35ml": 230,
+      "55ml": 360,
+      "110ml": 720
+    },
+    "image": "images/silk-veil.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Amouage/Guidance-78656.html"
+  },
+  {
+    "id": "musk-aura",
+    "brand_name": "Musk Aura",
+    "inspired_by": "Musk Silk — Ajmal",
+    "gender": "Unisex",
+    "categories": [
+      "Elegant",
+      "Summer",
+      "Formal"
+    ],
+    "fragrance_family": "Oriental Floral",
+    "short_profile": [
+      "Powdery",
+      "Soft",
+      "Clean"
+    ],
+    "description": "A soft powdery musk fragrance with lily-of-the-valley, gentle balsamic warmth and vanilla.",
+    "notes": {
+      "top": [
+        "Lily-of-the-Valley"
+      ],
+      "heart": [
+        "Tolu Balsam",
+        "Powdery Notes"
+      ],
+      "base": [
+        "Vanilla"
+      ]
+    },
+    "sizes": {
+      "35ml": 235,
+      "55ml": 365,
+      "110ml": 725
+    },
+    "image": "images/musk-aura.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Ajmal/Musk-Silk-58837.html"
+  },
+  {
+    "id": "golden-bloom",
+    "brand_name": "Golden Bloom",
+    "inspired_by": "Kirkè — Tiziana Terenzi",
+    "gender": "Unisex",
+    "categories": [
+      "Attractive",
+      "Summer",
+      "Elegant"
+    ],
+    "fragrance_family": "Chypre Fruity",
+    "short_profile": [
+      "Fruity",
+      "Sweet",
+      "Musky"
+    ],
+    "description": "A vivid fruity fragrance with passionfruit, peach, pear and raspberry, softened by floral notes and a warm musky vanilla base.",
+    "notes": {
+      "top": [
+        "Passionfruit",
+        "Peach",
+        "Pear",
+        "Raspberry",
+        "Cassis",
+        "Sand"
+      ],
+      "heart": [
+        "Lily-of-the-Valley"
+      ],
+      "base": [
+        "Musk",
+        "Sandalwood",
+        "Vanilla",
+        "Patchouli",
+        "Heliotrope"
+      ]
+    },
+    "sizes": {
+      "35ml": 235,
+      "55ml": 365,
+      "110ml": 730
+    },
+    "image": "images/golden-bloom.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Tiziana-Terenzi/Kirke-32172.html"
+  },
+  {
+    "id": "solar-glow",
+    "brand_name": "Solar Glow",
+    "inspired_by": "Dolce&Gabbana Pour Femme Intense",
+    "gender": "Women",
+    "categories": [
+      "Elegant",
+      "Attractive",
+      "Summer"
+    ],
+    "fragrance_family": "Floral",
+    "short_profile": [
+      "Floral",
+      "Bright",
+      "Warm"
+    ],
+    "description": "A bright floral fragrance with fresh neroli and green mandarin, followed by orange blossom and tuberose over soft marshmallow and sandalwood.",
+    "notes": {
+      "top": [
+        "Neroli",
+        "Green Mandarin"
+      ],
+      "heart": [
+        "Orange Blossom",
+        "Tuberose"
+      ],
+      "base": [
+        "Marshmallow",
+        "Sandalwood"
+      ]
+    },
+    "sizes": {
+      "35ml": 240,
+      "55ml": 375,
+      "110ml": 750
+    },
+    "image": "images/solar-glow.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Dolce-Gabbana/Dolce-Gabbana-Pour-Femme-Intense-18837.html"
+  },
+  {
+    "id": "amber-ray",
+    "brand_name": "Amber Ray",
+    "inspired_by": "Le Parfum Lumière — Elie Saab",
+    "gender": "Women",
+    "categories": [
+      "Elegant",
+      "Luxury",
+      "Attractive"
+    ],
+    "fragrance_family": "Oriental Floral",
+    "short_profile": [
+      "Floral",
+      "Bright",
+      "Warm"
+    ],
+    "description": "A bright and elegant floral scent with orange blossom, ylang-ylang and mandarin, followed by jasmine, tuberose and a warm amber-woody base.",
+    "notes": {
+      "top": [
+        "Orange Blossom",
+        "Ylang-Ylang",
+        "Mandarin Orange"
+      ],
+      "heart": [
+        "Jasmine Sambac",
+        "Tuberose",
+        "Gardenia"
+      ],
+      "base": [
+        "Patchouli",
+        "Musk",
+        "Woody Notes",
+        "Amber"
+      ]
+    },
+    "sizes": {
+      "35ml": 235,
+      "55ml": 365,
+      "110ml": 725
+    },
+    "image": "images/amber-ray.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Elie-Saab/Le-Parfum-Lumi-re-69136.html"
+  },
+  {
+    "id": "sandal-rush",
+    "brand_name": "Sandal Rush",
+    "inspired_by": "Stronger With You Sandalwood — Emporio Armani",
+    "gender": "Unisex",
+    "categories": [
+      "Night",
+      "Luxury",
+      "Attractive"
+    ],
+    "fragrance_family": "Oriental Woody",
+    "short_profile": [
+      "Woody",
+      "Warm",
+      "Creamy"
+    ],
+    "description": "A warm woody fragrance with saffron and lavender, a sweet chestnut heart and a smooth sandalwood, vanilla and cedarwood base.",
+    "notes": {
+      "top": [
+        "Saffron"
+      ],
+      "heart": [
+        "Lavender",
+        "Chestnut"
+      ],
+      "base": [
+        "Sandalwood",
+        "Vanilla",
+        "Cedarwood"
+      ]
+    },
+    "sizes": {
+      "35ml": 230,
+      "55ml": 360,
+      "110ml": 715
+    },
+    "image": "images/sandal-rush.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Giorgio-Armani/Emporio-Armani-Stronger-With-You-Sandalwood-102519.html"
+  },
+  {
+    "id": "berry-cloud",
+    "brand_name": "Berry Cloud",
+    "inspired_by": "Burberry Her — Burberry",
+    "gender": "Women",
+    "categories": [
+      "Attractive",
+      "Summer",
+      "Elegant"
+    ],
+    "fragrance_family": "Floral Fruity Gourmand",
+    "short_profile": [
+      "Fruity",
+      "Sweet",
+      "Soft"
+    ],
+    "description": "A juicy berry fragrance with strawberry, raspberry and cherry, softened by violet, jasmine, musk and vanilla.",
+    "notes": {
+      "top": [
+        "Strawberry",
+        "Raspberry",
+        "Blackberry",
+        "Sour Cherry",
+        "Black Currant",
+        "Mandarin Orange",
+        "Lemon"
+      ],
+      "heart": [
+        "Violet",
+        "Jasmine"
+      ],
+      "base": [
+        "Musk",
+        "Vanilla",
+        "Cashmeran",
+        "Woody Notes",
+        "Amber",
+        "Oakmoss",
+        "Patchouli"
+      ]
+    },
+    "sizes": {
+      "35ml": 245,
+      "55ml": 380,
+      "110ml": 755
+    },
+    "image": "images/berry-cloud.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Burberry/Burberry-Her-51694.html"
+  },
+  {
+    "id": "heavenly-bloom",
+    "brand_name": "Heavenly Bloom",
+    "inspired_by": "Love is Heavenly (2016) — Victoria’s Secret",
+    "gender": "Women",
+    "categories": [
+      "Summer",
+      "Elegant",
+      "Attractive"
+    ],
+    "fragrance_family": "Floral Fruity",
+    "short_profile": [
+      "Fresh",
+      "Floral",
+      "Fruity"
+    ],
+    "description": "A fresh and feminine floral-fruity scent with mandarin blossom, blackberry and kiwi, followed by soft flowers and clean musk with woods.",
+    "notes": {
+      "top": [
+        "Mandarin Blossom",
+        "Blackberry",
+        "Orange",
+        "Kiwi"
+      ],
+      "heart": [
+        "Water Lily",
+        "Freesia",
+        "Peony",
+        "Orchid"
+      ],
+      "base": [
+        "Musk",
+        "Sandalwood",
+        "Ebony Wood",
+        "Mahogany"
+      ]
+    },
+    "sizes": {
+      "35ml": 220,
+      "55ml": 345,
+      "110ml": 690
+    },
+    "image": "images/heavenly-bloom.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Victoria-s-Secret/Love-is-Heavenly-2016-39089.html"
+  },
+  {
+    "id": "green-sprint",
+    "brand_name": "Green Sprint",
+    "inspired_by": "Torino21 — Xerjoff",
+    "gender": "Unisex",
+    "categories": [
+      "Summer",
+      "Elegant"
+    ],
+    "fragrance_family": "Fresh Aromatic",
+    "short_profile": [
+      "Fresh",
+      "Green",
+      "Citrusy"
+    ],
+    "description": "A cool and energetic green scent with mint, lemon and basil, followed by aromatic herbs and a clean musky finish.",
+    "notes": {
+      "top": [
+        "Mint",
+        "Lemon",
+        "Basil",
+        "Thyme"
+      ],
+      "heart": [
+        "Black Currant",
+        "Lavender",
+        "Rosemary",
+        "Jasmine"
+      ],
+      "base": [
+        "Musk",
+        "Vervain"
+      ]
+    },
+    "sizes": {
+      "35ml": 220,
+      "55ml": 345,
+      "110ml": 690
+    },
+    "image": "images/green-sprint.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Xerjoff/Torino21-70424.html"
+  },
+  {
+    "id": "aqua-drive",
+    "brand_name": "Aqua Drive",
+    "inspired_by": "Allure Homme Sport — Chanel",
+    "gender": "Men",
+    "categories": [
+      "Summer",
+      "Attractive",
+      "Formal"
+    ],
+    "fragrance_family": "Woody Spicy",
+    "short_profile": [
+      "Fresh",
+      "Sporty",
+      "Warm"
+    ],
+    "description": "A fresh and sporty fragrance with orange and sea notes, a spicy heart and a smooth vanilla, tonka and musk base.",
+    "notes": {
+      "top": [
+        "Orange",
+        "Sea Notes",
+        "Aldehydes",
+        "Blood Mandarin"
+      ],
+      "heart": [
+        "Pepper",
+        "Neroli",
+        "Cedar"
+      ],
+      "base": [
+        "Vanilla",
+        "Tonka Bean",
+        "White Musk",
+        "Amber",
+        "Vetiver",
+        "Elemi Resin"
+      ]
+    },
+    "sizes": {
+      "35ml": 230,
+      "55ml": 355,
+      "110ml": 710
+    },
+    "image": "images/aqua-drive.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Chanel/Allure-Homme-Sport-607.html"
+  },
+  {
+    "id": "blush-aura",
+    "brand_name": "Blush Aura",
+    "inspired_by": "Arrogate Pink — Assaf",
+    "gender": "Unisex",
+    "categories": [
+      "Elegant",
+      "Attractive",
+      "Summer"
+    ],
+    "fragrance_family": "Floral Fruity",
+    "short_profile": [
+      "Floral",
+      "Powdery",
+      "Soft"
+    ],
+    "description": "A soft floral-fruity scent with orange blossom, neroli and almond, followed by violet, jasmine and apricot over musk and sandalwood.",
+    "notes": {
+      "top": [
+        "Orange Blossom",
+        "Neroli",
+        "Almond"
+      ],
+      "heart": [
+        "Violet",
+        "Jasmine",
+        "Apricot"
+      ],
+      "base": [
+        "Musk",
+        "Jasmine",
+        "Sandalwood"
+      ]
+    },
+    "sizes": {
+      "35ml": 225,
+      "55ml": 350,
+      "110ml": 700
+    },
+    "image": "images/blush-aura.webp",
+    "reference_link": "https://www.fragrantica.com/perfume/Assaf/Arrogate-Pink-110870.html"
+  }
+]
