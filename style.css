@@ -2791,12 +2791,28 @@ a {
   text-transform: uppercase;
 }
 
+/* ---------- FAQ section ---------- */
+.faq-section {
+  padding: 10px 18px 85px;
+  background: var(--ivory);
+}
+
+.faq-list {
+  display: grid;
+  gap: 10px;
+}
+
 /* Keep Shipping, Testimonials & FAQ aligned with Collection & Story sections
    (same inline gutters at every breakpoint). */
 @media (min-width: 700px) {
   .shipping-section,
   .testimonials-section,
   .faq-section { padding-inline: 7vw; }
+
+  .faq-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
 }
 
 @media (min-width: 1050px) {
@@ -2838,19 +2854,7 @@ a {
   .product-main { padding-top: calc(82px + 36px); }
 }
 
-/* ---------- FAQ section ---------- */
-.faq-section {
-  padding: 10px 18px 85px;
-  background: var(--ivory);
-}
-
-.faq-list {
-  max-width: 760px;
-  margin: 0 auto;
-  display: grid;
-  gap: 10px;
-}
-
+/* ---------- FAQ items ---------- */
 .faq-item {
   border: 1px solid var(--line);
   border-radius: 14px;
