@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم عطور ويلي</title>
+<style>
+  :root {
+    --gold: #a97c3b;
+    --gold-dark: #7a5520;
+    --ink: #241a0e;
+    --muted: #7b6f5e;
+    --line: #e8dfd0;
+    --bg: #f7f3ec;
+    --card: #ffffff;
+    --green: #2e7d4f;
+    --red: #b23a3a;
+    --blue: #2f5e8c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #8c6428, #b0813a);
+    color: #fff;
+  }
+  .topbar h1 { margin: 0; font-size: 20px; font-weight: 700; }
+  .stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat {
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .toolbar {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    padding: 14px 22px 0;
+  }
+  input[type=text], select, input[type=number] {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font: inherit;
+    background: var(--card);
+    color: var(--ink);
+  }
+  input[type=number] { width: 76px; }
+  .toolbar input[type=text] { flex: 0 1 260px; }
+  .btn {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--ink);
+  }
+  .btn:hover { filter: brightness(.96); }
+  .btn.gold { background: var(--gold); border-color: var(--gold); color: #fff; }
+  .btn.green { background: var(--green); border-color: var(--green); color: #fff; }
+  .btn.blue { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.red { background: var(--red); border-color: var(--red); color: #fff; }
+  .btn.small { padding: 5px 10px; font-size: 12px; }
+  .table-wrap { margin: 16px 22px 0; overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; min-width: 980px; }
+  th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: right; vertical-align: middle; }
+  th { background: #f1ead9; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #faf6ec; }
+  .prod-cell { display: flex; gap: 10px; align-items: center; }
+  .prod-cell img { width: 42px; height: 42px; object-fit: contain; background: #f1ead9; border-radius: 8px; }
+  .prod-cell strong { display: block; font-size: 14px; }
+  .prod-cell small { color: var(--muted); }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .pill.in { background: #e3f2e8; color: var(--green); }
+  .pill.low { background: #fff1d6; color: #9a6b1a; }
+  .pill.out { background: #fbe4e4; color: var(--red); }
+  .pill.hidden { background: #ece9e4; color: var(--muted); }
+  .actions { display: flex; gap: 6px; }
+  .gen-out { margin: 14px 22px 0; }
+  .gen-out pre {
+    background: #1f1a12; color: #d9c9a8; padding: 14px; border-radius: 10px;
+    font-size: 12px; white-space: pre-wrap; max-height: 320px; overflow: auto;
+  }
+  .hidden { display: none; }
+  footer { padding: 20px 22px; color: var(--muted); font-size: 12px; }
+  #toast {
+    position: fixed; bottom: 18px; right: 50%; transform: translateX(50%);
+    background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 999px;
+    font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s;
+    z-index: 50;
+  }
+  #toast.show { opacity: 1; }
+  .modal-back {
+    position: fixed; inset: 0; background: rgba(36,26,14,.45);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 30px 14px; overflow: auto; z-index: 40;
+  }
+  .modal-back.open { display: flex; }
+  .modal {
+    background: var(--card); border-radius: 14px; padding: 20px;
+    width: 100%; max-width: 780px; box-shadow: 0 24px 60px rgba(0,0,0,.25);
+  }
+  .modal h2 { margin: 0 0 14px; font-size: 18px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .field.full { grid-column: 1 / -1; }
+  .field input, .field select, .field textarea {
+    border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font: inherit;
+  }
+  .field textarea { resize: vertical; min-height: 54px; }
+  .ar-label { color: var(--gold-dark); }
+  .modal .actions { margin-top: 16px; display: flex; gap: 8px; justify-content: flex-end; }
+  .img-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .img-row img { width: 54px; height: 54px; object-fit: contain; background: #f1ead9; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>عطور ويلي — لوحة تحكم المنتجات</h1>
+  <div class="stats" id="stats"></div>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search" placeholder="ابحث بالاسم أو id...">
+  <select id="genderFilter">
+    <option value="">كل الأجناس</option>
+    <option>Men</option><option>Women</option><option>Unisex</option>
+  </select>
+  <select id="statusFilter">
+    <option value="">كل الحالات</option>
+    <option value="in">متاح</option>
+    <option value="low">كميات محدودة</option>
+    <option value="out">نفد المخزون</option>
+    <option value="hidden">مخفي</option>
+  </select>
+  <button class="btn gold" id="addBtn">+ إضافة منتج</button>
+  <button class="btn green" id="saveBtn">💾 حفظ الكل</button>
+  <button class="btn blue" id="genBtn">🔄 إعادة توليد الموقع</button>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>إظهار</th>
+        <th>المنتج</th>
+        <th>الجنس</th>
+        <th>السعر 35مل</th>
+        <th>السعر 55مل</th>
+        <th>السعر 110مل</th>
+        <th>الكمية</th>
+        <th>الترتيب</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<div class="gen-out hidden" id="genOut"><pre id="genText"></pre></div>
+
+<footer>الملفات بتتكتب مباشرة في <b>website_data_willis_perfume_FINAL_WITH_PRICES.json</b> — بعد الحفظ اضغط "إعادة توليد الموقع" عشان الصفحات والسايت ماب يتحدثوا.</footer>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal">
+    <h2 id="modalTitle">منتج جديد</h2>
+    <div class="form-grid" id="modalForm"></div>
+    <div class="actions">
+      <button class="btn green" id="modalSave">حفظ المنتج</button>
+      <button class="btn" id="modalCancel">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+let products = [];
+let dirty = false;
+let modalProduct = null;
+let imageOptions = [];
+
+function toast(msg) {
+  const el = $("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function statusOf(p) {
+  const n = Number(p.stock);
+  if (p.stock != null && String(p.stock).trim() !== "" && !isNaN(n)) {
+    if (n <= 0) return "out";
+    if (n <= 3) return "low";
+    return "in";
+  }
+  if (p.stock === "out") return "out";
+  if (p.stock === "low") return "low";
+  return "in";
+}
+
+async function load() {
+  try {
+    const r = await fetch("api/products");
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    products = await r.json();
+    renderStats();
+    renderTable();
+  } catch (e) {
+    toast("تعذر تحميل المنتجات: " + e.message);
+  }
+}
+
+function filtered() {
+  const q = $("search").value.trim().toLowerCase();
+  const g = $("genderFilter").value;
+  const s = $("statusFilter").value;
+  return [...products]
+    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0))
+    .filter(p => {
+      if (g && p.gender !== g) return false;
+      if (s === "hidden") { if (p.visible !== false) return false; }
+      else if (s && statusOf(p) !== s) return false;
+      if (q && ![String(p.id), p.brand_name, p.inspired_by].join(" ").toLowerCase().includes(q)) return false;
+      return true;
+    });
+}
+
+function esc(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderStats() {
+  const total = products.length;
+  const visible = products.filter(p => p.visible !== false).length;
+  const hidden = total - visible;
+  const out = products.filter(p => statusOf(p) === "out").length;
+  $("stats").innerHTML = `
+    <span class="stat">الإجمالي: ${total}</span>
+    <span class="stat">ظاهر: ${visible}</span>
+    <span class="stat">مخفي: ${hidden}</span>
+    <span class="stat">نفد المخزون: ${out}</span>`;
+}
+
+const NA = "—";
+function thumb(p) { return p.image || (p.id ? "images/" + p.id + ".webp" : "images/bottle.webp"); }
+
+function renderTable() {
+  const rows = filtered().map(p => {
+    const st = statusOf(p);
+    const pill = p.visible === false
+      ? '<span class="pill hidden">مخفي</span>'
+      : `<span class="pill ${st}">${st === "in" ? "متاح" : st === "low" ? "محدود" : "نفد"}</span>`;
+    return `
+    <tr data-id="${esc(p.id)}">
+      <td><input type="checkbox" class="cell-vis" data-id="${esc(p.id)}" ${p.visible === false ? "" : "checked"} title="إظهار/إخفاء"></td>
+      <td>
+        <div class="prod-cell">
+          <img src="${esc(thumb(p))}" alt="" onerror="this.style.opacity=.25">
+          <div>
+            <strong>${esc(p.brand_name)}</strong>
+            <small>${esc(p.id)} · مستوحى من: ${esc(p.inspired_by)}</small>
+          </div>
+        </div>
+      </td>
+      <td>${esc(p.gender || NA)}</td>
+      <td><input type="number" min="0" class="cell-size" data-id="${esc(p.id)}" data-size="35ml" value="${esc(p.sizes?.["35ml"] ?? "")}"></td>
+      <td><input type="number" min="0" class="cell-size" data-id="${esc(p.id)}" data-size="55ml" value="${esc(p.sizes?.["55ml"] ?? "")}"></td>
+      <td><input type="number" min="0" class="cell-size" data-id="${esc(p.id)}" data-size="110ml" value="${esc(p.sizes?.["110ml"] ?? "")}"></td>
+      <td><input type="number" min="0" class="cell-stock" data-id="${esc(p.id)}" value="${esc(p.stock ?? "")}"></td>
+      <td><input type="number" class="cell-order" data-id="${esc(p.id)}" value="${esc(p.order ?? "")}"></td>
+      <td>
+        <div class="actions">
+          <button class="btn small btn-edit" data-id="${esc(p.id)}">تعديل</button>
+          <button class="btn small red btn-del" data-id="${esc(p.id)}">حذف</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+  $("tbody").innerHTML = rows;
+}
+
+/* inline cell edits */
+document.addEventListener("change", e => {
+  const p = products.find(x => x.id === e.target.dataset.id);
+  if (!p) return;
+  if (e.target.classList.contains("cell-vis")) {
+    p.visible = e.target.checked;
+  } else if (e.target.classList.contains("cell-size")) {
+    if (!p.sizes) p.sizes = {};
+    p.sizes[e.target.dataset.size] = Number(e.target.value) || 0;
+  } else if (e.target.classList.contains("cell-stock")) {
+    p.stock = e.target.value === "" ? null : Math.max(0, Number(e.target.value) || 0);
+  } else if (e.target.classList.contains("cell-order")) {
+    p.order = Number(e.target.value) || 0;
+  } else {
+    return;
+  }
+  dirty = true;
+  renderStats();
+});
+
+/* actions */
+document.addEventListener("click", e => {
+  const editBtn = e.target.closest(".btn-edit");
+  if (editBtn) {
+    const p = products.find(x => x.id === editBtn.dataset.id);
+    if (p) openModal(p, false);
+    return;
+  }
+  const delBtn = e.target.closest(".btn-del");
+  if (delBtn) {
+    const p = products.find(x => x.id === delBtn.dataset.id);
+    if (p && confirm(`حذف "${p.brand_name}" من البيانات؟\nصفحته هتتتشال تلقائيًا بعد إعادة توليد الموقع.`)) {
+      products = products.filter(x => x.id !== p.id);
+      dirty = true;
+      renderTable(); renderStats();
+      toast("تم حذف المنتج — اضغط حفظ الكل");
+    }
+  }
+});
+
+$("search").addEventListener("input", renderTable);
+$("genderFilter").addEventListener("change", renderTable);
+$("statusFilter").addEventListener("change", renderTable);
+$("saveBtn").addEventListener("click", onSave);
+$("genBtn").addEventListener("click", onRegenerate);
+$("addBtn").addEventListener("click", () => openModal(null, true));
+
+async function onSave() {
+  try {
+    /* normalize ids & orders */
+    products.forEach((p, i) => {
+      p.id = String(p.id || "").trim();
+      if (p.order == null) p.order = i + 1;
+      if (p.visible == null) p.visible = true;
+    });
+    const bad = products.filter(p => !p.id);
+    if (bad.length) {
+      toast("في منتج بدون id — افتحه واكتب id أولاً");
+      return;
+    }
+    const ids = new Set();
+    for (const p of products) {
+      if (ids.has(p.id)) { toast("id مكرر: " + p.id); return; }
+      ids.add(p.id);
+    }
+    const r = await fetch("api/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(products)
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
+    dirty = false;
+    toast(`تم الحفظ ✔ (${j.count} منتج) — لاتنسَ إعادة توليد الموقع`);
+  } catch (e) {
+    toast("خطأ في الحفظ: " + e.message);
+  }
+}
+
+async function onRegenerate() {
+  $("genOut").classList.remove("hidden");
+  $("genText").textContent = "جارٍ إعادة التوليد...";
+  try {
+    const r = await fetch("api/regenerate", { method: "POST" });
+    const j = await r.json();
+    $("genText").textContent = j.ok
+      ? "✅ تمت إعادة توليد الصفحات والسايت ماب بنجاح."
+      : "❌ " + (j.error || "خطأ غير معروف");
+  } catch (e) {
+    $("genText").textContent = "❌ " + e.message;
+  }
+}
+
+/* ---------------- modal ---------------- */
+function csv(a) { return Array.isArray(a) ? a.join(", ") : ""; }
+function arr(v) {
+  return String(v || "").split(",").map(s => s.trim()).filter(Boolean);
+}
+
+async function loadImages() {
+  try {
+    const r = await fetch("api/images");
+    imageOptions = await r.json();
+  } catch (e) { imageOptions = []; }
+}
+
+function openModal(p, isNew) {
+  modalProduct = isNew ? {
+    id: "", brand_name: "", inspired_by: "", gender: "Men",
+    categories: [], fragrance_family: "", short_profile: [],
+    description: "", notes: { top: [], heart: [], base: [] },
+    sizes: { "35ml": 0, "55ml": 0, "110ml": 0 },
+    stock: 20, order: products.length + 1, visible: true,
+    ar: { description: "", family: "", profile: [], notes: { top: [], heart: [], base: [] } },
+    image: "images/bottle.webp"
+  } : p;
+
+  $("modalTitle").textContent = isNew ? "إضافة منتج جديد" : "تعديل: " + p.brand_name;
+
+  const ar = modalProduct.ar || {};
+  const notes = modalProduct.notes || {};
+  const arNotes = ar.notes || {};
+
+  const gOpt = ["Men", "Women", "Unisex"].map(g =>
+    `<option ${modalProduct.gender === g ? "selected" : ""}>${g}</option>`).join("");
+
+  $("modalForm").innerHTML = `
+    <div class="field"><label>الـ ID (رابط الصفحة — بالإنجليزي، مثل white-code)</label><input type="text" id="f_id" value="${esc(modalProduct.id)}" ${isNew ? "" : "readonly"}></div>
+    <div class="field"><label>اسم المنتج (EN)</label><input type="text" id="f_brand" value="${esc(modalProduct.brand_name)}"></div>
+    <div class="field"><label>مستوحى من</label><input type="text" id="f_inspired" value="${esc(modalProduct.inspired_by)}"></div>
+    <div class="field"><label>الجنس</label><select id="f_gender">${gOpt}</select></div>
+    <div class="field"><label>الفئات (مفصولة بفاصلة)</label><input type="text" id="f_cats" value="${esc(csv(modalProduct.categories))}"></div>
+    <div class="field"><label>العائلة العطرية (EN)</label><input type="text" id="f_family" value="${esc(modalProduct.fragrance_family)}"></div>
+    <div class="field"><label>البروفايل (EN، مفصول بفاصلة)</label><input type="text" id="f_profile" value="${esc(csv(modalProduct.short_profile))}"></div>
+    <div class="field"><label>الكمية بالمخزون</label><input type="number" min="0" id="f_stock" value="${esc(modalProduct.stock ?? 20)}"></div>
+    <div class="field"><label>الترتيب في العرض</label><input type="number" id="f_order" value="${esc(modalProduct.order ?? "")}"></div>
+    <div class="field"><label>الأسعار (35 / 55 / 110 مل)</label><div style="display:flex;gap:6px">
+      <input type="number" min="0" style="width:30%" id="f_s35" value="${esc(modalProduct.sizes?.["35ml"] ?? "")}">
+      <input type="number" min="0" style="width:30%" id="f_s55" value="${esc(modalProduct.sizes?.["55ml"] ?? "")}">
+      <input type="number" min="0" style="width:30%" id="f_s110" value="${esc(modalProduct.sizes?.["110ml"] ?? "")}">
+    </div></div>
+    <div class="field"><label>الوصف بالعربي (اختياري — لو فاضي يتعرض الإنجليزي)</label><textarea id="f_desc_ar">${esc(ar.description || "")}</textarea></div>
+    <div class="field full"><label>الوصف بالإنجليزي</label><textarea id="f_desc">${esc(modalProduct.description || "")}</textarea></div>
+    <div class="field full"><label>النوتات — مقدمة (top) | القلب (heart) | القاعدة (base) — مفصولة بفاصلة</label>
+      <div style="display:grid;gap:6px;grid-template-columns:1fr 1fr 1fr">
+        <input type="text" placeholder="Top (EN)" id="f_n_top" value="${esc(csv(notes.top))}">
+        <input type="text" placeholder="Heart (EN)" id="f_n_heart" value="${esc(csv(notes.heart))}">
+        <input type="text" placeholder="Base (EN)" id="f_n_base" value="${esc(csv(notes.base))}">
+      </div></div>
+    <div class="field full"><label class="ar-label">النوتات بالعربي (اختياري)</label>
+      <div style="display:grid;gap:6px;grid-template-columns:1fr 1fr 1fr">
+        <input type="text" placeholder="مقدمة" id="f_n_top_ar" value="${esc(csv(arNotes.top))}">
+        <input type="text" placeholder="القلب" id="f_n_heart_ar" value="${esc(csv(arNotes.heart))}">
+        <input type="text" placeholder="القاعدة" id="f_n_base_ar" value="${esc(csv(arNotes.base))}">
+      </div></div>
+    <div class="field full">
+      <label>صورة المنتج</label>
+      <div class="img-row">
+        <img id="f_img_preview" src="${esc(thumb(modalProduct))}" alt="">
+        <select id="f_img_sel"><option value="">— اختر صورة موجودة —</option></select>
+        <input type="file" id="f_img_file" accept="image/*">
+      </div>
+      <small style="color:var(--muted)">إذا رفعت صورة جديدة هتتحول webp تلقائيًا وتتسمّى images/{id}.webp</small>
+    </div>
+    <div class="field"><label><input type="checkbox" id="f_visible" ${modalProduct.visible === false ? "" : "checked"}> إظهار المنتج في الموقع</label></div>
+  `;
+
+  const imgSel = $("f_img_sel");
+  imgSel.innerHTML = '<option value="">— اختر صورة موجودة —</option>' +
+    imageOptions.map(p => `<option ${p === (modalProduct.image || "") ? "selected" : ""}>${esc(p)}</option>`).join("");
+  imgSel.addEventListener("change", () => {
+    if (imgSel.value) { modalProduct.image = imgSel.value; refreshImgPreview(); }
+  });
+  $("f_img_file").addEventListener("change", async ev => {
+    const file = ev.target.files[0];
+    if (!file) return;
+    const id = ($("f_id").value || "product").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "product";
+    const ext = file.name.split(".").pop().toLowerCase();
+    const name = "images/" + id + "." + (/^(png|jpg|jpeg)$/i.test(ext) ? "webp" : ext);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      toast("جارٍ تحويل الصورة...");
+      try {
+        const r = await fetch("api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, data: reader.result })
+        });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
+        modalProduct.image = j.path;
+        refreshImgPreview();
+        imageOptions.push(j.path);
+        toast("تم رفع الصورة ✔");
+      } catch (err) {
+        toast("خطأ في رفع الصورة: " + err.message);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  refreshImgPreview();
+
+  $("modalBack").classList.add("open");
+}
+
+function refreshImgPreview() {
+  if ($("f_img_preview")) $("f_img_preview").src = modalProduct.image || "images/bottle.webp";
+}
+
+$("modalCancel").addEventListener("click", () => $("modalBack").classList.remove("open"));
+$("modalBack").addEventListener("click", e => { if (e.target === $("modalBack")) $("modalBack").classList.remove("open"); });
+
+$("modalSave").addEventListener("click", () => {
+  const mp = modalProduct;
+  mp.brand_name = $("f_brand").value.trim();
+  mp.inspired_by = $("f_inspired").value.trim();
+  mp.gender = $("f_gender").value;
+  mp.categories = arr($("f_cats").value);
+  mp.fragrance_family = $("f_family").value.trim();
+  mp.short_profile = arr($("f_profile").value);
+  mp.description = $("f_desc").value.trim();
+  mp.stock = $("f_stock").value === "" ? null : Math.max(0, Number($("f_stock").value) || 0);
+  mp.order = Number($("f_order").value) || 0;
+  mp.visible = $("f_visible").checked;
+  mp.sizes = {
+    "35ml": Number($("f_s35").value) || 0,
+    "55ml": Number($("f_s55").value) || 0,
+    "110ml": Number($("f_s110").value) || 0
+  };
+  mp.ar = mp.ar || {};
+  mp.ar.description = $("f_desc_ar").value.trim();
+  mp.ar.family = $("f_family").value.trim();
+  mp.ar.profile = arr($("f_profile").value);
+  mp.ar.notes = {
+    top: arr($("f_n_top_ar").value),
+    heart: arr($("f_n_heart_ar").value),
+    base: arr($("f_n_base_ar").value)
+  };
+  mp.notes = {
+    top: arr($("f_n_top").value),
+    heart: arr($("f_n_heart").value),
+    base: arr($("f_n_base").value)
+  };
+
+  if (!mp.brand_name) { toast("اكتب اسم المنتج"); return; }
+
+  const isNew = !products.some(x => x.id === mp.id);
+  if (!mp.id) mp.id = String(mp.brand_name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "product";
+  mp.id = String(mp.id).trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-");
+
+  if (isNew) {
+    if (products.some(x => x.id === mp.id)) { toast("في منتج بنفس الـ id: " + mp.id); return; }
+    products.push(mp);
+  }
+  dirty = true;
+  $("modalBack").classList.remove("open");
+  renderTable(); renderStats();
+  toast(isNew ? "تمت إضافة المنتج — اضغط حفظ الكل" : "تم تعديل المنتج — اضغط حفظ الكل");
+});
+
+loadImages();
+load();
+</script>
+</body>
+</html>
