@@ -219,7 +219,15 @@
           <span class="eyebrow" data-i18n="hero.eyebrow">WILLI’S PERFUME</span>
           <h1 data-i18n-html="hero.title">Find Your<br><em>Signature Scent</em></h1>
           <p data-i18n="hero.subtitle">Discover carefully selected fragrances inspired by iconic scents, made for your own style.</p>
-          <a class="primary-btn" href="#collection"><span data-i18n="hero.cta">Explore Collection</span> <span>→</span></a>
+          <div class="hero-ctas">
+            <a class="primary-btn" href="#collection"><span data-i18n="hero.cta">Explore Collection</span> <span>→</span></a>
+            <a class="secondary-btn hero-wa-btn" href="#" id="heroWaBtn">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+                <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.72.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.71.97.99-3.62-.24-.37a9.77 9.77 0 1 1 8.34 4.6zM12 2a10 10 0 0 0-8.55 15.22L2 22l4.92-1.29A10 10 0 1 0 12 2z"/>
+              </svg>
+              <span data-i18n="hero.ctaWa">Order on WhatsApp</span>
+            </a>
+          </div>
 
           <div class="hero-features">
             <div><b>◊</b><span data-i18n-html="hero.f1">Premium<br>Quality</span></div>
@@ -279,6 +287,15 @@
           <span class="count-badge" id="resultCount">25 fragrances</span>
         </div>
 
+        <div class="quiz-banner" id="quizBanner" role="button" tabindex="0"
+          aria-label="Find your scent in 30 seconds — start the quiz">
+          <div class="quiz-banner-text">
+            <strong>🎯 <span data-i18n="quiz.bannerTitle">Find your scent in 30 seconds</span></strong>
+            <span data-i18n="quiz.bannerText">Answer 4 quick questions and we'll match you with the fragrances you'll love.</span>
+          </div>
+          <span class="quiz-banner-btn" data-i18n="quiz.bannerCta">Start the quiz</span>
+        </div>
+
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
           <input id="searchInput" type="search" placeholder="Search your fragrance..." data-i18n-placeholder="coll.search" autocomplete="off">
@@ -300,6 +317,16 @@
           <button class="category-chip" data-category="Night" data-i18n="cat.Night">Night</button>
           <button class="category-chip" data-category="Attractive" data-i18n="cat.Attractive">Attractive</button>
           <button class="category-chip" data-category="Luxury" data-i18n="cat.Luxury">Luxury</button>
+        </div>
+
+        <div class="sort-wrap">
+          <label for="sortSelect" data-i18n="sort.label">Sort</label>
+          <select id="sortSelect" aria-label="Sort products">
+            <option value="default" data-i18n="sort.optDefault">Default order</option>
+            <option value="price-asc" data-i18n="sort.optPriceAsc">Price: low to high</option>
+            <option value="price-desc" data-i18n="sort.optPriceDesc">Price: high to low</option>
+            <option value="name" data-i18n="sort.optName">Name A–Z</option>
+          </select>
         </div>
 
         <div id="products-container" class="products-grid"></div>

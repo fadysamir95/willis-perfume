@@ -18,6 +18,9 @@ const WHATSAPP_NUMBER = (window.SITE_CONFIG && window.SITE_CONFIG.whatsapp) || "
 
 const CART_STORAGE_KEY = "willis_cart_v1";
 
+/* Free-shipping threshold (EGP) — matches the announcement bar / FAQ. */
+const FREE_SHIPPING_MIN = 1000;
+
 const PAGE_PRODUCT_ID = document.body?.dataset?.productId || "";
 const PAGE_MODE = document.body?.dataset?.pageMode || ""; // "", "featured", "collection"
 
@@ -119,6 +122,7 @@ const state = {
   gender: "All",
   category: "All",
   search: "",
+  sort: "default",
   selectedProduct: null,
   selectedSize: "35ml",
   selectedQty: 1,
@@ -286,6 +290,8 @@ function renderCart() {
   }).join("");
 
   if (cartTotalEl()) cartTotalEl().textContent = `${Number(getCartTotal()).toLocaleString()} ${isArabic() ? "ج.م" : "EGP"}`;
+  renderShipProgress();
+  renderCartSuggestions();
 }
 
 const cartDrawer = document.getElementById("cartDrawer");
@@ -710,6 +716,7 @@ function buildProductDetail(product) {
     </div>
 
     ${relatedSectionHTML(product)}
+    ${recentSectionHTML(product)}
   `;
 }
 
@@ -763,6 +770,18 @@ function attachProductDetail(rootEl, product) {
       }
     });
   });
+
+  rootEl.querySelectorAll(".recent-card").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const recent = state.products.find(p => p.id === btn.dataset.recentId);
+      if (!recent) return;
+      if (PAGE_PRODUCT_ID) {
+        window.location.href = BASE_PATH + "products/" + recent.id + ".html";
+      } else {
+        openProductModal(recent);
+      }
+    });
+  });
 }
 
 const detailRoot = () =>
@@ -776,6 +795,395 @@ function renderActiveDetail() {
   if (!root) return;
   root.innerHTML = buildProductDetail(state.selectedProduct);
   attachProductDetail(root, state.selectedProduct);
+}
+
+/* ================================
+   Cart free-shipping progress
+   ================================ */
+
+function shipProgressHTML(total) {
+  if (total >= FREE_SHIPPING_MIN) {
+    return `
+      <div class="ship-progress unlocked" data-ship-progress>
+        <div class="ship-progress-track"><span class="ship-progress-fill" style="width:100%"></span></div>
+        <p>${t("cart.freeUnlocked")}</p>
+      </div>`;
+  }
+  const pct = Math.max(6, Math.min(100, Math.floor((total / FREE_SHIPPING_MIN) * 100)));
+  const remaining = FREE_SHIPPING_MIN - total;
+  return `
+    <div class="ship-progress" data-ship-progress>
+      <div class="ship-progress-track"><span class="ship-progress-fill" style="width:${pct}%"></span></div>
+      <p>${t("cart.freeHint", { min: FREE_SHIPPING_MIN.toLocaleString(), cur: currency() })} · ${t("cart.freeProgress", { amount: remaining.toLocaleString(), cur: currency() })}</p>
+    </div>`;
+}
+
+function renderShipProgress() {
+  const footer = document.getElementById("cartFooter");
+  if (!footer) return;
+  footer.querySelectorAll("[data-ship-progress]").forEach(el => el.remove());
+  const hasItems = state.cart.some(item => productInData(item.id));
+  if (!hasItems) return;
+  footer.insertAdjacentHTML("afterbegin", shipProgressHTML(getCartTotal()));
+}
+
+/* ================================
+   Sort (collection)
+   ================================ */
+
+function sortProducts(list) {
+  const arr = list.slice();
+  const price = p => {
+    const sizes = Object.values(p.sizes || {});
+    return sizes.length ? Math.min(...sizes.map(Number)) : 0;
+  };
+  if (state.sort === "price-asc") arr.sort((a, b) => price(a) - price(b));
+  else if (state.sort === "price-desc") arr.sort((a, b) => price(b) - price(a));
+  else if (state.sort === "name") arr.sort((a, b) => a.brand_name.localeCompare(b.brand_name));
+  else arr.sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+  return arr;
+}
+
+/* ================================
+   Cart — "often ordered together"
+   ================================ */
+
+function cartSuggestionsHTML() {
+  const cartIds = state.cart.filter(item => productInData(item.id)).map(item => item.id);
+  if (!cartIds.length) return "";
+  const picked = cartIds.map(id => state.products.find(p => p.id === id)).filter(Boolean);
+  const pool = state.products.filter(p => isVisible(p) && !cartIds.includes(p.id));
+  if (!pool.length) return "";
+
+  const score = p => picked.reduce((s, cp) => {
+    if (p.gender === cp.gender) s += 2;
+    if (p.fragrance_family && cp.fragrance_family && p.fragrance_family === cp.fragrance_family) s += 3;
+    const shared = (p.categories || []).filter(c => (cp.categories || []).includes(c)).length;
+    return s + shared;
+  }, 0);
+
+  const best = pool
+    .map(p => ({ p, s: score(p) }))
+    .sort((a, b) => b.s - a.s)
+    .slice(0, 3)
+    .map(x => x.p);
+
+  const cards = best.map(p => {
+    const size = getDefaultSize(p);
+    return `
+      <button type="button" class="cart-suggest-card" data-suggest-id="${escapeHTML(p.id)}">
+        <img src="${escapeHTML(getProductImageCandidates(p)[0])}" alt="" loading="lazy">
+        <span class="cart-suggest-info">
+          <strong>${escapeHTML(p.brand_name)}</strong>
+          <small>${Number(p.sizes?.[size] || 0).toLocaleString()} ${currency()}</small>
+        </span>
+        <span class="cart-suggest-add">+</span>
+      </button>`;
+  }).join("");
+
+  return `
+    <div class="cart-suggest">
+      <h4>${t("cart.suggest")}</h4>
+      <div class="cart-suggest-grid">${cards}</div>
+    </div>`;
+}
+
+function renderCartSuggestions() {
+  const itemsEl = document.getElementById("cartItems");
+  if (!itemsEl) return;
+  const old = document.getElementById("cartSuggest");
+  if (old) old.remove();
+  const html = cartSuggestionsHTML();
+  if (html) itemsEl.insertAdjacentHTML("afterend", `<div id="cartSuggest">${html}</div>`);
+}
+
+/* ================================
+   Recently viewed
+   ================================ */
+
+const RECENT_KEY = "willis_recent_v1";
+const RECENT_MAX = 6;
+
+function getRecent() {
+  try {
+    const raw = localStorage.getItem(RECENT_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr.filter(x => typeof x === "string") : [];
+  } catch (e) { return []; }
+}
+
+function recordRecent(product) {
+  if (!product || !product.id) return;
+  try {
+    let list = getRecent().filter(id => id !== product.id);
+    list.unshift(product.id);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, RECENT_MAX)));
+  } catch (e) { /* ignore */ }
+}
+
+function recentProducts(excludeId, limit = 3) {
+  return getRecent()
+    .filter(id => id !== excludeId)
+    .map(id => state.products.find(p => p.id === id))
+    .filter(Boolean)
+    .filter(isVisible)
+    .slice(0, limit);
+}
+
+function recentSectionHTML(product) {
+  const items = recentProducts(product.id);
+  if (!items.length) return "";
+  const cards = items.map(p => {
+    const size = getDefaultSize(p);
+    return `
+      <button type="button" class="recent-card" data-recent-id="${escapeHTML(p.id)}">
+        <img src="${escapeHTML(getProductImageCandidates(p)[0])}" alt="" loading="lazy">
+        <strong>${escapeHTML(p.brand_name)}</strong>
+        <span>${Number(p.sizes?.[size] || 0).toLocaleString()} ${currency()}</span>
+      </button>`;
+  }).join("");
+  return `
+    <div class="recent-section">
+      <h3 class="notes-title">${t("detail.recent")}</h3>
+      <div class="recent-grid">${cards}</div>
+    </div>`;
+}
+
+/* ================================
+   Scent quiz — "find your scent in 30 seconds"
+   ================================ */
+
+let quizStepIndex = 0;
+let quizAnswers = {};
+let quizModalEl = null;
+
+function quizSteps() {
+  return [
+    { id: "gender", title: t("quiz.gender.title"), options: [
+      { v: "Men", label: t("quiz.gender.men") },
+      { v: "Women", label: t("quiz.gender.women") },
+      { v: "Unisex", label: t("quiz.gender.unisex") }
+    ] },
+    { id: "vibe", title: t("quiz.vibe.title"), options: [
+      { v: "fresh", label: t("quiz.vibe.fresh") },
+      { v: "warm", label: t("quiz.vibe.warm") },
+      { v: "sweet", label: t("quiz.vibe.sweet") },
+      { v: "bold", label: t("quiz.vibe.bold") }
+    ] },
+    { id: "occasion", title: t("quiz.occasion.title"), options: [
+      { v: "day", label: t("quiz.occasion.day") },
+      { v: "work", label: t("quiz.occasion.work") },
+      { v: "night", label: t("quiz.occasion.night") },
+      { v: "special", label: t("quiz.occasion.special") }
+    ] },
+    { id: "longevity", title: t("quiz.longevity.title"), options: [
+      { v: "light", label: t("quiz.longevity.light") },
+      { v: "balanced", label: t("quiz.longevity.balanced") },
+      { v: "strong", label: t("quiz.longevity.strong") }
+    ] }
+  ];
+}
+
+function quizMatches(answers) {
+  const gender = answers.gender;
+  const vibe = answers.vibe;
+  const occasion = answers.occasion;
+  const longevity = answers.longevity;
+  const inc = (hay, ...keys) => keys.some(k => hay.includes(k));
+
+  return state.products
+    .filter(isVisible)
+    .map(p => {
+      let s = String(p.stock).trim() === "out" || Number(p.stock) <= 0 ? 0 : 6;
+      const fam = String(p.fragrance_family || "").toLowerCase();
+      const prof = (p.short_profile || []).map(x => String(x).toLowerCase());
+      const cats = (p.categories || []).map(x => String(x).toLowerCase());
+      const hay = [fam, ...prof, ...cats].join(" ");
+
+      if (gender && p.gender === gender) s += 40;
+
+      if (vibe === "fresh") {
+        if (inc(hay, "fresh", "citrus", "aquatic", "green", "clean", "sporty", "bright", "tropical")) s += 15;
+        if (cats.includes("summer")) s += 8;
+      } else if (vibe === "warm") {
+        if (inc(hay, "woody", "warm", "amber", "musky", "vanilla", "creamy", "oriental")) s += 15;
+        if (cats.includes("luxury") || cats.includes("elegant")) s += 4;
+      } else if (vibe === "sweet") {
+        if (inc(hay, "sweet", "fruity", "floral", "gourmand", "creamy", "soft", "vanilla")) s += 15;
+        if (cats.includes("summer") || cats.includes("attractive")) s += 4;
+      } else if (vibe === "bold") {
+        if (inc(hay, "dark", "deep", "spicy", "oriental", "woody", "powdery", "sweet", "warm")) s += 15;
+        if (cats.includes("night") || cats.includes("attractive") || cats.includes("luxury")) s += 6;
+      }
+
+      if (occasion === "day") {
+        if (cats.includes("summer") || cats.includes("elegant") || cats.includes("formal")) s += 10;
+      } else if (occasion === "work") {
+        if (cats.includes("formal") || cats.includes("elegant")) s += 12;
+        if (inc(hay, "clean", "fresh", "powdery", "refined", "elegant")) s += 4;
+      } else if (occasion === "night") {
+        if (cats.includes("night") || cats.includes("attractive")) s += 12;
+      } else if (occasion === "special") {
+        if (cats.includes("luxury") || cats.includes("night") || cats.includes("attractive")) s += 12;
+      }
+
+      if (longevity === "light") {
+        if (inc(hay, "fresh", "soft", "clean", "citrus", "sporty", "light")) s += 10;
+      } else if (longevity === "strong") {
+        if (inc(hay, "woody", "amber", "oriental", "dark", "deep", "powdery", "sweet", "warm", "rich")) s += 10;
+        if (cats.includes("night") || cats.includes("luxury")) s += 4;
+      }
+
+      return { p, s };
+    })
+    .sort((a, b) => b.s - a.s)
+    .slice(0, 3)
+    .map(x => x.p);
+}
+
+function openQuiz() {
+  closeQuiz();
+  document.body.insertAdjacentHTML("beforeend", `
+    <div class="quiz-backdrop" id="quizBackdrop">
+      <div class="quiz-modal" role="dialog" aria-modal="true" aria-hidden="false">
+        <button class="quiz-close" id="quizClose" aria-label="${t("quiz.close")}">×</button>
+        <div class="quiz-head">
+          <span class="eyebrow">${t("quiz.bannerTitle")}</span>
+          <h2>${t("quiz.title")}</h2>
+          <p>${t("quiz.subtitle")}</p>
+        </div>
+        <div class="quiz-body" id="quizBody"></div>
+        <div class="quiz-foot" id="quizFoot"></div>
+      </div>
+    </div>`);
+  quizModalEl = document.getElementById("quizBackdrop");
+  quizAnswers = {};
+  quizStepIndex = 0;
+  renderQuizStep();
+  document.getElementById("quizClose")?.addEventListener("click", closeQuiz);
+  quizModalEl.addEventListener("click", e => { if (e.target === quizModalEl) closeQuiz(); });
+  document.body.classList.add("modal-open");
+  trapFocus(quizModalEl.querySelector(".quiz-modal"));
+}
+
+function closeQuiz() {
+  if (quizModalEl) {
+    untrapFocus(quizModalEl.querySelector(".quiz-modal"));
+    quizModalEl.remove();
+  }
+  quizModalEl = null;
+  if (document.body.classList.contains("modal-open")
+    && !(document.getElementById("productModal")?.classList.contains("open"))) {
+    document.body.classList.remove("modal-open");
+  }
+}
+
+function renderActiveQuiz() {
+  if (!quizModalEl) return;
+  if (quizStepIndex >= quizSteps().length) renderQuizResults();
+  else renderQuizStep();
+}
+
+function renderQuizStep() {
+  const body = document.getElementById("quizBody");
+  const foot = document.getElementById("quizFoot");
+  if (!quizModalEl || !body || !foot) return;
+  const steps = quizSteps();
+  const step = steps[Math.min(quizStepIndex, steps.length - 1)];
+
+  body.innerHTML = `
+    <div class="quiz-progress">
+      <span>${t("quiz.step", { n: quizStepIndex + 1, m: steps.length })}</span>
+      <i style="width:${Math.round(((quizStepIndex + 1) / steps.length) * 100)}%"></i>
+    </div>
+    <h3>${step.title}</h3>
+    <div class="quiz-options">
+      ${step.options.map(o => `
+        <button type="button" class="quiz-option${quizAnswers[step.id] === o.v ? " selected" : ""}" data-quiz-val="${escapeHTML(o.v)}">
+          <span>${o.label}</span>
+        </button>`).join("")}
+    </div>`;
+
+  foot.innerHTML = `
+    <div class="quiz-foot-row">
+      ${quizStepIndex > 0 ? `<button type="button" class="btn-ghost" id="quizBackBtn">${t("quiz.back")}</button>` : ""}
+      <button type="button" class="btn-ghost" id="quizRestartBtn">${t("quiz.restart")}</button>
+    </div>`;
+
+  body.querySelectorAll(".quiz-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      quizAnswers[step.id] = btn.dataset.quizVal;
+      quizStepIndex++;
+      renderActiveQuiz();
+    });
+  });
+  foot.querySelector("#quizBackBtn")?.addEventListener("click", () => {
+    quizStepIndex = Math.max(0, quizStepIndex - 1);
+    renderQuizStep();
+  });
+  foot.querySelector("#quizRestartBtn")?.addEventListener("click", () => {
+    quizAnswers = {};
+    quizStepIndex = 0;
+    renderQuizStep();
+  });
+}
+
+function renderQuizResults() {
+  const body = document.getElementById("quizBody");
+  const foot = document.getElementById("quizFoot");
+  if (!quizModalEl || !body || !foot) return;
+
+  const matches = quizMatches(quizAnswers);
+  const cards = matches.map(p => {
+    const size = getDefaultSize(p);
+    return `
+      <div class="quiz-result-card">
+        <img src="${escapeHTML(getProductImageCandidates(p)[0])}" alt="" loading="lazy">
+        <div class="quiz-result-info">
+          <strong>${escapeHTML(p.brand_name)}</strong>
+          <small>${t("modal.inspired")} ${escapeHTML(p.inspired_by)}</small>
+          <span class="quiz-result-price">${Number(p.sizes?.[size] || 0).toLocaleString()} ${currency()}</span>
+        </div>
+        <button type="button" class="quiz-detail-btn" data-quiz-details="${escapeHTML(p.id)}">${t("card.details")}</button>
+      </div>`;
+  }).join("");
+
+  body.innerHTML = `
+    <div class="quiz-summary">
+      <h3>${t("quiz.results.title")}</h3>
+      <p>${t("quiz.results.text")}</p>
+    </div>
+    ${cards ? `<div class="quiz-results-grid">${cards}</div>` : `<p class="quiz-empty">${t("quiz.results.empty")}</p>`}`;
+
+  foot.innerHTML = `
+    <div class="quiz-foot-row">
+      <button type="button" class="btn-ghost" id="quizRestartBtn">${t("quiz.restart")}</button>
+      ${WHATSAPP_NUMBER ? `<a class="quiz-wa-help" id="quizWaHelp" target="_blank" rel="noopener">${t("quiz.waHelp")}</a>` : ""}
+    </div>`;
+
+  body.querySelectorAll("[data-quiz-details]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const p = state.products.find(x => x.id === btn.dataset.quizDetails);
+      if (p) { closeQuiz(); openProductModal(p); }
+    });
+  });
+  foot.querySelector("#quizRestartBtn")?.addEventListener("click", () => {
+    quizAnswers = {};
+    quizStepIndex = 0;
+    renderQuizStep();
+  });
+  const waHelp = foot.querySelector("#quizWaHelp");
+  if (waHelp) waHelp.href = generalWhatsAppUrl();
+}
+
+function initQuiz() {
+  const banner = document.getElementById("quizBanner");
+  if (!banner) return;
+  const open = () => openQuiz();
+  banner.addEventListener("click", open);
+  banner.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+  });
 }
 
 /* ================================
@@ -803,8 +1211,9 @@ function filteredProducts() {
       ].join(" ").toLowerCase();
 
       return matchesGender && matchesCategory && (!query || haystack.includes(query));
-    })
-    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+    });
+
+  return sortProducts(matches);
 }
 
 function productCardHTML(product) {
@@ -922,9 +1331,13 @@ function resetFilters() {
   state.gender = "All";
   state.category = "All";
   state.search = "";
+  state.sort = "default";
 
   const searchInput = document.getElementById("searchInput");
   if (searchInput) searchInput.value = "";
+
+  const sortSelect = document.getElementById("sortSelect");
+  if (sortSelect) sortSelect.value = "default";
 
   document.querySelectorAll("#genderFilters .filter-chip").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.gender === "All");
@@ -951,6 +1364,7 @@ function openProductModal(product) {
   state.selectedProduct = product;
   state.selectedSize = getDefaultSize(product);
   state.selectedQty = 1;
+  recordRecent(product);
   modalContentEl.innerHTML = buildProductDetail(product);
   attachProductDetail(modalContentEl, product);
   productModal.classList.add("open");
@@ -993,6 +1407,7 @@ function renderPageProduct() {
   state.selectedProduct = product;
   state.selectedSize = getDefaultSize(product);
   state.selectedQty = 1;
+  recordRecent(product);
 
   pageEl.dataset.rendered = "1";
   pageEl.innerHTML = buildProductDetail(product);
@@ -1138,6 +1553,15 @@ function initFilters() {
     });
 
     if (!state.search) clearSearch.style.display = "none";
+  }
+
+  const sortSelect = document.getElementById("sortSelect");
+  if (sortSelect) {
+    sortSelect.value = state.sort;
+    sortSelect.addEventListener("change", () => {
+      state.sort = sortSelect.value;
+      renderProducts();
+    });
   }
 
   document.getElementById("resetFilters")?.addEventListener("click", resetFilters);
@@ -1306,6 +1730,7 @@ function initWhatsAppButtons() {
 
   document.getElementById("whatsappNav")?.addEventListener("click", openGeneral);
   document.getElementById("desktopWhatsApp")?.addEventListener("click", openGeneral);
+  document.getElementById("heroWaBtn")?.addEventListener("click", openGeneral);
   document.getElementById("menuWhatsApp")?.addEventListener("click", event => {
     event.preventDefault();
     openGeneral();
@@ -1347,6 +1772,14 @@ document.addEventListener("click", event => {
   if (copyBtn) {
     const product = state.products.find(p => p.id === copyBtn.dataset.productId);
     if (product) copyShareLink(product);
+    return;
+  }
+
+  const suggestBtn = event.target.closest(".cart-suggest-card");
+  if (suggestBtn) {
+    const product = state.products.find(p => p.id === suggestBtn.dataset.suggestId);
+    if (product) openProductModal(product);
+    return;
   }
 });
 
@@ -1357,6 +1790,7 @@ document.addEventListener("keydown", event => {
   if (event.key !== "Escape") return;
 
   closeProductModal();
+  closeQuiz();
   closeCart();
 
   const sideMenu = document.getElementById("sideMenu");
@@ -1372,6 +1806,7 @@ document.addEventListener("keydown", event => {
 
 /* Re-render everything when the user switches language */
 document.addEventListener("langchange", () => {
+  if (document.getElementById("quizBackdrop")) renderActiveQuiz();
   if (document.getElementById("products-container")) renderProducts();
   renderFeatured();
 
@@ -1432,6 +1867,7 @@ async function loadProducts() {
 }
 
 initFilters();
+initQuiz();
 initCards();
 initMenu();
 initCartEvents();

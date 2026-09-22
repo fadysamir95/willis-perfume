@@ -1,11 +1,38 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة تحكم عطور ويلي</title>
+<title>Willi's Perfume — Admin Dashboard</title>
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Willi's Perfume" />
+<meta property="og:title" content="Willi's Perfume — Admin Dashboard" />
+<meta property="og:description" content="Manage Willi's Perfume products — edit prices, stock, sizes and content, then save straight to the live site." />
+<meta property="og:url" content="https://willis-perfume.vercel.app/admin.html" />
+<meta property="og:image" content="https://willis-perfume.vercel.app/images/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Willi's Perfume — Admin Dashboard" />
+<meta name="twitter:description" content="Manage Willi's Perfume products — edit prices, stock, sizes and content, then save straight to the live site." />
+<meta name="twitter:image" content="https://willis-perfume.vercel.app/images/og-image.png" />
+<script>
+  /* Make OG links resolve on whatever host opens the dashboard (vercel.app now,
+     the custom domain later, localhost while developing). */
+  (function () {
+    try {
+      var origin = (typeof location === "undefined" || location.protocol === "file:")
+        ? "https://willis-perfume.vercel.app"
+        : location.origin;
+      var url = document.querySelector('meta[property="og:url"]');
+      var img = document.querySelector('meta[property="og:image"]');
+      if (url) url.content = origin + "/admin.html";
+      if (img) img.content = origin + "/images/og-image.png";
+    } catch (e) { /* ignore */ }
+  })();
+</script>
 <style>
   :root {
     --gold: #a97c3b;
@@ -76,7 +103,7 @@
   .btn.small { padding: 5px 10px; font-size: 12px; }
   .table-wrap { margin: 16px 22px 0; overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
   table { border-collapse: collapse; width: 100%; min-width: 980px; }
-  th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: right; vertical-align: middle; }
+  th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
   th { background: #f1ead9; font-size: 12px; color: var(--muted); white-space: nowrap; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #faf6ec; }
@@ -150,28 +177,28 @@
 <body>
 
 <div class="topbar">
-  <h1>عطور ويلي — لوحة تحكم المنتجات</h1>
+  <h1>Willi's Perfume — Product Dashboard</h1>
   <div class="stats" id="stats"></div>
 </div>
 
 <div class="toolbar">
-  <input type="text" id="search" placeholder="ابحث بالاسم أو id...">
+  <input type="text" id="search" placeholder="Search by name or id...">
   <select id="genderFilter">
-    <option value="">كل الأجناس</option>
+    <option value="">All genders</option>
     <option>Men</option><option>Women</option><option>Unisex</option>
   </select>
   <select id="statusFilter">
-    <option value="">كل الحالات</option>
-    <option value="in">متاح</option>
-    <option value="low">كميات محدودة</option>
-    <option value="out">نفد المخزون</option>
-    <option value="hidden">مخفي</option>
+    <option value="">All statuses</option>
+    <option value="in">In stock</option>
+    <option value="low">Low stock</option>
+    <option value="out">Out of stock</option>
+    <option value="hidden">Hidden</option>
   </select>
-  <button class="btn gold" id="addBtn">+ إضافة منتج</button>
-  <input type="password" id="pinInput" placeholder="PIN أمان (اختياري)" title="رقم حماية اللوحة أونلاين — يُضبط من متغير ADMIN_PIN في إعدادات Vercel. محليًا غير مطلوب." autocomplete="off">
-  <button class="btn green" id="saveBtn">💾 حفظ الكل</button>
-  <button class="btn blue" id="genBtn">🔄 إعادة توليد الموقع</button>
-  <button class="btn" id="dlBtn" title="تنزيل ملف JSON الحالي — ضعه مكان الملف المحلي لإعادة توليد الـ SEO">⬇ JSON</button>
+  <button class="btn gold" id="addBtn">+ Add product</button>
+  <input type="password" id="pinInput" placeholder="Admin PIN (optional)" title="Protects the dashboard online — set via the ADMIN_PIN env var in Vercel. Not required locally." autocomplete="off">
+  <button class="btn green" id="saveBtn">💾 Save all</button>
+  <button class="btn blue" id="genBtn">🔄 Regenerate site</button>
+  <button class="btn" id="dlBtn" title="Download the current JSON file — replace the local file with it, then regenerate the SEO pages">⬇ JSON</button>
 </div>
 
 <div id="apiGuide" class="api-guide hidden"></div>
@@ -180,16 +207,16 @@
   <table>
     <thead>
       <tr>
-        <th>إظهار</th>
-        <th title="يظهر في قسم الأكثر طلبًا">مميز</th>
-        <th>المنتج</th>
-        <th>الجنس</th>
-        <th>السعر 35مل</th>
-        <th>السعر 55مل</th>
-        <th>السعر 110مل</th>
-        <th>الكمية</th>
-        <th>الترتيب</th>
-        <th>إجراءات</th>
+        <th>Show</th>
+        <th title="Shows in Most Requested">Featured</th>
+        <th>Product</th>
+        <th>Gender</th>
+        <th>Price 35ml</th>
+        <th>Price 55ml</th>
+        <th>Price 110ml</th>
+        <th>Stock</th>
+        <th>Order</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -198,27 +225,27 @@
 
 <div class="gen-out hidden" id="genOut"><pre id="genText"></pre></div>
 
-<footer><b>محليًا (start-admin.bat):</b> الحفظ يكتب في الملف المحلي ثم راجع "إعادة توليد الموقع" عشان الصفحات والسايت ماب يتحدثوا، بعدها اعملي <code>git push</code> عشان Vercel يتحدث. <b>أونلاين (على الموقع المنشور):</b> الحفظ يتم في السحابة (Vercel Blob) ويظهر فورًا على الموقع — وزر "إعادة توليد الموقع" بيختفي لأن تحديث ملفات الـ SEO يتم من جهازك (زر ⬇ JSON ثم <code>node tools/generate-pages.js</code> ثم push).</footer>
+<footer><b>Locally (start-admin.bat):</b> saving writes to the local file — then click "Regenerate site" so the pages and sitemap update, and run <code>git push</code> so Vercel deploys. <b>Online (on the live site):</b> saving writes to the cloud (Vercel Blob) and appears instantly — the "Regenerate site" button is hidden because SEO files are refreshed from your machine (⬇ JSON, then <code>node tools/generate-pages.js</code> and push).</footer>
 
 <div class="modal-back" id="modalBack">
   <div class="modal">
-    <h2 id="modalTitle">منتج جديد</h2>
+    <h2 id="modalTitle">New product</h2>
     <div class="form-grid" id="modalForm"></div>
     <div class="actions">
-      <button class="btn green" id="modalSave">حفظ المنتج</button>
-      <button class="btn" id="modalCancel">إلغاء</button>
+      <button class="btn green" id="modalSave">Save product</button>
+      <button class="btn" id="modalCancel">Cancel</button>
     </div>
   </div>
 </div>
 
 <div class="modal-back" id="lockBack" style="align-items:center">
   <div class="modal" style="max-width:380px">
-    <h2>🔒 لوحة محمية برقم PIN</h2>
-    <p id="lockMsg" style="color:var(--muted);margin:0 0 14px;line-height:1.8">اكتب رقم الحماية عشان تفتح اللوحة.</p>
-    <input type="password" id="lockPin" placeholder="رقم الحماية (PIN)" style="width:100%;margin-bottom:14px;direction:ltr" autocomplete="off">
+    <h2>🔒 Dashboard protected by PIN</h2>
+    <p id="lockMsg" style="color:var(--muted);margin:0 0 14px;line-height:1.8">Enter the PIN to unlock the dashboard.</p>
+    <input type="password" id="lockPin" placeholder="Security PIN" style="width:100%;margin-bottom:14px;direction:ltr" autocomplete="off">
     <div class="actions" style="justify-content:flex-start">
-      <button class="btn green" id="lockSubmit">دخول</button>
-      <button class="btn" id="lockCancel">إلغاء</button>
+      <button class="btn green" id="lockSubmit">Unlock</button>
+      <button class="btn" id="lockCancel">Cancel</button>
     </div>
   </div>
 </div>
@@ -262,7 +289,7 @@ function openLockScreen(msg) {
 }
 function submitLock() {
   const v = $("lockPin").value.trim();
-  if (!v) { toast("اكتب الرقم أولاً"); return; }
+  if (!v) { toast("Enter the PIN first"); return; }
   adminPin = v;
   try { localStorage.setItem("willis_admin_pin", v); } catch (e) {}
   $("lockBack").classList.remove("open");
@@ -299,7 +326,7 @@ function statusOf(p) {
 
 async function load() {
   if (!API_BASE) {
-    showGuide('التشغيل غلط ❗ — فتحت الصفحة كملف مباشر.<br><br>شغّل السيرفر من الطرفية أولاً:<br><code>node tools/serve.js</code><br>ثم افتح <b>http://localhost:8080/admin.html</b><br><br>أو الأسهل: دبل كليك على ملف <b>start-admin.bat</b> في مجلد المشروع — هيفتح كل حاجة لوحده.');
+    showGuide('Not running ❗ — you opened this page as a direct file.<br><br>Start the server from the terminal first:<br><code>node tools/serve.js</code><br>then open <b>http://localhost:8080/admin.html</b><br><br>Or easier: double-click <b>start-admin.bat</b> in the project folder — it starts everything for you.');
     return;
   }
   try {
@@ -313,23 +340,23 @@ async function load() {
       throw err;
     }
     products = j;
-    if (!Array.isArray(products)) throw new Error("البيانات مش مصفوفة");
+    if (!Array.isArray(products)) throw new Error("Data is not an array");
     dataHashAtLoad = r.headers && r.headers.get ? r.headers.get("X-Data-Hash") : null;
     renderStats();
     renderTable();
     if (IS_REMOTE) applyRemoteMode();
   } catch (e) {
     const remoteHint = IS_REMOTE
-      ? '<br><br>دليل سريع: افتح <b>Vercel</b> ← تبويب <b>Storage</b>، تأكد إن فيه store واحدة بس بتاعة <b>Public</b> مربوطة بالمشروع ده، وامسح أي متغيرات قديمة من <b>Settings ← Environment Variables</b> (BLOB_READ_WRITE_TOKEN و BLOB_STORE_ID) ثم اعمل <b>Redeploy</b>. محليًا: شغّل <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>'
-      : ' — تأكد إن السيرفر شغال: <code>node tools/serve.js</code> ثم افتح <b>http://localhost:8080/admin.html</b> أو استخدم <b>start-admin.bat</b>';
+      ? '<br><br>Quick guide: open <b>Vercel</b> → <b>Storage</b> tab, make sure exactly one <b>Public</b> store is linked to this project, and remove any old variables from <b>Settings ← Environment Variables</b> (BLOB_READ_WRITE_TOKEN and BLOB_STORE_ID), then <b>Redeploy</b>. Locally: run <code>node tools/serve.js</code> and open <b>http://localhost:8080/admin.html</b>, or use <b>start-admin.bat</b>'
+      : ' — make sure the server is running: <code>node tools/serve.js</code> then open <b>http://localhost:8080/admin.html</b>, or use <b>start-admin.bat</b>';
     let extra = "";
     if (e.detail && e.detail !== e.message) {
       extra = `<br><small style="direction:ltr;display:inline-block;word-break:break-all">detail: ${esc(e.detail).slice(0, 260)}</small>`;
     }
     if (e.env) {
-      extra += `<br><small>فحص المتغيرات: BLOB_READ_WRITE_TOKEN = ${e.env.hasToken ? "موجود ✔" : "غير موجود ✖"} · BLOB_STORE_ID = ${e.env.hasStoreId ? "موجود" : "غير موجود"}</small>`;
+      extra += `<br><small>Env check: BLOB_READ_WRITE_TOKEN = ${e.env.hasToken ? "set ✔" : "missing ✖"} · BLOB_STORE_ID = ${e.env.hasStoreId ? "set" : "missing"}</small>`;
     }
-    showGuide(`تعذر تحميل المنتجات (${e.message})${extra}${remoteHint}`);
+    showGuide(`Could not load products (${e.message})${extra}${remoteHint}`);
   }
 }
 
@@ -366,10 +393,10 @@ function renderStats() {
   const hidden = total - visible;
   const out = products.filter(p => statusOf(p) === "out").length;
   $("stats").innerHTML = `
-    <span class="stat">الإجمالي: ${total}</span>
-    <span class="stat">ظاهر: ${visible}</span>
-    <span class="stat">مخفي: ${hidden}</span>
-    <span class="stat">نفد المخزون: ${out}</span>`;
+    <span class="stat">Total: ${total}</span>
+    <span class="stat">Visible: ${visible}</span>
+    <span class="stat">Hidden: ${hidden}</span>
+    <span class="stat">Out of stock: ${out}</span>`;
 }
 
 const NA = "—";
@@ -379,18 +406,18 @@ function renderTable() {
   const rows = filtered().map(p => {
     const st = statusOf(p);
     const pill = p.visible === false
-      ? '<span class="pill hidden">مخفي</span>'
-      : `<span class="pill ${st}">${st === "in" ? "متاح" : st === "low" ? "محدود" : "نفد"}</span>`;
+      ? '<span class="pill hidden">Hidden</span>'
+      : `<span class="pill ${st}">${st === "in" ? "In stock" : st === "low" ? "Low stock" : "Out of stock"}</span>`;
     return `
     <tr data-id="${esc(p.id)}">
-      <td><input type="checkbox" class="cell-vis" data-id="${esc(p.id)}" ${p.visible === false ? "" : "checked"} title="إظهار/إخفاء"></td>
-      <td><input type="checkbox" class="cell-feat" data-id="${esc(p.id)}" ${p.featured === true ? "checked" : ""} title="مميز — يظهر في قسم الأكثر طلبًا"></td>
+      <td><input type="checkbox" class="cell-vis" data-id="${esc(p.id)}" ${p.visible === false ? "" : "checked"} title="Show / Hide"></td>
+      <td><input type="checkbox" class="cell-feat" data-id="${esc(p.id)}" ${p.featured === true ? "checked" : ""} title="Featured — shows in Most Requested"></td>
       <td>
         <div class="prod-cell">
           <img src="${esc(thumb(p))}" alt="" onerror="this.style.opacity=.25">
           <div>
             <strong>${esc(p.brand_name)}</strong>
-            <small>${esc(p.id)} · مستوحى من: ${esc(p.inspired_by)}</small>
+            <small>${esc(p.id)} · Inspired by: ${esc(p.inspired_by)}</small>
           </div>
         </div>
       </td>
@@ -402,8 +429,8 @@ function renderTable() {
       <td><input type="number" class="cell-order" data-id="${esc(p.id)}" value="${esc(p.order ?? "")}"></td>
       <td>
         <div class="actions">
-          <button class="btn small btn-edit" data-id="${esc(p.id)}">تعديل</button>
-          <button class="btn small red btn-del" data-id="${esc(p.id)}">حذف</button>
+          <button class="btn small btn-edit" data-id="${esc(p.id)}">Edit</button>
+          <button class="btn small red btn-del" data-id="${esc(p.id)}">Delete</button>
         </div>
       </td>
     </tr>`;
@@ -444,11 +471,11 @@ document.addEventListener("click", e => {
   const delBtn = e.target.closest(".btn-del");
   if (delBtn) {
     const p = products.find(x => x.id === delBtn.dataset.id);
-    if (p && confirm(`حذف "${p.brand_name}" من البيانات؟\nصفحته هتتتشال تلقائيًا بعد إعادة توليد الموقع.`)) {
+    if (p && confirm(`Delete "${p.brand_name}" from the data?\nIts page will be removed automatically after regenerating the site.`)) {
       products = products.filter(x => x.id !== p.id);
       dirty = true;
       renderTable(); renderStats();
-      toast("تم حذف المنتج — اضغط حفظ الكل");
+      toast("Product deleted — press Save all");
     }
   }
 });
@@ -465,24 +492,24 @@ $("pinInput").addEventListener("change", () => {
   const v = $("pinInput").value.trim();
   adminPin = v;
   try { localStorage.setItem("willis_admin_pin", v); } catch (e) {}
-  toast(v ? "تم حفظ رقم الحماية" : "تمت إزالة رقم الحماية");
+  toast(v ? "Admin PIN saved" : "Admin PIN removed");
 });
 if (adminPin) $("pinInput").value = adminPin;
 $("dlBtn").addEventListener("click", downloadJSON);
 
 function downloadJSON() {
-  if (!products.length) { toast("مفيش بيانات للحفظ"); return; }
+  if (!products.length) { toast("No data to save"); return; }
   const blob = new Blob([JSON.stringify(products, null, 2) + "\n"], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "website_data_willis_perfume_FINAL_WITH_PRICES.json";
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  toast("تم تنزيل الـ JSON — ضعه مكان الملف المحلي لإعادة التوليد");
+  toast("JSON downloaded — replace the local file and regenerate");
 }
 
 async function onSave() {
-  if (!API_BASE) { showGuide('التشغيل غلط — شغّل السيرفر أولاً (استخدم start-admin.bat)'); return; }
+  if (!API_BASE) { showGuide('Not running — start the server first (use start-admin.bat)'); return; }
   try {
     /* normalize ids & orders */
     products.forEach((p, i) => {
@@ -492,12 +519,12 @@ async function onSave() {
     });
     const bad = products.filter(p => !p.id);
     if (bad.length) {
-      toast("في منتج بدون id — افتحه واكتب id أولاً");
+      toast("A product is missing an id — open it and write the id first");
       return;
     }
     const ids = new Set();
     for (const p of products) {
-      if (ids.has(p.id)) { toast("id مكرر: " + p.id); return; }
+      if (ids.has(p.id)) { toast("Duplicate id: " + p.id); return; }
       ids.add(p.id);
     }
     /* stale-write guard: refuse to overwrite if the data file changed since page load */
@@ -506,8 +533,8 @@ async function onSave() {
       ? check.headers.get("X-Data-Hash") || ""
       : "";
     if (dataHashAtLoad && currentHash && dataHashAtLoad !== currentHash) {
-      const go = confirm("⚠️ ملف البيانات اتعدل في مكان تاني (تبويب/جهاز تاني) بعد ما فتحت الداش بورد دي.\n\nلو حفظت دلوقتي هتكتب فوق التعديلات دي.\n\nتستمر في الحفظ؟");
-      if (!go) { toast("تم إلغاء الحفظ — حدّث الصفحة (F5) لترى أحدث البيانات"); return; }
+      const go = confirm("⚠️ The data file was changed somewhere else (another tab/device) after you opened this dashboard.\n\nIf you save now, you will overwrite those changes.\n\nContinue saving?");
+      if (!go) { toast("Save cancelled — refresh (F5) to see the latest data"); return; }
     }
     const r = await apiFetch("/api/products", {
       method: "POST",
@@ -517,30 +544,30 @@ async function onSave() {
     const j = await r.json();
     if (r.status === 401) {
       pendingAction = onSave;
-      openLockScreen("اللوحة محمية برقم PIN 🔒 — اكتب رقم الحماية ثم هيتم الحفظ تلقائيًا.");
+      openLockScreen("Dashboard protected by PIN 🔒 — enter the PIN and the save will complete automatically.");
       return;
     }
     if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
     dataHashAtLoad = j.hash || currentHash || dataHashAtLoad;
     dirty = false;
     toast(IS_REMOTE
-      ? `تم الحفظ في السحابة ✔ (${j.count} منتج) — التغييرات ظاهرة فورًا على الموقع`
-      : `تم الحفظ ✔ (${j.count} منتج) — لاتنسَ إعادة توليد الموقع`);
+      ? `Saved to the cloud ✔ (${j.count} products) — changes are live on the site`
+      : `Saved ✔ (${j.count} products) — don't forget to regenerate the site`);
   } catch (e) {
-    toast("خطأ في الحفظ: " + e.message);
+    toast("Save error: " + e.message);
   }
 }
 
 async function onRegenerate() {
-  if (!API_BASE) { showGuide('التشغيل غلط — شغّل السيرفر أولاً (استخدم start-admin.bat)'); return; }
+  if (!API_BASE) { showGuide('Not running — start the server first (use start-admin.bat)'); return; }
   $("genOut").classList.remove("hidden");
-  $("genText").textContent = "جارٍ إعادة التوليد...";
+  $("genText").textContent = "Regenerating...";
   try {
     const r = await apiFetch("/api/regenerate", { method: "POST" });
     const j = await r.json();
     $("genText").textContent = j.ok
-      ? "✅ تمت إعادة توليد الصفحات والسايت ماب بنجاح."
-      : "❌ " + (j.error || "خطأ غير معروف");
+      ? "✅ Pages and sitemap regenerated successfully."
+      : "❌ " + (j.error || "Unknown error");
   } catch (e) {
     $("genText").textContent = "❌ " + e.message;
   }
@@ -572,7 +599,7 @@ function openModal(p, isNew) {
     image: "images/bottle.webp"
   } : p;
 
-  $("modalTitle").textContent = isNew ? "إضافة منتج جديد" : "تعديل: " + p.brand_name;
+  $("modalTitle").textContent = isNew ? "Add new product" : "Edit: " + p.brand_name;
 
   const ar = modalProduct.ar || {};
   const notes = modalProduct.notes || {};
@@ -582,49 +609,49 @@ function openModal(p, isNew) {
     `<option ${modalProduct.gender === g ? "selected" : ""}>${g}</option>`).join("");
 
   $("modalForm").innerHTML = `
-    <div class="field"><label>الـ ID (رابط الصفحة — بالإنجليزي، مثل white-code)</label><input type="text" id="f_id" value="${esc(modalProduct.id)}" ${isNew ? "" : "readonly"}></div>
-    <div class="field"><label>اسم المنتج (EN)</label><input type="text" id="f_brand" value="${esc(modalProduct.brand_name)}"></div>
-    <div class="field"><label>مستوحى من</label><input type="text" id="f_inspired" value="${esc(modalProduct.inspired_by)}"></div>
-    <div class="field"><label>الجنس</label><select id="f_gender">${gOpt}</select></div>
-    <div class="field"><label>الفئات (مفصولة بفاصلة)</label><input type="text" id="f_cats" value="${esc(csv(modalProduct.categories))}"></div>
-    <div class="field"><label>العائلة العطرية (EN)</label><input type="text" id="f_family" value="${esc(modalProduct.fragrance_family)}"></div>
-    <div class="field"><label>البروفايل (EN، مفصول بفاصلة)</label><input type="text" id="f_profile" value="${esc(csv(modalProduct.short_profile))}"></div>
-    <div class="field"><label>الكمية بالمخزون</label><input type="number" min="0" id="f_stock" value="${esc(modalProduct.stock ?? 20)}"></div>
-    <div class="field"><label>الترتيب في العرض</label><input type="number" id="f_order" value="${esc(modalProduct.order ?? "")}"></div>
-    <div class="field"><label>الأسعار (35 / 55 / 110 مل)</label><div style="display:flex;gap:6px">
+    <div class="field"><label>ID (page link — English, e.g. white-code)</label><input type="text" id="f_id" value="${esc(modalProduct.id)}" ${isNew ? "" : "readonly"}></div>
+    <div class="field"><label>Product name (EN)</label><input type="text" id="f_brand" value="${esc(modalProduct.brand_name)}"></div>
+    <div class="field"><label>Inspired by</label><input type="text" id="f_inspired" value="${esc(modalProduct.inspired_by)}"></div>
+    <div class="field"><label>Gender</label><select id="f_gender">${gOpt}</select></div>
+    <div class="field"><label>Categories (comma-separated)</label><input type="text" id="f_cats" value="${esc(csv(modalProduct.categories))}"></div>
+    <div class="field"><label>Fragrance family (EN)</label><input type="text" id="f_family" value="${esc(modalProduct.fragrance_family)}"></div>
+    <div class="field"><label>Short profile (EN, comma-separated)</label><input type="text" id="f_profile" value="${esc(csv(modalProduct.short_profile))}"></div>
+    <div class="field"><label>Stock quantity</label><input type="number" min="0" id="f_stock" value="${esc(modalProduct.stock ?? 20)}"></div>
+    <div class="field"><label>Display order</label><input type="number" id="f_order" value="${esc(modalProduct.order ?? "")}"></div>
+    <div class="field"><label>Prices (35 / 55 / 110 ml)</label><div style="display:flex;gap:6px">
       <input type="number" min="0" style="width:30%" id="f_s35" value="${esc(modalProduct.sizes?.["35ml"] ?? "")}">
       <input type="number" min="0" style="width:30%" id="f_s55" value="${esc(modalProduct.sizes?.["55ml"] ?? "")}">
       <input type="number" min="0" style="width:30%" id="f_s110" value="${esc(modalProduct.sizes?.["110ml"] ?? "")}">
     </div></div>
-    <div class="field"><label>الوصف بالعربي (اختياري — لو فاضي يتعرض الإنجليزي)</label><textarea id="f_desc_ar">${esc(ar.description || "")}</textarea></div>
-    <div class="field full"><label>الوصف بالإنجليزي</label><textarea id="f_desc">${esc(modalProduct.description || "")}</textarea></div>
-    <div class="field full"><label>النوتات — مقدمة (top) | القلب (heart) | القاعدة (base) — مفصولة بفاصلة</label>
+    <div class="field"><label>Arabic description (optional — falls back to English)</label><textarea id="f_desc_ar">${esc(ar.description || "")}</textarea></div>
+    <div class="field full"><label>English description</label><textarea id="f_desc">${esc(modalProduct.description || "")}</textarea></div>
+    <div class="field full"><label>Notes — top | heart | base (comma-separated)</label>
       <div style="display:grid;gap:6px;grid-template-columns:1fr 1fr 1fr">
         <input type="text" placeholder="Top (EN)" id="f_n_top" value="${esc(csv(notes.top))}">
         <input type="text" placeholder="Heart (EN)" id="f_n_heart" value="${esc(csv(notes.heart))}">
         <input type="text" placeholder="Base (EN)" id="f_n_base" value="${esc(csv(notes.base))}">
       </div></div>
-    <div class="field full"><label class="ar-label">النوتات بالعربي (اختياري)</label>
+    <div class="field full"><label class="ar-label">Notes in Arabic (optional)</label>
       <div style="display:grid;gap:6px;grid-template-columns:1fr 1fr 1fr">
-        <input type="text" placeholder="مقدمة" id="f_n_top_ar" value="${esc(csv(arNotes.top))}">
-        <input type="text" placeholder="القلب" id="f_n_heart_ar" value="${esc(csv(arNotes.heart))}">
-        <input type="text" placeholder="القاعدة" id="f_n_base_ar" value="${esc(csv(arNotes.base))}">
+        <input type="text" placeholder="Top" id="f_n_top_ar" value="${esc(csv(arNotes.top))}">
+        <input type="text" placeholder="Heart" id="f_n_heart_ar" value="${esc(csv(arNotes.heart))}">
+        <input type="text" placeholder="Base" id="f_n_base_ar" value="${esc(csv(arNotes.base))}">
       </div></div>
     <div class="field full">
-      <label>صورة المنتج</label>
+      <label>Product image</label>
       <div class="img-row">
         <img id="f_img_preview" src="${esc(thumb(modalProduct))}" alt="">
-        <select id="f_img_sel"><option value="">— اختر صورة موجودة —</option></select>
+        <select id="f_img_sel"><option value="">— Choose an existing image —</option></select>
         <input type="file" id="f_img_file" accept="image/*">
       </div>
-      <small style="color:var(--muted)">إذا رفعت صورة جديدة هتتحول webp تلقائيًا وتتسمّى images/{id}.webp</small>
+      <small style="color:var(--muted)">New uploads are converted to webp and saved as images/{id}.webp</small>
     </div>
-    <div class="field"><label><input type="checkbox" id="f_visible" ${modalProduct.visible === false ? "" : "checked"}> إظهار المنتج في الموقع</label></div>
-    <div class="field"><label><input type="checkbox" id="f_featured" ${modalProduct.featured === true ? "checked" : ""}> ★ مميز — يظهر في قسم "الأكثر طلبًا"</label></div>
+    <div class="field"><label><input type="checkbox" id="f_visible" ${modalProduct.visible === false ? "" : "checked"}> Show product on site</label></div>
+    <div class="field"><label><input type="checkbox" id="f_featured" ${modalProduct.featured === true ? "checked" : ""}> ★ Featured — shows in "Most Requested"</label></div>
   `;
 
   const imgSel = $("f_img_sel");
-  imgSel.innerHTML = '<option value="">— اختر صورة موجودة —</option>' +
+  imgSel.innerHTML = '<option value="">— Choose an existing image —</option>' +
     imageOptions.map(p => `<option ${p === (modalProduct.image || "") ? "selected" : ""}>${esc(p)}</option>`).join("");
   imgSel.addEventListener("change", () => {
     if (imgSel.value) { modalProduct.image = imgSel.value; refreshImgPreview(); }
@@ -645,7 +672,7 @@ function openModal(p, isNew) {
 }
 
 async function doUpload(name, dataUrl) {
-  toast("جارٍ تحويل الصورة...");
+  toast("Converting image...");
   try {
     const r = await apiFetch("/api/upload", {
       method: "POST",
@@ -655,16 +682,16 @@ async function doUpload(name, dataUrl) {
     const j = await r.json();
     if (r.status === 401) {
       pendingAction = () => doUpload(name, dataUrl);
-      openLockScreen("اللوحة محمية برقم PIN 🔒 — اكتب رقم الحماية ثم تتكرر عملية الرفع تلقائيًا.");
+      openLockScreen("Dashboard protected by PIN 🔒 — enter the PIN and the upload will retry automatically.");
       return;
     }
     if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
     modalProduct.image = j.path;
     refreshImgPreview();
     imageOptions.push(j.path);
-    toast("تم رفع الصورة ✔");
+    toast("Image uploaded ✔");
   } catch (err) {
-    toast("خطأ في رفع الصورة: " + err.message);
+    toast("Upload error: " + err.message);
   }
 }
 
@@ -714,20 +741,20 @@ $("modalSave").addEventListener("click", () => {
     base: arr($("f_n_base").value)
   };
 
-  if (!mp.brand_name) { toast("اكتب اسم المنتج"); return; }
+  if (!mp.brand_name) { toast("Enter the product name"); return; }
 
   const isNew = !products.some(x => x.id === mp.id);
   if (!mp.id) mp.id = String(mp.brand_name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "product";
   mp.id = String(mp.id).trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-");
 
   if (isNew) {
-    if (products.some(x => x.id === mp.id)) { toast("في منتج بنفس الـ id: " + mp.id); return; }
+    if (products.some(x => x.id === mp.id)) { toast("A product with this id already exists: " + mp.id); return; }
     products.push(mp);
   }
   dirty = true;
   $("modalBack").classList.remove("open");
   renderTable(); renderStats();
-  toast(isNew ? "تمت إضافة المنتج — اضغط حفظ الكل" : "تم تعديل المنتج — اضغط حفظ الكل");
+  toast(isNew ? "Product added — press Save all" : "Product updated — press Save all");
 });
 
 loadImages();

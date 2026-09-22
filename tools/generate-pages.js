@@ -441,7 +441,18 @@ function listShellBody(mode) {
   const titleKey = featuredList ? "featured.title" : "coll.title";
   const pageMode = featuredList ? "featured" : "collection";
 
-  const shopTools = featuredList ? "" : `
+  const quizBanner = `
+        <div class="quiz-banner" id="quizBanner" role="button" tabindex="0"
+          aria-label="Find your scent in 30 seconds — start the quiz">
+          <div class="quiz-banner-text">
+            <strong>🎯 <span data-i18n="quiz.bannerTitle">Find your scent in 30 seconds</span></strong>
+            <span data-i18n="quiz.bannerText">Answer 4 quick questions and we'll match you with the fragrances you'll love.</span>
+          </div>
+          <span class="quiz-banner-btn" data-i18n="quiz.bannerCta">Start the quiz</span>
+        </div>`;
+
+  const shopTools = featuredList ? quizBanner : `
+        ${quizBanner}
         <div class="search-wrap">
           <span class="search-icon">⌕</span>
           <input id="searchInput" type="search" placeholder="Search your fragrance..." data-i18n-placeholder="coll.search" autocomplete="off">
@@ -463,6 +474,16 @@ function listShellBody(mode) {
           <button class="category-chip" data-category="Night" data-i18n="cat.Night">Night</button>
           <button class="category-chip" data-category="Attractive" data-i18n="cat.Attractive">Attractive</button>
           <button class="category-chip" data-category="Luxury" data-i18n="cat.Luxury">Luxury</button>
+        </div>
+
+        <div class="sort-wrap">
+          <label for="sortSelect" data-i18n="sort.label">Sort</label>
+          <select id="sortSelect" aria-label="Sort products">
+            <option value="default" data-i18n="sort.optDefault">Default order</option>
+            <option value="price-asc" data-i18n="sort.optPriceAsc">Price: low to high</option>
+            <option value="price-desc" data-i18n="sort.optPriceDesc">Price: high to low</option>
+            <option value="name" data-i18n="sort.optName">Name A–Z</option>
+          </select>
         </div>`;
 
   return chromePage({
