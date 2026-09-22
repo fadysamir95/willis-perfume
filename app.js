@@ -457,6 +457,13 @@ ${t("wa.total", { total })}${waOrderFooter()}`
   );
 }
 
+/* Same as openWhatsApp but WITHOUT a phone number — WhatsApp opens its
+   recipient/contact picker so the user chooses whom to share the link with. */
+function shareToWhatsApp(message) {
+  const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+}
+
 function openWhatsApp(message) {
   if (!WHATSAPP_NUMBER) return; /* config missing — nothing to open */
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
@@ -471,8 +478,14 @@ function analyticsEvent(pixelEvent, ga4Event, params) {
 
 /* ---------- Product page URL + share / notify helpers ---------- */
 function productPageUrl(product) {
-  if (window.SITE_URL) return `${window.SITE_URL}/products/${product.id}.html`;
-  return BASE_PATH + "products/" + product.id + ".html";
+  /* Runtime share/copy links must use the domain the site is actually open on
+     (the Vercel preview now, the custom domain later). A hardcoded SITE_URL
+     hands the recipient a link that doesn't resolve until the custom domain
+     goes live. */
+  const origin = (typeof location !== "undefined" && location.protocol !== "file:")
+    ? location.origin
+    : (window.SITE_URL || "");
+  return origin + "/products/" + product.id + ".html";
 }
 
 function notifyMessage(product, size) {
@@ -1322,7 +1335,7 @@ document.addEventListener("click", event => {
   const shareWa = event.target.closest("#shareWhatsApp");
   if (shareWa) {
     const product = state.products.find(p => p.id === shareWa.dataset.productId);
-    if (product) openWhatsApp(shareMessage(product));
+    if (product) shareToWhatsApp(shareMessage(product));
     return;
   }
 
