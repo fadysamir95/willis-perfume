@@ -5,11 +5,15 @@
   "description": "Willi's Perfume — static store + online admin (Vercel Blob)",
   "scripts": {
     "generate": "node tools/generate-pages.js",
+    "build:icons": "node tools/build-icons.js",
     "verify": "node tools/verify-site.js",
     "check-config": "node tools/check-config.js",
     "serve": "node tools/serve.js"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
   }
 }
