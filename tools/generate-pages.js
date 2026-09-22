@@ -157,7 +157,7 @@ function headHTML(product) {
   <meta name="theme-color" content="#f7f3ec" />
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(desc)}" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="${product.visible === false ? "noindex, follow" : "index, follow"}" />
   <link rel="canonical" href="${url}" />
 
   <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png" />
@@ -636,15 +636,19 @@ if (process.exitCode) {
   process.exit(1);
 }
 
-const visible = data
-  .filter(isVisible)
+const allProducts = data
+  .slice()
   .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
-const hiddenIds = data.filter(p => !isVisible(p)).map(p => p.id);
+const visible = allProducts.filter(isVisible);
+const hiddenList = allProducts.filter(p => !isVisible(p));
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
-/* Remove pages whose product no longer exists or was hidden. */
-const keepSet = new Set(visible.map(p => `${p.id}.html`));
+/* Generate (and keep) a page for EVERY product — visible AND hidden — so
+   share/copy links always resolve and show the product. Hidden pages get a
+   noindex meta (headHTML) and stay out of the sitemap (urls below), so they
+   remain unlisted yet directly shareable. */
+const keepSet = new Set(allProducts.map(p => `${p.id}.html`));
 const removedPages = fs.readdirSync(OUT_DIR)
   .filter(f => f.endsWith(".html") && !keepSet.has(f));
 for (const f of removedPages) fs.unlinkSync(path.join(OUT_DIR, f));
@@ -656,9 +660,16 @@ const urls = [
   `${SITE_URL}/contact.html`
 ];
 
-visible.forEach((product, index) => {
-  const prev = visible[(index - 1 + visible.length) % visible.length];
-  const next = visible[(index + 1) % visible.length];
+function neighbor(list, product) {
+  const i = list.findIndex(p => p.id === product.id);
+  return {
+    prev: list[(i - 1 + list.length) % list.length],
+    next: list[(i + 1) % list.length]
+  };
+}
+
+visible.forEach((product) => {
+  const { prev, next } = neighbor(visible, product);
 
   const page = headHTML(product) + productShellBody(product, prev.id, next.id);
   const file = path.join(OUT_DIR, `${product.id}.html`);
@@ -666,6 +677,16 @@ visible.forEach((product, index) => {
 
   urls.push(`${SITE_URL}/products/${product.id}.html`);
   console.log(`✔ products/${product.id}.html`);
+});
+
+hiddenList.forEach((product) => {
+  const { prev, next } = neighbor(allProducts, product);
+
+  const page = headHTML(product) + productShellBody(product, prev.id, next.id);
+  const file = path.join(OUT_DIR, `${product.id}.html`);
+  fs.writeFileSync(file, page, "utf8");
+
+  console.log(`✔ products/${product.id}.html  (hidden — noindex, shareable)`);
 });
 
 /* ---------- root list pages ---------- */
@@ -702,7 +723,8 @@ console.log(`✔ robots.txt (Sitemap: ${SITE_URL}/sitemap.xml)`);
 
 /* ---------- summary ---------- */
 console.log(`\nℹ ${visible.length} visible / ${data.length} total`);
-if (hiddenIds.length) console.log(`⊘ hidden (page not generated): ${hiddenIds.join(", ")}`);
+const hiddenIds = hiddenList.map(p => p.id);
+if (hiddenIds.length) console.log(`↘ hidden pages generated too (noindex, not in sitemap): ${hiddenIds.join(", ")}`);
 if (removedPages.length) console.log(`🗑 removed stale pages: ${removedPages.join(", ")}`);
 if (warnings.length) {
   console.log(`\n⚠ ${warnings.length} warning(s):`);

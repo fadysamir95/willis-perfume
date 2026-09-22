@@ -975,7 +975,7 @@ function renderPageProduct() {
   if (!pageEl || !PAGE_PRODUCT_ID) return;
 
   const product = state.products.find(p => p.id === PAGE_PRODUCT_ID);
-  if (!product || !isVisible(product)) {
+  if (!product) {
     pageEl.innerHTML = `
       <div class="not-found">
         <h2>404</h2>
