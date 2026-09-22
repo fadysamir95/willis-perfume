@@ -18,7 +18,7 @@
    ============================================================ */
 window.SITE_CONFIG = {
   siteUrl: "https://willis-perfume.vercel.app",
-  ga4Id: "G-XXXXXXXXXX",
+  ga4Id: "G-DGXZZQQ8DP",
   pixelId: "1234567890123456",
   whatsapp: "201272566695"
 };
