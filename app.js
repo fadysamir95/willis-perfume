@@ -62,9 +62,10 @@ function getProductImageCandidates(product) {
   return [...new Set(candidates)];
 }
 
-function productImageTag(product, extraClass = "product-image") {
+function productImageTag(product, extraClass = "product-image", interactive = false) {
   const candidates = getProductImageCandidates(product);
   const first = candidates[0];
+  const interactiveAttrs = interactive ? ' tabindex="0" role="button" aria-label="' + escapeHTML(t("card.details")) + '"' : "";
 
   return `
     <img
@@ -73,7 +74,7 @@ function productImageTag(product, extraClass = "product-image") {
       src="${escapeHTML(first)}"
       data-image-candidates="${escapeHTML(JSON.stringify(candidates))}"
       data-image-index="0"
-      alt="${escapeHTML(product.brand_name)} perfume"
+      alt="${escapeHTML(product.brand_name)} perfume"${interactiveAttrs}
       onerror="tryNextProductImage(this)"
     >
   `;
@@ -1363,7 +1364,7 @@ function productCardHTML(product) {
           <div class="product-image-wrap">
             <span class="product-gender">${gt(product.gender)}</span>
             ${stockChip(product)}
-            ${productImageTag(product)}
+            ${productImageTag(product, "product-image", true)}
             ${available ? `
               <a class="quick-order-btn" href="${escapeHTML(quickOrderUrl(product))}"
                  target="_blank" rel="noopener" aria-label="${t("modal.orderWa")}"
@@ -1820,14 +1821,35 @@ function handleCardClick(event) {
     }
     return;
   }
+
+  /* Product image click behaves exactly like the Details button */
+  const detailImg = event.target.closest(".product-image-wrap .product-image");
+  if (detailImg) {
+    const card = detailImg.closest(".product-card");
+    const product = card && state.products.find(p => p.id === card.dataset.productId);
+    if (product) openProductModal(product);
+    return;
+  }
+}
+
+function handleCardKeydown(event) {
+  const img = event.target.closest(".product-image-wrap .product-image");
+  if (!img) return;
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  const card = img.closest(".product-card");
+  const product = card && state.products.find(p => p.id === card.dataset.productId);
+  if (product) openProductModal(product);
 }
 
 function initCards() {
   const container = document.getElementById("products-container");
   if (container) container.addEventListener("click", handleCardClick);
+  if (container) container.addEventListener("keydown", handleCardKeydown);
 
   const featuredGrid = document.getElementById("featuredGrid");
   if (featuredGrid) featuredGrid.addEventListener("click", handleCardClick);
+  if (featuredGrid) featuredGrid.addEventListener("keydown", handleCardKeydown);
 }
 
 function initMenu() {
