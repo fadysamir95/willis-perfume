@@ -4431,3 +4431,17 @@ a.contact-card:hover {
   background: linear-gradient(135deg, #b88a42, #8c6428);
   cursor: pointer;
 }
+
+/* Samsung install note + ghost button */
+.install-ios-note {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #4e4840;
+}
+.install-ios-ghost {
+  margin-top: 8px;
+  background: transparent;
+  color: var(--gold-dark);
+  border: 1px solid var(--gold-soft);
+}

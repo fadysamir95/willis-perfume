@@ -305,6 +305,8 @@ const cartOverlay = document.getElementById("cartOverlay");
 const cartCloseBtn = document.getElementById("closeCart");
 const cartItemsEl = document.getElementById("cartItems");
 
+const isSamsungBrowser = /SamsungBrowser/i.test(navigator.userAgent);
+
 function openCart() {
   renderCart();
   cartDrawer?.classList?.add("open");
@@ -1629,7 +1631,7 @@ function initSmoothAnchors() {
 
       event.preventDefault();
       target.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      if (!isSamsungBrowser) window.history.replaceState(null, "", window.location.pathname + window.location.search);
 
       if (link.closest(".side-menu")) closeSideMenu();
     });
@@ -1891,7 +1893,7 @@ function initMenu() {
       close();
       const collection = document.getElementById("collection");
       if (collection) collection.scrollIntoView({ behavior: "smooth" });
-      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      if (!isSamsungBrowser) window.history.replaceState(null, "", window.location.pathname + window.location.search);
     });
   });
 }
@@ -2181,6 +2183,10 @@ function closeInstallIos() {
   document.getElementById("installIosModal")?.classList.add("hidden");
 }
 
+function closeInstallSamsung() {
+  document.getElementById("installSamsungModal")?.classList.add("hidden");
+}
+
 function initInstallBanner() {
   const installBtn = document.getElementById("installBtn");
   if (!installBtn) return;
@@ -2198,6 +2204,16 @@ function initInstallBanner() {
   });
 
   installBtn.addEventListener("click", async () => {
+    if (isSamsungBrowser) {
+      /* Samsung Internet > Chrome for installs — its WebAPK install is
+         unreliable/fails, so guide the user to Chrome instead of prompt(). */
+      const modal = document.getElementById("installSamsungModal");
+      if (modal) {
+        modal.classList.remove("hidden");
+        analyticsEvent("InstallPrompt", "pwa_samsung_instructions", {});
+      }
+      return;
+    }
     if (deferredInstallPrompt) {
       deferredInstallPrompt.prompt();
       const choice = await deferredInstallPrompt.userChoice.catch(() => null);
@@ -2230,8 +2246,28 @@ function initInstallBanner() {
   const iosModal = document.getElementById("installIosModal");
   iosModal?.addEventListener("click", event => { if (event.target === iosModal) closeInstallIos(); });
 
-  /* iOS Safari never fires beforeinstallprompt → show our own prompt shortly after load */
-  if (isIOs) setTimeout(showInstallBanner, 2500);
+  document.getElementById("installSamsungClose")?.addEventListener("click", closeInstallSamsung);
+  const samsungModal = document.getElementById("installSamsungModal");
+  samsungModal?.addEventListener("click", event => { if (event.target === samsungModal) closeInstallSamsung(); });
+  document.getElementById("installSamsungCopy")?.addEventListener("click", async () => {
+    const url = window.location.href.split("#")[0];
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch (error) {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e2) { /* ignore */ }
+      document.body.removeChild(ta);
+    }
+    showToast(t("toast.copied"));
+  });
+
+  /* iOS Safari / Samsung Internet may never fire beforeinstallprompt → show our own prompt shortly after load */
+  if (isIOs || isSamsungBrowser) setTimeout(showInstallBanner, 2500);
 }
 
 initInstallBanner();

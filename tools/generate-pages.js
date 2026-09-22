@@ -440,6 +440,15 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
     </div>
   </div>
 
+  <div class="install-ios hidden" id="installSamsungModal" role="dialog" aria-modal="true" aria-label="Install from Chrome">
+    <div class="install-ios-card">
+      <h3 data-i18n="pwa.samsungTitle">Install from Chrome</h3>
+      <p class="install-ios-note" data-i18n="pwa.samsungText">Samsung Internet can't install the app reliably right now. Copy the link, open it in Chrome, and tap Install there.</p>
+      <button type="button" class="install-ios-done" id="installSamsungCopy" data-i18n="pwa.samsungCopy">Copy link</button>
+      <button type="button" class="install-ios-done install-ios-ghost" id="installSamsungClose" data-i18n="pwa.done">Got it</button>
+    </div>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="${back}i18n.js"><\/script>

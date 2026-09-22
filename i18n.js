@@ -90,6 +90,9 @@ const I18N = {
     "pwa.iosStep2": "Tap \u201CAdd to Home Screen\u201D",
     "pwa.iosStep3": "Tap \u201CAdd\u201D at the top right",
     "pwa.done": "Got it",
+    "pwa.samsungTitle": "Install from Chrome",
+    "pwa.samsungText": "Samsung Internet can't install the app reliably right now. Copy the link, open it in Chrome, and tap Install there.",
+    "pwa.samsungCopy": "Copy link",
 
     "stock.in": "In Stock",
     "stock.low": "Low Stock",
@@ -341,6 +344,9 @@ const I18N = {
     "pwa.iosStep2": "اختر \u201Cإضافة إلى الشاشة الرئيسية\u201D",
     "pwa.iosStep3": "اضغط \u201Cإضافة\u201D في الأعلى",
     "pwa.done": "تمام",
+    "pwa.samsungTitle": "ثبّت من Chrome",
+    "pwa.samsungText": "متصفح Samsung Internet مش بيثبّت التطبيق بشكل موثوق دلوقتي. انسخ الرابط وافتحه في Chrome واضغط Install هناك.",
+    "pwa.samsungCopy": "نسخ الرابط",
 
     "stock.in": "متوفر",
     "stock.low": "كمية محدودة",
