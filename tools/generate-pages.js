@@ -417,6 +417,29 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
     </div>
   </aside>
 
+  <!-- ===== PWA install banner (custom prompt; iOS gets instructions) ===== -->
+  <div class="install-banner hidden" id="installBanner" role="region" aria-label="Install the app">
+    <button type="button" class="install-banner-close" id="installDismiss" aria-label="Not now">&times;</button>
+    <img src="${back}images/logo.webp" alt="" width="40" height="40" loading="lazy">
+    <div class="install-banner-copy">
+      <strong data-i18n="pwa.installTitle">Install the app</strong>
+      <span data-i18n="pwa.installText">Open Willi's in full screen with offline support.</span>
+    </div>
+    <button type="button" class="install-banner-btn" id="installBtn" data-i18n="pwa.install">Install App</button>
+  </div>
+
+  <div class="install-ios hidden" id="installIosModal" role="dialog" aria-modal="true" aria-label="Add to Home Screen">
+    <div class="install-ios-card">
+      <h3 data-i18n="pwa.iosTitle">Add Willi's to your Home Screen</h3>
+      <ol>
+        <li data-i18n="pwa.iosStep1">In Safari tap the Share button ▲ at the bottom</li>
+        <li data-i18n="pwa.iosStep2">Tap “Add to Home Screen”</li>
+        <li data-i18n="pwa.iosStep3">Tap “Add” at the top right</li>
+      </ol>
+      <button type="button" class="install-ios-done" id="installIosClose" data-i18n="pwa.done">Got it</button>
+    </div>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="${back}i18n.js"><\/script>

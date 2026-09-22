@@ -2135,6 +2135,102 @@ syncWishlistUI();
 
 loadProducts();
 
+/* ===== PWA install banner =====
+   Android/desktop Chrome & Edge fire beforeinstallprompt → custom banner;
+   iOS Safari never fires it → we show the same banner with share-sheet steps.
+   Never shown once installed, and dismissed hides it for 7 days. */
+const PWA_DISMISS_KEY = "willis_pwa_dismissed";
+const PWA_INSTALLED_KEY = "willis_pwa_installed";
+let deferredInstallPrompt = null;
+const isIOs =
+  /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+function isStandaloneApp() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+function installBannerEligible() {
+  if (isStandaloneApp()) return false;
+  try {
+    if (localStorage.getItem(PWA_INSTALLED_KEY)) return false;
+    const dismissed = Number(localStorage.getItem(PWA_DISMISS_KEY) || 0);
+    if (dismissed && Date.now() - dismissed < 7 * 24 * 60 * 60 * 1000) return false;
+  } catch (error) { /* storage unavailable → still show */ }
+  return true;
+}
+
+function showInstallBanner() {
+  const banner = document.getElementById("installBanner");
+  if (banner && installBannerEligible()) banner.classList.remove("hidden");
+}
+
+function hideInstallBanner() {
+  document.getElementById("installBanner")?.classList.add("hidden");
+}
+
+function closeInstallIos() {
+  document.getElementById("installIosModal")?.classList.add("hidden");
+}
+
+function initInstallBanner() {
+  const installBtn = document.getElementById("installBtn");
+  if (!installBtn) return;
+
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    showInstallBanner();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    try { localStorage.setItem(PWA_INSTALLED_KEY, "1"); } catch (error) { /* ignore */ }
+    hideInstallBanner();
+  });
+
+  installBtn.addEventListener("click", async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice.catch(() => null);
+      deferredInstallPrompt = null;
+      hideInstallBanner();
+      analyticsEvent("InstallPrompt", choice && choice.outcome === "accepted" ? "pwa_install_accepted" : "pwa_install_cancelled", {});
+      if (choice && choice.outcome === "accepted") {
+        try { localStorage.setItem(PWA_INSTALLED_KEY, "1"); } catch (error) { /* ignore */ }
+      }
+      return;
+    }
+    if (isIOs) {
+      const modal = document.getElementById("installIosModal");
+      if (modal) {
+        modal.classList.remove("hidden");
+        analyticsEvent("InstallPrompt", "pwa_ios_instructions", {});
+      }
+      return;
+    }
+    hideInstallBanner();
+  });
+
+  document.getElementById("installDismiss")?.addEventListener("click", () => {
+    try { localStorage.setItem(PWA_DISMISS_KEY, String(Date.now())); } catch (error) { /* ignore */ }
+    hideInstallBanner();
+    analyticsEvent("InstallPrompt", "pwa_dismiss", {});
+  });
+
+  document.getElementById("installIosClose")?.addEventListener("click", closeInstallIos);
+  const iosModal = document.getElementById("installIosModal");
+  iosModal?.addEventListener("click", event => { if (event.target === iosModal) closeInstallIos(); });
+
+  /* iOS Safari never fires beforeinstallprompt → show our own prompt shortly after load */
+  if (isIOs) setTimeout(showInstallBanner, 2500);
+}
+
+initInstallBanner();
+
 /* PWA: register the service worker (offline startup + install prompt).
    Skipped when opened as a plain file:// page. */
 if ("serviceWorker" in navigator && (typeof location === "undefined" || location.protocol !== "file:")) {

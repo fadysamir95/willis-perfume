@@ -81,6 +81,16 @@ const I18N = {
     "card.details": "Details",
     "card.addToCart": "Add to Cart",
 
+    "pwa.installTitle": "Install the app",
+    "pwa.installText": "Open Willi's in full screen with offline support.",
+    "pwa.install": "Install App",
+    "pwa.dismiss": "Not now",
+    "pwa.iosTitle": "Add Willi's to your Home Screen",
+    "pwa.iosStep1": "In Safari tap the Share button ▲ at the bottom",
+    "pwa.iosStep2": "Tap \u201CAdd to Home Screen\u201D",
+    "pwa.iosStep3": "Tap \u201CAdd\u201D at the top right",
+    "pwa.done": "Got it",
+
     "stock.in": "In Stock",
     "stock.low": "Low Stock",
     "stock.out": "Out of Stock",
@@ -321,6 +331,16 @@ const I18N = {
     "card.from": "يبدأ من",
     "card.details": "التفاصيل",
     "card.addToCart": "أضف للسلة",
+
+    "pwa.installTitle": "ثبّت التطبيق",
+    "pwa.installText": "افتح متجر Willi's بشاشة كاملة واشتغل حتى بدون إنترنت.",
+    "pwa.install": "تثبيت التطبيق",
+    "pwa.dismiss": "لاحقًا",
+    "pwa.iosTitle": "أضِف Willi's للشاشة الرئيسية",
+    "pwa.iosStep1": "في سفاري اضغط زر المشاركة ▲ في الأسفل",
+    "pwa.iosStep2": "اختر \u201Cإضافة إلى الشاشة الرئيسية\u201D",
+    "pwa.iosStep3": "اضغط \u201Cإضافة\u201D في الأعلى",
+    "pwa.done": "تمام",
 
     "stock.in": "متوفر",
     "stock.low": "كمية محدودة",
