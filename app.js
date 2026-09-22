@@ -1508,7 +1508,7 @@ function resetFilters() {
     btn.classList.toggle("active", btn.dataset.gender === "All");
   });
 
-  document.querySelectorAll("#categoryFilters .category-chip").forEach(btn => {
+  document.querySelectorAll("#categoryFilters .category-chip:not(#wishlistFilter)").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.category === "All");
   });
 
@@ -1694,10 +1694,10 @@ function initFilters() {
     });
   });
 
-  document.querySelectorAll("#categoryFilters .category-chip").forEach(btn => {
+  document.querySelectorAll("#categoryFilters .category-chip:not(#wishlistFilter)").forEach(btn => {
     btn.addEventListener("click", () => {
       state.category = btn.dataset.category;
-      document.querySelectorAll("#categoryFilters .category-chip").forEach(b => {
+      document.querySelectorAll("#categoryFilters .category-chip:not(#wishlistFilter)").forEach(b => {
         b.classList.toggle("active", b === btn);
       });
       renderProducts();
@@ -1747,7 +1747,7 @@ function initFilters() {
         document.querySelectorAll("#genderFilters .filter-chip").forEach(b => {
           b.classList.toggle("active", b.dataset.gender === "All");
         });
-        document.querySelectorAll("#categoryFilters .category-chip").forEach(b => {
+        document.querySelectorAll("#categoryFilters .category-chip:not(#wishlistFilter)").forEach(b => {
           b.classList.toggle("active", b.dataset.category === "All");
         });
         const searchInput = document.getElementById("searchInput");
