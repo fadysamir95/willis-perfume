@@ -1414,7 +1414,7 @@ function renderProducts() {
 
   /* Homepage preview: show a curated grid, then a "view all" link to collection.html.
      Filtering (search / gender / category) shows every matching product instead. */
-  const filtering = state.search.trim() || state.gender !== "All" || state.category !== "All";
+  const filtering = state.search.trim() || state.gender !== "All" || state.category !== "All" || state.wishlistOnly;
   const viewAllWrap = document.getElementById("viewAllWrap");
 
   let products = allProducts;
@@ -1738,6 +1738,23 @@ function initFilters() {
   if (wishlistFilter) {
     wishlistFilter.addEventListener("click", () => {
       state.wishlistOnly = !state.wishlistOnly;
+      if (state.wishlistOnly) {
+        /* Favorites view = everything you saved. Clear the other filters so
+           the saved products are never hidden by gender/category/search. */
+        state.gender = "All";
+        state.category = "All";
+        state.search = "";
+        document.querySelectorAll("#genderFilters .filter-chip").forEach(b => {
+          b.classList.toggle("active", b.dataset.gender === "All");
+        });
+        document.querySelectorAll("#categoryFilters .category-chip").forEach(b => {
+          b.classList.toggle("active", b.dataset.category === "All");
+        });
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) searchInput.value = "";
+        const clearSearch = document.getElementById("clearSearch");
+        if (clearSearch) clearSearch.style.display = "none";
+      }
       syncWishlistUI();
       renderProducts();
     });
