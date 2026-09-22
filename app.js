@@ -2031,7 +2031,12 @@ document.addEventListener("click", event => {
   const suggestBtn = event.target.closest(".cart-suggest-card");
   if (suggestBtn) {
     const product = state.products.find(p => p.id === suggestBtn.dataset.suggestId);
-    if (product) openProductModal(product);
+    if (product) {
+      /* On mobile the cart drawer covers nearly the whole screen — close it
+         first so the detail modal is fully visible; on desktop keep it open. */
+      if (window.matchMedia("(max-width: 699px)").matches) closeCart();
+      openProductModal(product);
+    }
     return;
   }
 });
