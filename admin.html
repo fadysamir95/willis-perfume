@@ -231,6 +231,7 @@ let dirty = false;
 let modalProduct = null;
 let imageOptions = [];
 let dataHashAtLoad = null;
+let pendingAction = null; /* retried automatically after the PIN lock screen unlocks */
 
 /* Works whatever host/port the server runs on; if the file is opened
    directly (file://) there is no API and we show a guide instead.
@@ -264,7 +265,9 @@ function submitLock() {
   try { localStorage.setItem("willis_admin_pin", v); } catch (e) {}
   $("lockBack").classList.remove("open");
   if ($("pinInput") && !$("pinInput").value) $("pinInput").value = v;
-  load();
+  const act = pendingAction;
+  pendingAction = null;
+  if (act) act(); else load();
 }
 
 function showGuide(msg) {
@@ -299,10 +302,6 @@ async function load() {
   }
   try {
     const r = await apiFetch("/api/products");
-    if (r.status === 401) {
-      openLockScreen('اللوحة محمية برقم PIN 🔒 — اكتب الرقم عشان تقدر تفتح اللوحة وتعدّل المنتجات.');
-      return;
-    }
     let j = null;
     try { j = await r.json(); } catch (e) { /* non-JSON error */ }
     if (!r.ok) {
@@ -514,7 +513,11 @@ async function onSave() {
       body: JSON.stringify(products)
     });
     const j = await r.json();
-    if (r.status === 401) { openLockScreen("رقم الحماية غلط ❗ — جرب تاني."); return; }
+    if (r.status === 401) {
+      pendingAction = onSave;
+      openLockScreen("اللوحة محمية برقم PIN 🔒 — اكتب رقم الحماية ثم هيتم الحفظ تلقائيًا.");
+      return;
+    }
     if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
     dataHashAtLoad = j.hash || currentHash || dataHashAtLoad;
     dirty = false;
@@ -631,29 +634,36 @@ function openModal(p, isNew) {
     const ext = file.name.split(".").pop().toLowerCase();
     const name = "images/" + id + "." + (/^(png|jpg|jpeg)$/i.test(ext) ? "webp" : ext);
     const reader = new FileReader();
-    reader.onload = async () => {
-      toast("جارٍ تحويل الصورة...");
-      try {
-        const r = await apiFetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, data: reader.result })
-        });
-        const j = await r.json();
-        if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
-        modalProduct.image = j.path;
-        refreshImgPreview();
-        imageOptions.push(j.path);
-        toast("تم رفع الصورة ✔");
-      } catch (err) {
-        toast("خطأ في رفع الصورة: " + err.message);
-      }
-    };
+    reader.onload = () => doUpload(name, reader.result);
     reader.readAsDataURL(file);
   });
   refreshImgPreview();
 
   $("modalBack").classList.add("open");
+}
+
+async function doUpload(name, dataUrl) {
+  toast("جارٍ تحويل الصورة...");
+  try {
+    const r = await apiFetch("/api/upload", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, data: dataUrl })
+    });
+    const j = await r.json();
+    if (r.status === 401) {
+      pendingAction = () => doUpload(name, dataUrl);
+      openLockScreen("اللوحة محمية برقم PIN 🔒 — اكتب رقم الحماية ثم تتكرر عملية الرفع تلقائيًا.");
+      return;
+    }
+    if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
+    modalProduct.image = j.path;
+    refreshImgPreview();
+    imageOptions.push(j.path);
+    toast("تم رفع الصورة ✔");
+  } catch (err) {
+    toast("خطأ في رفع الصورة: " + err.message);
+  }
 }
 
 function refreshImgPreview() {

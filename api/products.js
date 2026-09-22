@@ -6,8 +6,9 @@
    Setup:
      - Connect a Blob store (vercel.com/stores) — BLOB_READ_WRITE_TOKEN is
        injected automatically.
-     - Optional security: set env ADMIN_PIN — then every request must send
-       header x-admin-pin with that value. Without it the endpoint is open. */
+     - Optional security: set env ADMIN_PIN — then every WRITE (POST) must send
+       header x-admin-pin with that value. GET reads are always open (the
+        storefront would 401 and fall back to stale repo JSON otherwise). */
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
@@ -60,8 +61,6 @@ function md5(text) {
 module.exports = async function handler(req, res) {
   const method = (req.method || "GET").toUpperCase();
 
-  if (!pinOk(req)) return sendJson(res, 401, { error: "unauthorized" });
-
   try {
     if (method === "GET") {
       const txt = await currentContent();
@@ -82,6 +81,10 @@ module.exports = async function handler(req, res) {
     }
 
     if (method === "POST") {
+      /* writes are protected: an optional ADMIN_PIN env var must then be
+         passed via the x-admin-pin header (e.g. from the dashboard). */
+      if (!pinOk(req)) return sendJson(res, 401, { error: "unauthorized" });
+
       const body = JSON.parse(await readBody(req));
       if (!Array.isArray(body)) return sendJson(res, 400, { error: "expected an array" });
 

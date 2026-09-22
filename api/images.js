@@ -17,16 +17,11 @@ function sendJson(res, status, obj) {
   res.end(JSON.stringify(obj));
 }
 
-function pinOk(req) {
-  const pin = process.env.ADMIN_PIN;
-  return !pin || String(req.headers["x-admin-pin"] || "") === pin;
-}
-
 module.exports = async function handler(req, res) {
   if ((req.method || "GET").toUpperCase() !== "GET") {
     return sendJson(res, 405, { error: "method not allowed" });
   }
-  if (!pinOk(req)) return sendJson(res, 401, { error: "unauthorized" });
+  /* read-only listing — kept public (same as the local server) */
 
   try {
     const out = new Set();
