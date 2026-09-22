@@ -491,6 +491,7 @@ a {
   width: 78%;
   height: 175px;
   object-fit: contain;
+  cursor: pointer;
   filter: drop-shadow(0 15px 14px rgba(35, 25, 12, .13));
 }
 
