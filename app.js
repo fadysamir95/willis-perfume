@@ -37,19 +37,23 @@ const IMAGE_EXTENSIONS = ["webp", "png", "jpg", "jpeg"];
 
 function getProductImageCandidates(product) {
   const id = String(product.id || "").trim().toLowerCase();
-  const candidates = IMAGE_EXTENSIONS.map(ext => `images/${id}.${ext}`);
+  /* Relative paths are scoped to the folder of the current page: "" on
+     root pages, "../" on /products/*.html — so images/... only resolves
+     correctly when it is prefixed with BASE_PATH. */
+  const rel = src => (/^https?:/i.test(src) ? src : BASE_PATH + src);
+  const candidates = IMAGE_EXTENSIONS.map(ext => rel(`images/${id}.${ext}`));
 
   if (product.image) {
     if (/^https?:/i.test(product.image)) {
       /* absolute URL (e.g. an image uploaded to Blob from the online admin)
          wins over the static candidates */
       candidates.unshift(product.image);
-    } else if (!candidates.includes(product.image)) {
-      candidates.push(product.image);
+    } else if (!candidates.includes(rel(product.image))) {
+      candidates.push(rel(product.image));
     }
   }
 
-  candidates.push("images/bottle.webp");
+  candidates.push(rel("images/bottle.webp"));
   return [...new Set(candidates)];
 }
 
@@ -84,7 +88,7 @@ function tryNextProductImage(image) {
     image.src = candidates[index];
   } catch (error) {
     image.onerror = null;
-    image.src = "images/bottle.webp";
+    image.src = BASE_PATH + "images/bottle.webp";
   }
 }
 
