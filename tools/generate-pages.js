@@ -23,7 +23,7 @@ try {
   vm.runInContext(fs.readFileSync(path.join(ROOT, "site-config.js"), "utf8"), cfgCtx);
   SITE_CONFIG = cfgCtx.window.SITE_CONFIG || {};
 } catch (e) {
-  console.warn("âš  site-config.js not readable â€” using defaults:", e.message);
+  console.warn("⚠ site-config.js not readable — using defaults:", e.message);
 }
 
 const SITE_URL = process.env.SITE_URL || SITE_CONFIG.siteUrl || "https://willis-perfume.vercel.app";
@@ -41,7 +41,7 @@ function esc(value) {
 function truncate(text, max = 158) {
   const plain = String(text || "").replace(/\s+/g, " ").trim();
   if (plain.length <= max) return plain;
-  return plain.slice(0, max - 1).trimEnd() + "â€¦";
+  return plain.slice(0, max - 1).trimEnd() + "…";
 }
 
 function stockStatus(stock) {
@@ -66,10 +66,10 @@ const isVisible = product => product.visible !== false;
 
 const ANALYTICS_SNIPPETS = `
   <!-- ======================================================================
-       ANALYTICS â€” ids come from ../site-config.js (window.SITE_CONFIG) at
+       ANALYTICS — ids come from ../site-config.js (window.SITE_CONFIG) at
        runtime. Edit site-config.js and re-run: node tools/generate-pages.js
        ====================================================================== -->
-  <!-- GOOGLE ANALYTICS (GA4) â€” not loaded while the ID is still a placeholder -->
+  <!-- GOOGLE ANALYTICS (GA4) — not loaded while the ID is still a placeholder -->
   <script>
     (function () {
       var cfg = window.SITE_CONFIG || {};
@@ -86,7 +86,7 @@ const ANALYTICS_SNIPPETS = `
     })();
   <\/script>
 
-  <!-- META PIXEL â€” not initialized while the ID is still a placeholder -->
+  <!-- META PIXEL — not initialized while the ID is still a placeholder -->
   <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -114,7 +114,7 @@ const FONTS_LINK = "https://fonts.googleapis.com/css2?family=Marcellus&family=Co
 /* ---------- <head> for product pages (in products/) ---------- */
 function headHTML(product) {
   const url = `${SITE_URL}/products/${product.id}.html`;
-  const title = `${product.brand_name} â€” Inspired by ${product.inspired_by} | Willi's Perfume`;
+  const title = `${product.brand_name} — Inspired by ${product.inspired_by} | Willi's Perfume`;
   const desc = truncate(product.description);
   const image = `${SITE_URL}/images/${product.id}.webp`;
   const prices = Object.values(product.sizes || {});
@@ -211,11 +211,11 @@ function listHeadHTML(mode) {
     ? "Most Requested Fragrances | Willi's Perfume"
     : contactList
       ? "Contact Us | Willi's Perfume"
-      : "Our Collection â€” Inspired Perfumes | Willi's Perfume";
+      : "Our Collection — Inspired Perfumes | Willi's Perfume";
   const desc = featuredList
-    ? "The most requested fragrances from Willi's Perfume â€” shop the customer favorites online with cash on delivery nationwide."
+    ? "The most requested fragrances from Willi's Perfume — shop the customer favorites online with cash on delivery nationwide."
     : contactList
-      ? "Get in touch with Willi's Perfume â€” chat on WhatsApp, follow us on Instagram and Facebook, or send us a message."
+      ? "Get in touch with Willi's Perfume — chat on WhatsApp, follow us on Instagram and Facebook, or send us a message."
       : "Browse the full Willi's Perfume collection of inspired fragrances at the best prices. Cash on delivery nationwide.";
   const image = `${SITE_URL}/images/logo.webp`;
 
@@ -283,7 +283,7 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
 <body ${bodyAttrs}>
   <div class="page-shell">
     <div class="site-topbar">
-    <div class="announcement-bar" data-i18n="announce.text" role="note">Free shipping on orders above 1000 EGP Â· Cash on delivery nationwide</div>
+    <div class="announcement-bar" data-i18n="announce.text" role="note">Free shipping on orders above 1000 EGP · Cash on delivery nationwide</div>
     <header class="site-header">
       <a class="brand" href="${back}index.html" aria-label="Willi's Perfume home">
         <img src="${back}images/logo.webp" alt="Willi's Perfume logo" width="43" height="43">
@@ -308,7 +308,7 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
         <a class="social-icon" href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
         </a>
-        <button class="lang-toggle" type="button" aria-label="Switch to Arabic">Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©</button>
+        <button class="lang-toggle" type="button" aria-label="Switch to Arabic">العربية</button>
         <button class="cart-icon-btn" id="desktopCartBtn" aria-label="Open cart" aria-expanded="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7.5h12l-1.1 12a1.8 1.8 0 0 1-1.8 1.6H8.9a1.8 1.8 0 0 1-1.8-1.6L6 7.5Z"/><path d="M9 10V5.8A3 3 0 0 1 12 3a3 3 0 0 1 3 2.8V10"/></svg>
           <span class="cart-badge" id="desktopCartBadge">0</span>
@@ -329,7 +329,7 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
     <aside class="side-menu" id="sideMenu" aria-hidden="true">
       <div class="menu-top">
         <span data-i18n="menu.label">Menu</span>
-        <button class="icon-btn close-menu" id="closeMenu" aria-label="Close menu" data-i18n-aria="menu.close">Ã—</button>
+        <button class="icon-btn close-menu" id="closeMenu" aria-label="Close menu" data-i18n-aria="menu.close">×</button>
       </div>
       <nav>
         <a href="${back}index.html#home" data-i18n="nav.home">Home</a>
@@ -341,7 +341,7 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
       </nav>
       <div class="menu-divider"></div>
       <p class="menu-caption" data-i18n="menu.caption">Find a scent that feels like you.</p>
-      <button class="lang-toggle menu-lang-toggle" type="button" aria-label="Switch to Arabic">Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©</button>
+      <button class="lang-toggle menu-lang-toggle" type="button" aria-label="Switch to Arabic">العربية</button>
       <div class="menu-socials">
         <a href="https://www.instagram.com/willis_perfume/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-i18n="menu.instagram">Instagram</a>
         <a href="https://www.facebook.com/profile.php?id=61590332657028" target="_blank" rel="noopener noreferrer" aria-label="Facebook" data-i18n="menu.facebook">Facebook</a>
@@ -358,22 +358,22 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
       <img src="${back}images/logo.webp" alt="" class="footer-logo" width="58" height="58">
       <h3>Willi's Perfume</h3>
       <p data-i18n="footer.about">Wear Your Will</p>
-      <small data-i18n="footer.rights">Â© 2026 Willi's Perfume. All rights reserved.</small>
+      <small data-i18n="footer.rights">© 2026 Willi's Perfume. All rights reserved.</small>
     </footer>
   </div>
 
   <div class="modal-backdrop" id="modalBackdrop"></div>
   <section class="product-modal" id="productModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <button class="modal-close" id="modalClose" aria-label="Close product details" data-i18n-aria="modal.close">Ã—</button>
+    <button class="modal-close" id="modalClose" aria-label="Close product details" data-i18n-aria="modal.close">×</button>
     <div class="modal-content" id="modalContent"></div>
   </section>
 
   <nav class="mobile-nav" aria-label="Mobile navigation">
     <a href="${back}index.html#home" class="mobile-nav-item">
-      <span>âŒ‚</span><small data-i18n="mnav.home">Home</small>
+      <span>⌂</span><small data-i18n="mnav.home">Home</small>
     </a>
     <a href="${back}index.html#collection" class="mobile-nav-item">
-      <span>â–¦</span><small data-i18n="mnav.collection">Collection</small>
+      <span>▦</span><small data-i18n="mnav.collection">Collection</small>
     </a>
     <button class="mobile-nav-item" id="cartNav" aria-label="Open cart" data-i18n-aria="cart.open">
       <span class="mobile-cart-wrap">
@@ -391,12 +391,12 @@ function chromePage({ back, bodyAttrs, breadcrumbsHtml, mainHtml }) {
   <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
     <div class="cart-head">
       <span class="cart-title" data-i18n="cart.title">Your Cart</span>
-      <button class="icon-btn close-cart" id="closeCart" aria-label="Close cart" data-i18n-aria="cart.close">Ã—</button>
+      <button class="icon-btn close-cart" id="closeCart" aria-label="Close cart" data-i18n-aria="cart.close">×</button>
     </div>
     <div class="cart-items-wrap">
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-empty" id="cartEmpty">
-        <span class="cart-empty-icon">â–¢</span>
+        <span class="cart-empty-icon">▢</span>
         <h3 data-i18n="cart.emptyTitle">Your cart is empty</h3>
         <p data-i18n="cart.emptyText">Add a fragrance you love and it will appear here.</p>
         <button class="secondary-btn" id="continueShopping" data-i18n="cart.continue">Continue shopping</button>
@@ -434,18 +434,18 @@ function productShellBody(product, prevId, nextId) {
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="${back}index.html" data-i18n="nav.home">Home</a>
-        <span class="sep" aria-hidden="true">â€º</span>
+        <span class="sep" aria-hidden="true">›</span>
         <a href="${back}collection.html" data-i18n="nav.collection">Collection</a>
-        <span class="sep" aria-hidden="true">â€º</span>
+        <span class="sep" aria-hidden="true">›</span>
         <span class="current">${esc(product.brand_name)}</span>
       </nav>`,
     mainHtml: `
       <div id="productPage" class="product-page"></div>
 
       <nav class="product-pager" aria-label="Pagination">
-        <a href="./${prevId}.html"><span aria-hidden="true">â€¹</span> <span data-i18n="pager.prev">Previous fragrance</span></a>
+        <a href="./${prevId}.html"><span aria-hidden="true">‹</span> <span data-i18n="pager.prev">Previous fragrance</span></a>
         <a href="${back}collection.html" data-i18n="nav.collection">Collection</a>
-        <a href="./${nextId}.html"><span data-i18n="pager.next">Next fragrance</span> <span aria-hidden="true">â€º</span></a>
+        <a href="./${nextId}.html"><span data-i18n="pager.next">Next fragrance</span> <span aria-hidden="true">›</span></a>
       </nav>`
   });
 }
@@ -462,9 +462,9 @@ function listShellBody(mode) {
 
   const quizBanner = `
         <div class="quiz-banner" id="quizBanner" role="button" tabindex="0"
-          aria-label="Find your scent in 30 seconds â€” start the quiz">
+          aria-label="Find your scent in 30 seconds — start the quiz">
           <div class="quiz-banner-text">
-            <strong>ðŸŽ¯ <span data-i18n="quiz.bannerTitle">Find your scent in 30 seconds</span></strong>
+            <strong>🎯 <span data-i18n="quiz.bannerTitle">Find your scent in 30 seconds</span></strong>
             <span data-i18n="quiz.bannerText">Answer 4 quick questions and we'll match you with the fragrances you'll love.</span>
           </div>
           <span class="quiz-banner-btn" data-i18n="quiz.bannerCta">Start the quiz</span>
@@ -473,9 +473,9 @@ function listShellBody(mode) {
   const shopTools = featuredList ? quizBanner : `
         ${quizBanner}
         <div class="search-wrap">
-          <span class="search-icon">âŒ•</span>
+          <span class="search-icon">⌕</span>
           <input id="searchInput" type="search" placeholder="Search your fragrance..." data-i18n-placeholder="coll.search" autocomplete="off">
-          <button id="clearSearch" class="clear-search" aria-label="Clear search" data-i18n-aria="coll.clear">Ã—</button>
+          <button id="clearSearch" class="clear-search" aria-label="Clear search" data-i18n-aria="coll.clear">×</button>
         </div>
 
         <div class="filter-row" id="genderFilters" aria-label="Filter by gender">
@@ -486,7 +486,7 @@ function listShellBody(mode) {
         </div>
 
         <div class="category-row" id="categoryFilters" aria-label="Filter by category">
-          <button class="category-chip wishlist-chip" id="wishlistFilter" type="button" aria-pressed="false">â™¥ Favorites (0)</button>
+          <button class="category-chip wishlist-chip" id="wishlistFilter" type="button" aria-pressed="false">♥ Favorites (0)</button>
           <button class="category-chip active" data-category="All" data-i18n="cat.all">All styles</button>
           <button class="category-chip" data-category="Elegant" data-i18n="cat.Elegant">Elegant</button>
           <button class="category-chip" data-category="Summer" data-i18n="cat.Summer">Summer</button>
@@ -502,7 +502,7 @@ function listShellBody(mode) {
             <option value="default" data-i18n="sort.optDefault">Default order</option>
             <option value="price-asc" data-i18n="sort.optPriceAsc">Price: low to high</option>
             <option value="price-desc" data-i18n="sort.optPriceDesc">Price: high to low</option>
-            <option value="name" data-i18n="sort.optName">Name Aâ€“Z</option>
+            <option value="name" data-i18n="sort.optName">Name A–Z</option>
           </select>
         </div>`;
 
@@ -512,7 +512,7 @@ function listShellBody(mode) {
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="index.html" data-i18n="nav.home">Home</a>
-        <span class="sep" aria-hidden="true">â€º</span>
+        <span class="sep" aria-hidden="true">›</span>
         <span class="current" data-i18n="${titleKey}">${titleText}</span>
       </nav>`,
     mainHtml: `
@@ -526,7 +526,7 @@ function listShellBody(mode) {
         <div id="products-container" class="products-grid"></div>
 
         <div id="emptyState" class="empty-state hidden">
-          <div>âŒ•</div>
+          <div>⌕</div>
           <h3 data-i18n="coll.empty.title">No fragrance found</h3>
           <p data-i18n="coll.empty.text">Try another name, inspired fragrance, or filter.</p>
           <button class="secondary-btn" id="resetFilters" data-i18n="coll.empty.reset">Show all fragrances</button>
@@ -535,7 +535,7 @@ function listShellBody(mode) {
   });
 }
 
-/* Root contact page body (contact.html) â€” contact info + a message form that
+/* Root contact page body (contact.html) — contact info + a message form that
    opens WhatsApp with the typed message already filled in. */
 function contactBody() {
   return chromePage({
@@ -544,7 +544,7 @@ function contactBody() {
     breadcrumbsHtml: `
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <a href="index.html" data-i18n="nav.home">Home</a>
-        <span class="sep" aria-hidden="true">â€º</span>
+        <span class="sep" aria-hidden="true">›</span>
         <span class="current" data-i18n="contact.title">Contact Us</span>
       </nav>`,
     mainHtml: `
@@ -552,7 +552,7 @@ function contactBody() {
         <div class="list-page-head">
           <span class="eyebrow" data-i18n="contact.eyebrow">GET IN TOUCH</span>
           <h1 data-i18n="contact.title">Contact Us</h1>
-          <p class="contact-intro" data-i18n="contact.text">We reply fast on WhatsApp â€” send us your question or order details anytime.</p>
+          <p class="contact-intro" data-i18n="contact.text">We reply fast on WhatsApp — send us your question or order details anytime.</p>
         </div>
 
         <div class="contact-grid">
@@ -561,7 +561,7 @@ function contactBody() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.4-4.2A8.5 8.5 0 1 1 20.5 11.8Z"/><path d="M8.3 8.6c.2-.4.5-.5.9-.5h.6c.2 0 .4.1.5.4l.8 1.8c.1.3.1.5-.1.7l-.6.7c.7 1.2 1.6 2.1 2.9 2.8l.7-.7c.2-.2.4-.2.7-.1l1.8.8c.3.1.4.3.4.5v.6c0 .4-.2.7-.5.9-.5.3-1.2.4-1.8.2-3.4-1-5.8-3.4-6.8-6.8-.2-.6-.1-1.3.2-1.8Z" fill="currentColor"/></svg>
             </span>
             <h3 data-i18n="contact.whatsappTitle">WhatsApp</h3>
-            <p data-i18n="contact.whatsappText">Chat with us directly â€” the fastest way to reach you.</p>
+            <p data-i18n="contact.whatsappText">Chat with us directly — the fastest way to reach you.</p>
             <span class="contact-value" id="contactPhone"></span>
           </a>
 
@@ -582,7 +582,7 @@ function contactBody() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35a1 1 0 0 0-.78-.38H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
             </span>
             <h3 data-i18n="contact.deliveryTitle">Delivery</h3>
-            <p data-i18n="contact.deliveryText">Free shipping on orders above 1000 EGP Â· Cash on delivery nationwide.</p>
+            <p data-i18n="contact.deliveryText">Free shipping on orders above 1000 EGP · Cash on delivery nationwide.</p>
           </div>
         </div>
 
@@ -641,7 +641,7 @@ const warnings = [];
 const seen = new Set();
 for (const product of data) {
   if (!product.id) { warnings.push("product without id"); continue; }
-  if (seen.has(product.id)) { console.error(`âœ– duplicate id: ${product.id}`); process.exitCode = 1; }
+  if (seen.has(product.id)) { console.error(`✖ duplicate id: ${product.id}`); process.exitCode = 1; }
   seen.add(product.id);
 
   if (!product.brand_name) warnings.push(`${product.id}: missing brand_name`);
@@ -652,7 +652,7 @@ for (const product of data) {
   }
   const imgRefs = [product.image, ...(product.image_gallery || [])].filter(Boolean);
   const missing = imgRefs.filter(p => !fs.existsSync(path.join(ROOT, p)));
-  if (missing.length) warnings.push(`${product.id}: image not found â€” ${missing.join(", ")}`);
+  if (missing.length) warnings.push(`${product.id}: image not found — ${missing.join(", ")}`);
 }
 
 /* Images that don't belong to any product (visible OR hidden). Hidden/unreleased
@@ -673,7 +673,7 @@ if (fs.existsSync(IMAGE_DIR)) {
 }
 
 if (process.exitCode) {
-  console.error("\nâœ– Aborting: fix the validation errors above, then rerun.");
+  console.error("\n✖ Aborting: fix the validation errors above, then rerun.");
   process.exit(1);
 }
 
@@ -685,7 +685,7 @@ const hiddenList = allProducts.filter(p => !isVisible(p));
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
-/* Generate (and keep) a page for EVERY product â€” visible AND hidden â€” so
+/* Generate (and keep) a page for EVERY product — visible AND hidden — so
    share/copy links always resolve and show the product. Hidden pages get a
    noindex meta (headHTML) and stay out of the sitemap (urls below), so they
    remain unlisted yet directly shareable. */
@@ -717,7 +717,7 @@ visible.forEach((product) => {
   fs.writeFileSync(file, page, "utf8");
 
   urls.push(`${SITE_URL}/products/${product.id}.html`);
-  console.log(`âœ” products/${product.id}.html`);
+  console.log(`✔ products/${product.id}.html`);
 });
 
 hiddenList.forEach((product) => {
@@ -727,7 +727,7 @@ hiddenList.forEach((product) => {
   const file = path.join(OUT_DIR, `${product.id}.html`);
   fs.writeFileSync(file, page, "utf8");
 
-  console.log(`âœ” products/${product.id}.html  (hidden â€” noindex, shareable)`);
+  console.log(`✔ products/${product.id}.html  (hidden — noindex, shareable)`);
 });
 
 /* ---------- root list pages ---------- */
@@ -740,7 +740,7 @@ for (const spec of listPages) {
   const page = listHeadHTML(spec.mode) + (spec.mode === "contact" ? contactBody() : listShellBody(spec.mode));
   const file = path.join(ROOT, spec.name);
   fs.writeFileSync(file, page, "utf8");
-  console.log(`âœ” ${spec.name}`);
+  console.log(`✔ ${spec.name}`);
 }
 
 /* ---------- sitemap.xml ---------- */
@@ -750,7 +750,7 @@ ${urls.map(u => `  <url>\n    <loc>${u}</loc>\n    <changefreq>weekly</changefre
 </urlset>
 `;
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), sitemap, "utf8");
-console.log(`âœ” sitemap.xml (${urls.length} URLs)`);
+console.log(`✔ sitemap.xml (${urls.length} URLs)`);
 
 /* ---------- robots.txt (domain comes from SITE_CONFIG) ---------- */
 const robots = `User-agent: *
@@ -760,16 +760,16 @@ Allow: /
 Sitemap: ${SITE_URL}/sitemap.xml
 `;
 fs.writeFileSync(path.join(ROOT, "robots.txt"), robots, "utf8");
-console.log(`âœ” robots.txt (Sitemap: ${SITE_URL}/sitemap.xml)`);
+console.log(`✔ robots.txt (Sitemap: ${SITE_URL}/sitemap.xml)`);
 
 /* ---------- summary ---------- */
-console.log(`\nâ„¹ ${visible.length} visible / ${data.length} total`);
+console.log(`\nℹ ${visible.length} visible / ${data.length} total`);
 const hiddenIds = hiddenList.map(p => p.id);
-if (hiddenIds.length) console.log(`â†˜ hidden pages generated too (noindex, not in sitemap): ${hiddenIds.join(", ")}`);
-if (removedPages.length) console.log(`ðŸ—‘ removed stale pages: ${removedPages.join(", ")}`);
+if (hiddenIds.length) console.log(`↘ hidden pages generated too (noindex, not in sitemap): ${hiddenIds.join(", ")}`);
+if (removedPages.length) console.log(`🗑 removed stale pages: ${removedPages.join(", ")}`);
 if (warnings.length) {
-  console.log(`\nâš  ${warnings.length} warning(s):`);
+  console.log(`\n⚠ ${warnings.length} warning(s):`);
   warnings.forEach(w => console.log(`   - ${w}`));
 } else {
-  console.log("âœ” no data warnings");
+  console.log("✔ no data warnings");
 }
