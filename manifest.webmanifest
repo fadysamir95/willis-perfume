@@ -1,0 +1,19 @@
+{
+  "name": "Willi's Perfume — Signature Fragrances",
+  "short_name": "Willi's",
+  "description": "Discover your signature scent. Premium fragrances inspired by iconic scents — delivery all over Egypt, cash on delivery.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f3ec",
+  "theme_color": "#f7f3ec",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["shopping", "fashion"],
+  "icons": [
+    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

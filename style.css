@@ -4208,3 +4208,109 @@ a.contact-card:hover {
   .recent-card,
   .cart-suggest-card { transition: none; }
 }
+/* ==========================================================
+   WISHLIST, CARD SHARE, REORDER — convenience features
+   ========================================================== */
+
+/* ---------- Wishlist heart (product cards) ---------- */
+.wishlist-btn {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(230, 222, 210, .9);
+  border-radius: 50%;
+  color: #8a8378;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 4px 10px rgba(35, 25, 12, .12);
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+.wishlist-btn:hover { transform: scale(1.08); }
+.wishlist-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, #b88a42, #8c6428);
+  border-color: transparent;
+}
+
+/* ---------- Share button (product cards) ---------- */
+.card-share-btn {
+  position: absolute;
+  bottom: 50px;
+  left: 10px;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(230, 222, 210, .9);
+  border-radius: 50%;
+  color: var(--gold-dark);
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 4px 10px rgba(35, 25, 12, .12);
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.card-share-btn:hover {
+  transform: scale(1.08);
+  background: var(--gold-soft);
+}
+
+/* ---------- Wishlist heart (product modal / share row) ---------- */
+.share-btn.wish-heart.active {
+  background: var(--gold-soft);
+  border-color: transparent;
+  color: #7d5920;
+}
+
+/* ---------- Wishlist filter chip ---------- */
+.wishlist-chip.active {
+  color: #fff;
+  background: linear-gradient(135deg, #b88a42, #8c6428);
+  border-color: transparent;
+}
+
+/* ---------- Reorder last order (cart drawer, empty state) ---------- */
+.reorder-box {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .65);
+  text-align: center;
+}
+.reorder-box span {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.reorder-box p {
+  margin: 6px 0 0;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.reorder-box .secondary-btn { margin-top: 12px; }
+
+/* ---------- RTL mirroring ---------- */
+[dir="rtl"] .wishlist-btn,
+[dir="rtl"] .card-share-btn {
+  left: auto;
+  right: 10px;
+}
+
+@media (max-width: 699px) {
+  [dir="rtl"] .wishlist-btn,
+  [dir="rtl"] .card-share-btn {
+    left: auto;
+    right: 8px;
+  }
+}

@@ -17,6 +17,8 @@ const DATA_URL = (typeof location !== "undefined" && location.protocol === "file
 const WHATSAPP_NUMBER = (window.SITE_CONFIG && window.SITE_CONFIG.whatsapp) || "";
 
 const CART_STORAGE_KEY = "willis_cart_v1";
+const WISHLIST_STORAGE_KEY = "willis_wishlist_v1";
+const LAST_ORDER_STORAGE_KEY = "willis_last_order_v1";
 
 /* Free-shipping threshold (EGP) — matches the announcement bar / FAQ. */
 const FREE_SHIPPING_MIN = 1000;
@@ -123,6 +125,7 @@ const state = {
   category: "All",
   search: "",
   sort: "default",
+  wishlistOnly: false,
   selectedProduct: null,
   selectedSize: "35ml",
   selectedQty: 1,
@@ -253,6 +256,7 @@ function renderCart() {
     itemsEl.innerHTML = "";
     CART_EMPTY_EL?.classList.remove("hidden");
     CART_FOOTER_EL?.classList.add("hidden");
+    renderLastOrderBox();
     if (cartTotalEl()) cartTotalEl().textContent = `0 ${isArabic() ? "ج.م" : "EGP"}`;
     return;
   }
@@ -292,6 +296,7 @@ function renderCart() {
   if (cartTotalEl()) cartTotalEl().textContent = `${Number(getCartTotal()).toLocaleString()} ${isArabic() ? "ج.م" : "EGP"}`;
   renderShipProgress();
   renderCartSuggestions();
+  renderLastOrderBox();
 }
 
 const cartDrawer = document.getElementById("cartDrawer");
@@ -476,6 +481,7 @@ function shareToWhatsApp(message) {
 
 function openWhatsApp(message) {
   if (!WHATSAPP_NUMBER) return; /* config missing — nothing to open */
+  analyticsEvent("Contact", "wa_click", { content_type: "whatsapp" });
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank", "noopener,noreferrer");
 }
@@ -527,6 +533,24 @@ function copyShareLink(product) {
     if (window.prompt) window.prompt(product.brand_name, url);
   } catch (e) { /* noop */ }
   done();
+}
+
+/* Share a product via the native share sheet when available (mobile),
+   otherwise fall back to the WhatsApp recipient picker. */
+function shareProduct(product) {
+  const size = getDefaultSize(product);
+  const text = t("wa.shareMsg", {
+    name: product.brand_name,
+    price: Number(product.sizes?.[size] || 0).toLocaleString(),
+    currency: currency()
+  });
+  const url = productPageUrl(product);
+  if (navigator.share && (typeof location === "undefined" || location.protocol !== "file:")) {
+    navigator.share({ title: product.brand_name, text, url }).catch(() => { /* user cancelled */ });
+  } else {
+    shareToWhatsApp(shareMessage(product));
+  }
+  analyticsEvent("Share", "share", { content_type: "product", item_id: product.id });
 }
 
 /* ---------- Related products ---------- */
@@ -625,6 +649,7 @@ function galleryImages(product) {
    ================================ */
 
 function buildProductDetail(product) {
+  const liked = inWishlist(product.id);
   const notes = pt(product, "notes") || {};
   const profiles = (pt(product, "profile") || [])
     .map(item => `<span class="profile-chip">${escapeHTML(item)}</span>`)
@@ -702,6 +727,11 @@ function buildProductDetail(product) {
 
     <div class="share-row">
       <span>${t("detail.share")}</span>
+      <button type="button" class="share-btn wish-heart ${liked ? "active" : ""}" id="wishlistBtn" data-wish-id="${escapeHTML(product.id)}" aria-pressed="${liked}" aria-label="${t(liked ? "wish.remove" : "wish.add")}">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="${liked ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 21C7 16.6 3.5 13.3 3.5 9.5 3.5 7 5.5 5 7.8 5c1.7 0 3.3 .9 4.2 2.4C12.9 5.9 14.5 5 16.2 5c2.3 0 4.3 2 4.3 4.5 0 3.8-3.5 7.1-8.5 11.5Z"/>
+        </svg>
+      </button>
       <button type="button" class="share-btn" id="shareWhatsApp" data-product-id="${escapeHTML(product.id)}" aria-label="WhatsApp">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
           <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.72.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.71.97.99-3.62-.24-.37a9.77 9.77 0 1 1 8.34 4.6zM12 2a10 10 0 0 0-8.55 15.22L2 22l4.92-1.29A10 10 0 1 0 12 2z"/>
@@ -842,6 +872,111 @@ function sortProducts(list) {
   else if (state.sort === "name") arr.sort((a, b) => a.brand_name.localeCompare(b.brand_name));
   else arr.sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
   return arr;
+}
+
+/* ================================
+   Wishlist / Favorites
+   ================================ */
+
+let wishlistCache = null;
+function getWishlist() {
+  if (wishlistCache) return wishlistCache;
+  try {
+    const raw = localStorage.getItem(WISHLIST_STORAGE_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    wishlistCache = Array.isArray(arr) ? arr.filter(x => typeof x === "string") : [];
+  } catch (e) { wishlistCache = []; }
+  return wishlistCache;
+}
+function saveWishlist(list) {
+  wishlistCache = list.slice();
+  try { localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(list)); } catch (e) { /* ignore */ }
+}
+function inWishlist(id) { return getWishlist().includes(id); }
+function toggleWishlist(id) {
+  const list = getWishlist();
+  const added = !list.includes(id);
+  if (added) list.unshift(id);
+  else list.splice(list.indexOf(id), 1);
+  saveWishlist(list);
+  analyticsEvent(
+    added ? "AddToWishlist" : "RemoveFromWishlist",
+    added ? "add_to_wishlist" : "remove_from_wishlist",
+    { content_ids: [id], content_type: "product" }
+  );
+  return added;
+}
+function syncWishlistUI() {
+  document.querySelectorAll(".wishlist-btn").forEach(btn => {
+    const id = btn.dataset.wishId;
+    const liked = inWishlist(id);
+    btn.classList.toggle("active", liked);
+    btn.setAttribute("aria-pressed", String(liked));
+    btn.setAttribute("aria-label", t(liked ? "wish.remove" : "wish.add"));
+  });
+  const chip = document.getElementById("wishlistFilter");
+  if (chip) {
+    const active = !!state.wishlistOnly;
+    chip.classList.toggle("active", active);
+    chip.setAttribute("aria-pressed", String(active));
+    chip.textContent = t("wish.chip", { n: getWishlist().length });
+  }
+}
+
+/* ================================
+   Reorder last order
+   ================================ */
+
+function getLastOrder() {
+  try {
+    const raw = localStorage.getItem(LAST_ORDER_STORAGE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
+    if (!data || !Array.isArray(data.items)) return null;
+    return data.items;
+  } catch (e) { return null; }
+}
+function saveLastOrder() {
+  const items = state.cart
+    .filter(item => productInData(item.id))
+    .map(item => ({ id: item.id, size: item.size, qty: Number(item.qty) || 1 }));
+  if (!items.length) return;
+  try {
+    localStorage.setItem(LAST_ORDER_STORAGE_KEY, JSON.stringify({ items, at: Date.now() }));
+  } catch (e) { /* ignore */ }
+}
+function reorderLastOrder() {
+  const items = getLastOrder();
+  if (!items) return;
+  let added = 0;
+  items.forEach(item => {
+    const product = state.products.find(p => p.id === item.id);
+    if (!product || !(item.size in (product.sizes || {}))) return;
+    const existing = state.cart.find(c => c.id === item.id && c.size === item.size);
+    if (existing) existing.qty += item.qty;
+    else state.cart.push({ id: item.id, size: item.size, qty: item.qty });
+    added += 1;
+  });
+  if (!added) return;
+  saveCart();
+  updateCartUI();
+  renderCart();
+  showToast(t("toast.reordered"));
+  analyticsEvent("InitiateCheckout", "reorder", { content_type: "order" });
+}
+function renderLastOrderBox() {
+  const box = document.getElementById("lastOrderBox");
+  if (!box) return;
+  const items = getLastOrder();
+  const names = items
+    ? items.map(it => {
+        const p = state.products.find(x => x.id === it.id);
+        return p ? p.brand_name : it.id;
+      }).join(", ")
+    : "";
+  if (!names) { box.classList.add("hidden"); return; }
+  box.classList.remove("hidden");
+  const label = box.querySelector("#lastOrderNames");
+  if (label) label.textContent = names;
 }
 
 /* ================================
@@ -1200,6 +1335,7 @@ function filteredProducts() {
       const matchesGender = state.gender === "All" || product.gender === state.gender;
       const matchesCategory =
         state.category === "All" || (product.categories || []).includes(state.category);
+      const matchesWishlist = !state.wishlistOnly || inWishlist(product.id);
 
       const haystack = [
         product.brand_name,
@@ -1210,7 +1346,7 @@ function filteredProducts() {
         ...Object.values(product.notes || {}).flat()
       ].join(" ").toLowerCase();
 
-      return matchesGender && matchesCategory && (!query || haystack.includes(query));
+      return matchesGender && matchesCategory && matchesWishlist && (!query || haystack.includes(query));
     });
 
   return sortProducts(matches);
@@ -1220,6 +1356,7 @@ function productCardHTML(product) {
   const size = getDefaultSize(product);
   const price = Number(product.sizes?.[size] || 0).toLocaleString();
   const available = isAvailable(product);
+  const liked = inWishlist(product.id);
 
   return `
         <article class="product-card" data-product-id="${escapeHTML(product.id)}" role="group" aria-label="${escapeHTML(product.brand_name)}">
@@ -1235,6 +1372,18 @@ function productCardHTML(product) {
                   <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.72.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.05 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.71.97.99-3.62-.24-.37a9.77 9.77 0 1 1 8.34 4.6zM12 2a10 10 0 0 0-8.55 15.22L2 22l4.92-1.29A10 10 0 1 0 12 2z"/>
                 </svg>
               </a>` : ""}
+
+              <button type="button" class="wishlist-btn ${liked ? "active" : ""}" data-wish-id="${escapeHTML(product.id)}" aria-pressed="${liked}" aria-label="${t(liked ? "wish.remove" : "wish.add")}">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="${liked ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 21C7 16.6 3.5 13.3 3.5 9.5 3.5 7 5.5 5 7.8 5c1.7 0 3.3 .9 4.2 2.4C12.9 5.9 14.5 5 16.2 5c2.3 0 4.3 2 4.3 4.5 0 3.8-3.5 7.1-8.5 11.5Z"/>
+                </svg>
+              </button>
+              <button type="button" class="card-share-btn" data-share-id="${escapeHTML(product.id)}" aria-label="${t("detail.share")}">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/>
+                  <path d="M8.7 13.6l6.6 3.9M15.3 6.5l-6.6 3.9"/>
+                </svg>
+              </button>
           </div>
 
           <div class="product-body">
@@ -1281,10 +1430,25 @@ function renderProducts() {
   if (!products.length) {
     productsContainer.innerHTML = "";
     emptyState?.classList.remove("hidden");
+    if (emptyState) {
+      const h3 = emptyState.querySelector("h3");
+      const p = emptyState.querySelector("p");
+      const resetBtn = emptyState.querySelector("#resetFilters");
+      if (state.wishlistOnly) {
+        if (h3) h3.textContent = t("wish.emptyTitle");
+        if (p) p.textContent = t("wish.emptyText");
+        if (resetBtn) resetBtn.textContent = t("wish.showAll");
+      } else {
+        if (h3) h3.textContent = t("coll.empty.title");
+        if (p) p.textContent = t("coll.empty.text");
+        if (resetBtn) resetBtn.textContent = t("coll.empty.reset");
+      }
+    }
   } else {
     emptyState?.classList.add("hidden");
     productsContainer.innerHTML = products.map(productCardHTML).join("");
   }
+  syncWishlistUI();
 }
 
 /* "Most requested" — visible + featured products only, sorted by manual order. */
@@ -1332,6 +1496,7 @@ function resetFilters() {
   state.category = "All";
   state.search = "";
   state.sort = "default";
+  state.wishlistOnly = false;
 
   const searchInput = document.getElementById("searchInput");
   if (searchInput) searchInput.value = "";
@@ -1365,6 +1530,11 @@ function openProductModal(product) {
   state.selectedSize = getDefaultSize(product);
   state.selectedQty = 1;
   recordRecent(product);
+  analyticsEvent("ViewContent", "view_item", {
+    content_ids: [product.id],
+    content_type: "product",
+    items: [{ item_id: product.id, item_name: product.brand_name, quantity: 1 }]
+  });
   modalContentEl.innerHTML = buildProductDetail(product);
   attachProductDetail(modalContentEl, product);
   productModal.classList.add("open");
@@ -1564,10 +1734,36 @@ function initFilters() {
     });
   }
 
+  const wishlistFilter = document.getElementById("wishlistFilter");
+  if (wishlistFilter) {
+    wishlistFilter.addEventListener("click", () => {
+      state.wishlistOnly = !state.wishlistOnly;
+      syncWishlistUI();
+      renderProducts();
+    });
+  }
+
   document.getElementById("resetFilters")?.addEventListener("click", resetFilters);
 }
 
 function handleCardClick(event) {
+  const wishBtn = event.target.closest(".wishlist-btn");
+  if (wishBtn) {
+    const id = wishBtn.dataset.wishId;
+    toggleWishlist(id);
+    showToast(t(inWishlist(id) ? "wish.added" : "wish.removed"));
+    syncWishlistUI();
+    return;
+  }
+
+  const cardShare = event.target.closest(".card-share-btn");
+  if (cardShare) {
+    const card = cardShare.closest(".product-card");
+    const product = card && state.products.find(p => p.id === card.dataset.productId);
+    if (product) shareProduct(product);
+    return;
+  }
+
   const details = event.target.closest(".view-details");
   if (details) {
     const card = details.closest(".product-card");
@@ -1690,6 +1886,7 @@ function initCartEvents() {
         items
       });
 
+      saveLastOrder();
       openWhatsApp(message);
     }
   });
@@ -1698,6 +1895,8 @@ function initCartEvents() {
     clearCart();
     showToast(t("toast.cleared"));
   });
+
+  document.getElementById("reorderBtn")?.addEventListener("click", reorderLastOrder);
 
   cartItemsEl?.addEventListener("click", event => {
     const row = event.target.closest(".cart-item");
@@ -1749,6 +1948,12 @@ document.addEventListener("click", event => {
   const waBtn = event.target.closest("#orderWhatsApp");
   if (waBtn && state.selectedProduct) {
     openWhatsApp(modalOrderMessage(state.selectedProduct, state.selectedSize));
+    try {
+      localStorage.setItem(LAST_ORDER_STORAGE_KEY, JSON.stringify({
+        items: [{ id: state.selectedProduct.id, size: state.selectedSize, qty: state.selectedQty }],
+        at: Date.now()
+      }));
+    } catch (e) { /* ignore */ }
     return;
   }
 
@@ -1758,6 +1963,15 @@ document.addEventListener("click", event => {
     if (product) {
       openWhatsApp(notifyMessage(product, notifyBtn.dataset.size || getDefaultSize(product)));
     }
+    return;
+  }
+
+  const wishlistBtn = event.target.closest("#wishlistBtn");
+  if (wishlistBtn) {
+    const id = wishlistBtn.dataset.wishId;
+    toggleWishlist(id);
+    showToast(t(inWishlist(id) ? "wish.added" : "wish.removed"));
+    syncWishlistUI();
     return;
   }
 
@@ -1878,5 +2092,16 @@ initNavSpy();
 
 updateCartUI();
 renderCart();
+syncWishlistUI();
 
 loadProducts();
+
+/* PWA: register the service worker (offline startup + install prompt).
+   Skipped when opened as a plain file:// page. */
+if ("serviceWorker" in navigator && (typeof location === "undefined" || location.protocol !== "file:")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(BASE_PATH + "sw.js", { scope: "/" }).catch(err => {
+      console.warn("Service worker registration failed:", err);
+    });
+  });
+}

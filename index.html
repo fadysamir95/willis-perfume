@@ -16,7 +16,14 @@
 
   <!-- ===== Favicons ===== -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="images/icon-512.png" />
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Willi's Perfume" />
 
   <!-- ===== Open Graph / Facebook ===== -->
   <meta property="og:type" content="website" />
@@ -310,6 +317,7 @@
         </div>
 
         <div class="category-row" id="categoryFilters" aria-label="Filter by category">
+          <button class="category-chip wishlist-chip" id="wishlistFilter" type="button" aria-pressed="false">♥ Favorites (0)</button>
           <button class="category-chip active" data-category="All" data-i18n="cat.all">All styles</button>
           <button class="category-chip" data-category="Elegant" data-i18n="cat.Elegant">Elegant</button>
           <button class="category-chip" data-category="Summer" data-i18n="cat.Summer">Summer</button>
@@ -523,6 +531,11 @@
         <h3 data-i18n="cart.emptyTitle">Your cart is empty</h3>
         <p data-i18n="cart.emptyText">Add a fragrance you love and it will appear here.</p>
         <button class="secondary-btn" id="continueShopping" data-i18n="cart.continue">Continue shopping</button>
+        <div class="reorder-box hidden" id="lastOrderBox">
+          <span data-i18n="cart.lastOrder">Re-purchase your last order</span>
+          <p id="lastOrderNames"></p>
+          <button class="secondary-btn" id="reorderBtn" data-i18n="cart.reorder">Reorder last order</button>
+        </div>
       </div>
     </div>
 
