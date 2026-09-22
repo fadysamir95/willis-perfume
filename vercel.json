@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/favicon.ico", "destination": "/images/favicon-32x32.png" }
+  ],
   "headers": [
     {
       "source": "/admin.html",
