@@ -760,6 +760,10 @@ a {
   transition: opacity .25s ease;
 }
 
+/* Product-detail modal sits above the cart drawer (z 110/120) so it is not
+   hidden behind the cart when opened from "often ordered together". */
+.modal-backdrop { z-index: 130; }
+
 .menu-overlay.open,
 .modal-backdrop.open {
   opacity: 1;
@@ -851,7 +855,7 @@ a {
   position: fixed;
   left: 50%;
   bottom: 0;
-  z-index: 100;
+  z-index: 140;
   width: min(100%, 680px);
   max-height: 92dvh;
   overflow-y: auto;
