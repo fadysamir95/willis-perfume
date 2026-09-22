@@ -17,16 +17,17 @@ const LOGO = path.join(ROOT, "images", "logo.webp");
 const OUT_DIR = path.join(ROOT, "images");
 const BG = { r: 247, g: 243, b: 236 }; // #f7f3ec — matches manifest background/theme
 const LOGO_FRACTION = 0.6; // logo artwork occupies 60% of the canvas (maskable-safe)
+const FAVICON_FRACTION = 0.85; // smaller canvases need a bigger logo to stay legible
 
 const SIZES = [
-  { file: "icon-512.png", size: 512 },
-  { file: "icon-192.png", size: 192 },
-  { file: "apple-touch-icon.png", size: 180 },
-  { file: "favicon-32x32.png", size: 32 }
+  { file: "icon-512.png", size: 512, fraction: LOGO_FRACTION },
+  { file: "icon-192.png", size: 192, fraction: LOGO_FRACTION },
+  { file: "apple-touch-icon.png", size: 180, fraction: LOGO_FRACTION },
+  { file: "favicon-32x32.png", size: 32, fraction: FAVICON_FRACTION }
 ];
 
-async function build(logoBuffer, outFile, size) {
-  const logoSize = Math.round(size * LOGO_FRACTION);
+async function build(logoBuffer, outFile, size, fraction) {
+  const logoSize = Math.round(size * fraction);
   const logo = await sharp(logoBuffer)
     .trim() // cut away transparent padding so the artwork is measured, not the canvas
     .resize(logoSize, logoSize, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
@@ -54,7 +55,7 @@ async function build(logoBuffer, outFile, size) {
     process.exit(1);
   }
   const logoBuffer = fs.readFileSync(LOGO);
-  console.log("Building icons from", path.relative(ROOT, LOGO), `(${(logoBuffer.length / 1024).toFixed(1)} KB)`);
-  for (const s of SIZES) await build(logoBuffer, s.file, s.size);
+  console.log(`Building icons from ${path.relative(ROOT, LOGO)} (${(logoBuffer.length / 1024).toFixed(1)} KB)`);
+  for (const s of SIZES) await build(logoBuffer, s.file, s.size, s.fraction);
   console.log("done.");
 })();
