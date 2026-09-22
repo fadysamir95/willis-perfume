@@ -1193,7 +1193,7 @@ function initQuiz() {
 function filteredProducts() {
   const query = state.search.trim().toLowerCase();
 
-  return state.products
+  const matches = state.products
     .filter(product => {
       if (!isVisible(product)) return false;
 
