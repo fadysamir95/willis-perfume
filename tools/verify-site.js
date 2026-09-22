@@ -15,7 +15,7 @@ try {
   vm.runInContext(src, ctx);
   SITE_CONFIG = ctx.window.SITE_CONFIG || {};
 } catch (e) { /* keep {} */ }
-const SITE_URL = String(SITE_CONFIG.siteUrl || "https://willis-perfume.com").replace(/\/+$/, "");
+const SITE_URL = String(SITE_CONFIG.siteUrl || "https://willis-perfume.vercel.app").replace(/\/+$/, "");
 
 let data = [];
 try {

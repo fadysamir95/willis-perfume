@@ -11,8 +11,8 @@
   <meta name="author" content="Willi's Perfume" />
   <meta name="robots" content="index, follow" />
 
-  <!-- ===== Canonical (replace willis-perfume.com with the real domain on launch) ===== -->
-  <link rel="canonical" href="https://willis-perfume.com/" />
+  <!-- ===== Canonical — live domain; flip site-config.js siteUrl on launch ===== -->
+  <link rel="canonical" href="https://willis-perfume.vercel.app/" />
 
   <!-- ===== Favicons ===== -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png" />
@@ -23,8 +23,8 @@
   <meta property="og:site_name" content="Willi's Perfume" />
   <meta property="og:title" content="Willi's Perfume — Wear Your Will" />
   <meta property="og:description" content="Discover your signature scent. Premium fragrances inspired by iconic scents — delivery all over Egypt, cash on delivery." />
-  <meta property="og:url" content="https://willis-perfume.com/" />
-  <meta property="og:image" content="https://willis-perfume.com/images/og-image.png" />
+  <meta property="og:url" content="https://willis-perfume.vercel.app/" />
+  <meta property="og:image" content="https://willis-perfume.vercel.app/images/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="en_US" />
@@ -34,7 +34,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Willi's Perfume — Wear Your Will" />
   <meta name="twitter:description" content="Discover your signature scent. Premium fragrances inspired by iconic scents — delivery all over Egypt, cash on delivery." />
-  <meta name="twitter:image" content="https://willis-perfume.com/images/og-image.png" />
+  <meta name="twitter:image" content="https://willis-perfume.vercel.app/images/og-image.png" />
 
   <!-- ===== Fonts (Cairo added for Arabic / RTL) ===== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +49,7 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Willi's Perfume",
-    "url": "https://willis-perfume.com/",
+    "url": "https://willis-perfume.vercel.app/",
     "description": "Willi's Perfume — discover your signature scent.",
     "inLanguage": ["en", "ar"]
   }
@@ -59,8 +59,8 @@
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Willi's Perfume",
-    "url": "https://willis-perfume.com/",
-    "logo": "https://willis-perfume.com/images/logo.webp",
+    "url": "https://willis-perfume.vercel.app/",
+    "logo": "https://willis-perfume.vercel.app/images/logo.webp",
     "sameAs": [
       "https://www.instagram.com/willis_perfume/",
       "https://www.facebook.com/profile.php?id=61590332657028"
@@ -79,21 +79,21 @@
     (function () {
       var cfg = window.SITE_CONFIG || {};
       var site = (cfg.siteUrl || "").replace(/\/+$/, "");
-      if (!site || site === "https://willis-perfume.com") return;
-      var swap = function (v) { return v.replace(/https:\/\/willis-perfume\.com/g, site); };
+      if (!site || site === "https://willis-perfume.vercel.app") return;
+      var swap = function (v) { return v.replace(/https:\/\/willis-perfume\.vercel\.app/g, site); };
       var metas = document.querySelectorAll("meta");
       var i, n, c;
       for (i = 0; i < metas.length; i++) {
         n = metas[i].getAttribute("property") || metas[i].getAttribute("name");
         c = metas[i].content;
-        if (c && c.indexOf("willis-perfume.com") !== -1) metas[i].content = swap(c);
+        if (c && c.indexOf("willis-perfume.vercel.app") !== -1) metas[i].content = swap(c);
       }
       var link = document.querySelector('link[rel="canonical"]');
-      if (link && link.href && link.href.indexOf("willis-perfume.com") !== -1) link.href = swap(link.href);
+      if (link && link.href && link.href.indexOf("willis-perfume.vercel.app") !== -1) link.href = swap(link.href);
       var lds = document.querySelectorAll('script[type="application/ld+json"]');
       for (i = 0; i < lds.length; i++) {
         var txt = lds[i].textContent || "";
-        if (txt.indexOf("willis-perfume.com") !== -1) lds[i].textContent = swap(txt);
+        if (txt.indexOf("willis-perfume.vercel.app") !== -1) lds[i].textContent = swap(txt);
       }
     })();
   </script>
@@ -514,7 +514,7 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    window.SITE_URL = (window.SITE_CONFIG && window.SITE_CONFIG.siteUrl) || "https://willis-perfume.com";
+    window.SITE_URL = (window.SITE_CONFIG && window.SITE_CONFIG.siteUrl) || "https://willis-perfume.vercel.app";
   </script>
   <script src="i18n.js"></script>
   <script src="app.js"></script>

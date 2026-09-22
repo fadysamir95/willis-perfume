@@ -21,7 +21,7 @@ function loadConfig() {
 }
 
 const isPending = {
-  /* the launch domain is confirmed: https://willis-perfume.com — only flag
+  /* live on willis-perfume.vercel.app (custom domain on launch) — only flag
      genuinely unset/broken values (empty, placeholder-ish, whitespace) */
   domain: v => !v || /X{4,}/.test(v) || /\s/.test(v),
   ga4: v => !v || /X{4,}/.test(v),
